@@ -1,0 +1,25 @@
+{
+  "name": "MeReal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ducthangwru/MeReal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ducthangwru/MeReal/issues"
+  },
+  "homepage": "https://github.com/ducthangwru/MeReal#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "pusher": "^2.2.0"
+  }
+}
