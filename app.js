@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const Pusher = require('pusher')
@@ -18,7 +19,7 @@ const pusher = new Pusher({
     encrypted: true
   })
 
-// get authentictation for the channel;
+//get authentictation for the channel;
 app.post("/pusher/auth", (req, res) => {
 const socketId = req.body.socket_id
 const channel = req.body.channel_name
@@ -36,7 +37,15 @@ app.get('/', (req, res) => {
     return res.sendFile(__dirname + '/index.html')
 })
 
+mongoose.connect(process.env.CONNECT_MONGO, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Connect to db success');
+    }
+})
+
 //listen on the app
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
     return console.log('Server is up on 3000')
 })
