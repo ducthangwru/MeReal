@@ -225,14 +225,16 @@
         }
         
     });
+    
     channel.bind("client-reject", function(answer) {
-        if(answer.room==room){
+        if(answer.room == room){
             console.log("Call declined");
             alert("call to " + answer.rejected + "was politely declined");
             endCall();
         }
         
     });
+
      channel.bind("client-endcall", function(answer) {
         if(answer.room==room){
             console.log("Call Ended");

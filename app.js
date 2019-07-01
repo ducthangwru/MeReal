@@ -65,5 +65,5 @@ mongoose.connect(process.env.CONNECT_MONGO, (err) => {
 
 //listen on the app
 server.listen(process.env.PORT, () => {
-    return console.log('Server is up on 3000')
+    return console.log(`Server is up on ${process.env.PORT}`)
 })
