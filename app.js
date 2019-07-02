@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000
 const app = express()
 var server = require('http').createServer(app)
 var io = require('socket.io')(server)
-
+const CONNECT_MONGO = 'mongodb://localhost/mereal'
 // Body parser middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // HTTP stuff
 app.get('/', (req, res) => res.sendFile(path.resolve(__dirname, './index.html')));
 
-mongoose.connect(process.env.CONNECT_MONGO, (err) => {
+mongoose.connect(CONNECT_MONGO, (err) => {
     if (err) {
       console.log(err);
     } else {
