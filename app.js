@@ -5,8 +5,8 @@ const bodyParser = require('body-parser')
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const session = require('express-session')
-const WebSocket = require('ws');
-const app = express();
+
+const app = express()
 var server = require('http').createServer(app);
 const wsServer = new WebSocket.Server({ server: server }, () => console.log(`WS server is listening at ws://localhost:${process.env.PORT}`));
 
@@ -45,14 +45,7 @@ wsServer.on('connection', (ws, req) => {
 });
 
 // HTTP stuff
-app.get('/client', (req, res) => res.sendFile(path.resolve(__dirname, './client.html')));
-app.get('/streamer', (req, res) => res.sendFile(path.resolve(__dirname, './streamer.html')));
-app.get('/', (req, res) => {
-    res.send(`
-        <a href="streamer">Streamer</a><br>
-        <a href="client">Client</a>
-    `);
-});
+app.get('/', (req, res) => res.sendFile(path.resolve(__dirname, './index.html')));
 
 mongoose.connect(process.env.CONNECT_MONGO, (err) => {
     if (err) {
