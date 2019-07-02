@@ -21,12 +21,8 @@ const updateUser = async (user) => {
         var queryUpdate = {
             email : user.email,
             fullname : user.fullname,
-            dateofbirth : user.dateofbirth,
-            tokenfirebase : user.tokenfirebase,
             avatar : user.avatar,
-            password : user.password,
-            email : user.email,
-            group : user.group
+            email : user.email
         }
     
         return await usersModel.findOneAndUpdate(id, queryUpdate).exec();

@@ -5,11 +5,10 @@ const bodyParser = require('body-parser')
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const session = require('express-session')
-const Pusher = require('pusher')
-const app = express()
-
+const WebSocket = require('ws');
+const app = express();
 var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+const wsServer = new WebSocket.Server({ server: server }, () => console.log(`WS server is listening at ws://localhost:${process.env.PORT}`));
 
 // Body parser middleware
 app.use(bodyParser.json())
@@ -26,34 +25,34 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/api', publicController);
 // app.use('/api/user', usersController);
 
+let connectedClients = [];
 
-// Create an instance of Pusher
-var pusher = new Pusher({
-  appId: '810804',
-  key: 'f70f1870659a69d4de88',
-  secret: '4f09e3455f0386b4eac7',
-  cluster: 'ap1',
-  encrypted: true
+wsServer.on('connection', (ws, req) => {
+    console.log('Connected');
+    // add new connected client
+    connectedClients.push(ws);
+    // listen for messages from the streamer, the clients will not send anything so we don't need to filter
+    ws.on('message', data => {
+        // send the base64 encoded frame to each connected ws
+        connectedClients.forEach((ws, i) => {
+            if (ws.readyState === ws.OPEN) { // check if it is still connected
+                ws.send(data); // send
+            } else { // if it's not connected remove from the array of connected ws
+                connectedClients.splice(i, 1);
+            }
+        });
+    });
 });
 
-//get authentictation for the channel;
-app.post("/pusher/auth", (req, res) => {
-const socketId = req.body.socket_id
-const channel = req.body.channel_name
-var presenceData = {
-    user_id:
-    Math.random()
-        .toString(36)
-        .slice(2) + Date.now()
-}
-
-const auth = pusher.authenticate(socketId, channel, presenceData)
-res.send(auth)
-})
-
+// HTTP stuff
+app.get('/client', (req, res) => res.sendFile(path.resolve(__dirname, './client.html')));
+app.get('/streamer', (req, res) => res.sendFile(path.resolve(__dirname, './streamer.html')));
 app.get('/', (req, res) => {
-    return res.sendFile(__dirname + '/index.html')
-})
+    res.send(`
+        <a href="streamer">Streamer</a><br>
+        <a href="client">Client</a>
+    `);
+});
 
 mongoose.connect(process.env.CONNECT_MONGO, (err) => {
     if (err) {
