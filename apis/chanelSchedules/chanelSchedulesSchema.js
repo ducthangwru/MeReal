@@ -9,6 +9,8 @@ const chanelSchedulesSchema = new Schema(
         chanel : {type : ObjectId, require : true,  ref: 'chanels'},
         desc : {type : String, require : true},
         time : {type : Date, require : true},
+        questions : {type : Number, require : true},  //số lượng câu hỏi
+        time_question : {type : Number, require : true, default : 10}, // thời gian trả lời mỗi câu hỏi mặc định 10s (Đơn vị giây)
         type : {type : Number, require : true, default : TYPE_GIFT.MONEY},
         status : {type : Boolean, default : STATUS_USER.ACTIVE},
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}

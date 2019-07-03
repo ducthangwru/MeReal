@@ -24,10 +24,16 @@ const TYPE_GIFT = {
     PRODUCT : 2
 }
 
+const STATUS_QUESTION = {
+    ACTIVE : 1,
+    LOCK : -1
+}
+
 module.exports = {
     STATUS_USER,
     STATUS_CHANEL,
     ROLE_USER,
     STATUS_GIFT,
-    TYPE_GIFT
+    TYPE_GIFT,
+    STATUS_QUESTION
 }
