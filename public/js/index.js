@@ -11,7 +11,11 @@ function playStream(idVideoTag, stream) {
 
 // openStream().then(stream => playStream('localStream', stream))
 
-const peer = new Peer('someid', {host: 'https://peer-mereal.herokuapp.com', port: 443, path: '/myapp'})
+const peer = new Peer('someid', {
+    secure: true, 
+    host: 'peer-mereal.herokuapp.com/myapp', 
+    port: 443,
+});
 
 peer.on('open', id => $('#myPeer').append(id))
 
