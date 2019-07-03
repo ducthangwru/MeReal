@@ -114,9 +114,9 @@
         getCam()
             .then(stream => {
                 if (window.URL) {
-                    document.getElementById("selfview").src = window.URL.createObjectURL(stream);
+                    document.getElementById("selfview").src = localUserMedia
                 } else {
-                    document.getElementById("selfview").src = stream;
+                    document.getElementById("selfview").src = stream
                 }
                 toggleEndCallButton();
                 caller.addStream(stream);
@@ -187,9 +187,9 @@
                     localUserMedia = stream;
                     toggleEndCallButton();
                     if (window.URL) {
-                        document.getElementById("selfview").srcObject = evt.stream;
+                        document.getElementById("selfview").srcObject = localUserMedia
                     } else {
-                        document.getElementById("selfview").src = stream;
+                        document.getElementById("selfview").src = stream
                     }
                     caller.addStream(stream);
                     var sessionDesc = new RTCSessionDescription(msg.sdp);
