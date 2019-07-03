@@ -28,10 +28,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Create an instance of Pusher
 const pusher = new Pusher({
-  appId: '810804',
-  key: 'f70f1870659a69d4de88',
-  secret: '4f09e3455f0386b4eac7',
-  cluster: 'ap1',
+  app_id : "810806",
+  key : "41331bee0b47f9f7dd7d",
+  secret : "6f7f9fd94149ec507078",
+  cluster : "ap1",
   encrypted: true
 })
 
