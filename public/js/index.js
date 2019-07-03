@@ -13,7 +13,8 @@ function playStream(idVideoTag, stream) {
 
 const peer = new Peer('peerjs', {
     secure: true, 
-    host: 'peer-mereal.herokuapp.com/myapp', 
+    host: 'peer-mereal.herokuapp.com', 
+    path : '/myapp',
     port: 443
 });
 
