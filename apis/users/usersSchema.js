@@ -8,12 +8,14 @@ const usersSchema = new Schema(
         username : {type : String, require : true},
         password : {type : String, require : true},
         fullname : {type : String, require : true},
-        is_online : {type: Boolean},
+        is_online : {type: Boolean, default : 0},
+        socket_id : {type : String},
         avatar : {type: String},
         email : {type : String},
         status : {type : Number, default : STATUS_USER.ACTIVED},
         role : {type : Number, default : ROLE_USER.USER},
-        wallet : {type : Number, default : 0}
+        wallet : {type : Number, default : 0},
+        wallet_gift : {type : Array, default : []}
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 );
 
