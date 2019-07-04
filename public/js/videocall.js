@@ -61,7 +61,7 @@ btnGoRoom.onclick = function () {
         alert("Please type a room number")
     } else {
         roomNumber = inputRoomNumber.value;
-        socket.emit('joinroom', roomNumber);
+        socket.emit('create or join', roomNumber);
         divSelectRoom.style = "display: none;"
         divConsultingRoom.style = "display: block;"
     }
@@ -78,16 +78,14 @@ socket.on('created', function (room) {
     });
 });
 
-socket.on('joined', function (data) {
-    $('#listView').append(`<p>${data.id}</p>`)
-    socket.emit('ready', data.room)
-    // navigator.mediaDevices.getUserMedia(streamConstraints).then(function (stream) {
-    //     localStream = stream
-    //     localVideo.srcObject = stream
-    //     socket.emit('ready', roomNumber)
-    // }).catch(function (err) {
-    //     console.log('An error ocurred when accessing media devices', err)
-    // });
+socket.on('joined', function (room) {
+    navigator.mediaDevices.getUserMedia(streamConstraints).then(function (stream) {
+        localStream = stream
+        localVideo.srcObject = stream
+        socket.emit('ready', roomNumber)
+    }).catch(function (err) {
+        console.log('An error ocurred when accessing media devices', err)
+    });
 });
 
 socket.on('candidate', function (event) {
@@ -103,12 +101,8 @@ socket.on('ready', function () {
         rtcPeerConnection = new RTCPeerConnection(iceServers)
         rtcPeerConnection.onicecandidate = onIceCandidate
         rtcPeerConnection.ontrack = onAddStream
-        if(localStream)
-        {
-            rtcPeerConnection.addTrack(localStream.getTracks()[0], localStream)
-            rtcPeerConnection.addTrack(localStream.getTracks()[1], localStream)
-        }
-      
+        rtcPeerConnection.addTrack(localStream.getTracks()[0], localStream)
+        rtcPeerConnection.addTrack(localStream.getTracks()[1], localStream)
         rtcPeerConnection.createOffer()
             .then(sessionDescription => {
                 rtcPeerConnection.setLocalDescription(sessionDescription)
@@ -129,12 +123,8 @@ socket.on('offer', function (event) {
         rtcPeerConnection = new RTCPeerConnection(iceServers)
         rtcPeerConnection.onicecandidate = onIceCandidate
         rtcPeerConnection.ontrack = onAddStream;
-        if(localStream)
-        {
-            rtcPeerConnection.addTrack(localStream.getTracks()[0], localStream)
-            rtcPeerConnection.addTrack(localStream.getTracks()[1], localStream)
-        }
-      
+        rtcPeerConnection.addTrack(localStream.getTracks()[0], localStream)
+        rtcPeerConnection.addTrack(localStream.getTracks()[1], localStream)
         rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event))
         rtcPeerConnection.createAnswer()
             .then(sessionDescription => {
