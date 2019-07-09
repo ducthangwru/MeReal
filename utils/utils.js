@@ -1,5 +1,16 @@
 const JWT = require('jsonwebtoken')
 const message = require('./message')
+const crypto = require('crypto')
+const config = require('./config')
+const nodemailer = require('nodemailer')
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+           user: config.USER_EMAIL,
+           pass: config.PASS_EMAIL
+       }
+   });
 
 const verifyToken = async (req, res, next) => {
     var token = req.headers['x-access-token']
@@ -14,7 +25,7 @@ const verifyToken = async (req, res, next) => {
 
 const assignToken = (user_id, username, email) => {
     return new Promise((resolve, reject) => {
-        JWT.sign({username: username, user_id: user_id, email: email}, process.env.SECRET_KEY, (e, token) => {
+        JWT.sign({username: username, user_id: user_id, email: email}, config.SECRET_KEY, (e, token) => {
             if (e) reject(e)
             else resolve(token)
         })
@@ -33,7 +44,7 @@ const verify = async(token) => {
 const verifyAccessToken = async (token) => {
     try
     {
-        return await JWT.verify(token, process.env.SECRET_KEY)
+        return await JWT.verify(token, config.SECRET_KEY)
     }
     catch(e)
     {
@@ -69,11 +80,72 @@ const success = function (res, data, page) {
     res.send(obj)
 }
 
+
+const checkRegexUsername = function(username) {
+    let usernameRegex = /^[a-zA-Z\d.]{5,20}$/
+    return username.match(usernameRegex)
+}
+
+const checkRegexPassword = function(password) {
+    let passwordRegex = /([A-Za-z\d\@\!\#\$\%\^\&\*\(\)]){8,}/
+    return password.match(passwordRegex)
+}
+
+const md5 = function (plain) {
+    return crypto.createHash('md5').update(plain).digest('hex')
+}
+
+const validateParameters = function (args, res) {
+    for (var i = 0; i < args.length; i++) {
+        var arg = args[i]
+        if (!arg) {
+            res.send({success: false, error: 'Missing required parameters'})
+            return false
+        }
+    }
+    return true
+}
+
+const sendEmail = async function(to, subject, content) {
+    try
+    {
+        var mailOptions = {
+            from: `"[MeReal]" <info@mereal.findme.vn>`,
+            to: to,
+            subject: subject,
+            html: content
+        }
+    
+        return await transporter.sendMail(mailOptions)
+    }
+    catch(e)
+    {
+        return e.message
+    }
+}
+
+const sendEmailForgotPW = async function(email, code) {
+    return await sendEmail(email, '[MeReal] Đặt lại mật khẩu', 
+                config.form_email(
+                        '[MeReal] Đặt lại mật khẩu',
+                        'Nhập mã để đặt lại mật khẩu hoặc chỉ cần nhấp vào Đặt lại mật khẩu.',
+                        'Mã đặt lại mật khẩu:',
+                        'Đặt lại mật khẩu',
+                        'Bạn có thể sao chép liên kết đặt lại mật khẩu',
+                        code, 
+                        `${config.BASE_URL}/resetPassword?email=${email}&code=${code}`))
+}
+
 module.exports = {
     verifyToken,
     verify,
     assignToken,
     verifyAccessToken,
     error,
-    success
+    success,
+    checkRegexUsername,
+    checkRegexPassword,
+    md5,
+    validateParameters,
+    sendEmailForgotPW
 }

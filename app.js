@@ -80,8 +80,14 @@ app.get('/', (req, res) => {
 
 app.get('/videocall', (req, res) => {
     return res.sendFile(__dirname + '/videocall.html')
-  })
+})
 
+
+const public = require('./apis/public/publicController')
+
+app.use('/public', public)
+
+mongoose.set('useFindAndModify', false)
 mongoose.connect(CONNECT_MONGO, (e) => {
     if (e) {
       console.log(e);
