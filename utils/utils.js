@@ -14,8 +14,8 @@ const verifyToken = async (req, res, next) => {
 
 const assignToken = (user_id, username, email) => {
     return new Promise((resolve, reject) => {
-        JWT.sign({username: username, user_id: user_id, email: email}, process.env.SECRET_KEY, (err, token) => {
-            if (err) reject(err)
+        JWT.sign({username: username, user_id: user_id, email: email}, process.env.SECRET_KEY, (e, token) => {
+            if (e) reject(e)
             else resolve(token)
         })
     })

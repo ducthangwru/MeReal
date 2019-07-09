@@ -84,9 +84,9 @@ app.get('/videocall', (req, res) => {
     return res.sendFile(__dirname + '/videocall.html')
   })
 
-mongoose.connect(CONNECT_MONGO, (err) => {
-    if (err) {
-      console.log(err);
+mongoose.connect(CONNECT_MONGO, (e) => {
+    if (e) {
+      console.log(e);
     } else {
       console.log('Connect to db success')
     }

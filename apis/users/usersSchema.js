@@ -23,7 +23,7 @@ let usersModel = mongoose.model('users', usersSchema, 'users');
 
 usersSchema.pre('save', function(next) {
     let user = this;
-    usersModel.find({username : user.username}, function (err, docs) {
+    usersModel.find({username : user.username}, function (e, docs) {
         if (!docs.length){
             next();
         }else{                

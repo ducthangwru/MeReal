@@ -73,8 +73,8 @@ socket.on('created', function (room) {
         localStream = stream
         localVideo.srcObject = stream
         isCaller = true
-    }).catch(function (err) {
-        console.log('An error ocurred when accessing media devices', err)
+    }).catch(function (e) {
+        console.log('An error ocurred when accessing media devices', e)
     });
 });
 
@@ -83,8 +83,8 @@ socket.on('joined', function (room) {
         localStream = stream
         localVideo.srcObject = stream
         socket.emit('ready', roomNumber)
-    }).catch(function (err) {
-        console.log('An error ocurred when accessing media devices', err)
+    }).catch(function (e) {
+        console.log('An error ocurred when accessing media devices', e)
     });
 });
 

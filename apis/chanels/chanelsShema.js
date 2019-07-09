@@ -16,7 +16,7 @@ let chanelsModel = mongoose.model('chanels', usersSchema, 'chanels')
 
 chanelsShema.pre('save', function(next) {
     let chanel = this;
-    chanelsModel.find().populate({path: 'users'}).exec(function(err, chanels) {
+    chanelsModel.find().populate({path: 'users'}).exec(function(e, chanels) {
         chanels = chanels.filter(function(c) {
             if(c.user == chanel.user)
                 next(new Error("User exists in other chanel!"))
