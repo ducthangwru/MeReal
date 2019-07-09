@@ -302,8 +302,8 @@
 		<entity schema="mereal" name="messages" color="C1D8EE" x="80" y="480" />
 		<entity schema="mereal" name="gifts" color="C1D8EE" x="944" y="80" />
 		<entity schema="mereal" name="answers" color="C1D8EE" x="448" y="432" />
-		<entity schema="mereal" name="users" color="C1D8EE" x="272" y="208" />
 		<entity schema="mereal" name="chanel_gifts" color="C1D8EE" x="656" y="48" />
+		<entity schema="mereal" name="users" color="C1D8EE" x="272" y="208" />
 		<browser id="Browse_3c4a26b" name="user" confirm_updates="y" >
 			<browse_table schema="mereal" entity="chanels" x="20" y="20" width="400" height="300" record_view="y" />
 		</browser>

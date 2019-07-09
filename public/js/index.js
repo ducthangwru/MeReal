@@ -11,43 +11,14 @@ var remoteVideo = document.getElementById("remoteVideo")
 var roomNumber
 var localStream
 var remoteStream
-var rtcPeerConnection
+var rtcPeerConnection = []
 var iceServers = {
     'iceServers': [
-        {url:'stun:stun01.sipphone.com'},
-        {url:'stun:stun.ekiga.net'},
-        {url:'stun:stun.fwdnet.net'},
-        {url:'stun:stun.ideasip.com'},
-        {url:'stun:stun.iptel.org'},
-        {url:'stun:stun.rixtelecom.se'},
-        {url:'stun:stun.schlund.de'},
         {url:'stun:stun.l.google.com:19302'},
         {url:'stun:stun1.l.google.com:19302'},
         {url:'stun:stun2.l.google.com:19302'},
         {url:'stun:stun3.l.google.com:19302'},
         {url:'stun:stun4.l.google.com:19302'},
-        {url:'stun:stunserver.org'},
-        {url:'stun:stun.softjoys.com'},
-        {url:'stun:stun.voiparound.com'},
-        {url:'stun:stun.voipbuster.com'},
-        {url:'stun:stun.voipstunt.com'},
-        {url:'stun:stun.voxgratia.org'},
-        {url:'stun:stun.xten.com'},
-        {
-            url: 'turn:numb.viagenie.ca',
-            credential: 'muazkh',
-            username: 'webrtc@live.com'
-        },
-        {
-            url: 'turn:192.158.29.39:3478?transport=udp',
-            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-            username: '28224511:1379330808'
-        },
-        {
-            url: 'turn:192.158.29.39:3478?transport=tcp',
-            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-            username: '28224511:1379330808'
-        }
     ]
 }
 var streamConstraints = { audio: true, video: true }
@@ -95,23 +66,23 @@ socket.on('candidate', function (event) {
         sdpMLineIndex: event.label,
         candidate: event.candidate
     });
-    rtcPeerConnection.addIceCandidate(candidate)
+    rtcPeerConnection[rtcPeerConnection.length-1].addIceCandidate(candidate)
 });
 
 socket.on('ready', function () {
     if (isCaller) {
-        rtcPeerConnection = new RTCPeerConnection(iceServers)
-        rtcPeerConnection.onicecandidate = onIceCandidate
-        rtcPeerConnection.ontrack = onAddStream
+        rtcPeerConnection.push(new RTCPeerConnection(iceServers))
+        rtcPeerConnection[rtcPeerConnection.length-1].onicecandidate = onIceCandidate
+        rtcPeerConnection[rtcPeerConnection.length-1].ontrack = onAddStream
         if(localStream)
         {
-            rtcPeerConnection.addTrack(localStream.getTracks()[0], localStream)
-            rtcPeerConnection.addTrack(localStream.getTracks()[1], localStream)
+            rtcPeerConnection[rtcPeerConnection.length-1].addTrack(localStream.getTracks()[0], localStream)
+            rtcPeerConnection[rtcPeerConnection.length-1].addTrack(localStream.getTracks()[1], localStream)
         }
       
-        rtcPeerConnection.createOffer()
+        rtcPeerConnection[rtcPeerConnection.length-1].createOffer()
             .then(sessionDescription => {
-                rtcPeerConnection.setLocalDescription(sessionDescription)
+                rtcPeerConnection[rtcPeerConnection.length-1].setLocalDescription(sessionDescription)
                 socket.emit('offer', {
                     type: 'offer',
                     sdp: sessionDescription,
@@ -126,19 +97,20 @@ socket.on('ready', function () {
 
 socket.on('offer', function (event) {
     if (!isCaller) {
-        rtcPeerConnection = new RTCPeerConnection(iceServers)
-        rtcPeerConnection.onicecandidate = onIceCandidate
-        rtcPeerConnection.ontrack = onAddStream;
+        rtcPeerConnection.push(new RTCPeerConnection(iceServers))
+        rtcPeerConnection[rtcPeerConnection.length-1].onicecandidate = onIceCandidate
+        rtcPeerConnection[rtcPeerConnection.length-1].ontrack = onAddStream;
         if(localStream)
         {
-            rtcPeerConnection.addTrack(localStream.getTracks()[0], localStream)
-            rtcPeerConnection.addTrack(localStream.getTracks()[1], localStream)
+            rtcPeerConnection[rtcPeerConnection.length-1].addTrack(localStream.getTracks()[0], localStream)
+            rtcPeerConnection[rtcPeerConnection.length-1].addTrack(localStream.getTracks()[1], localStream)
         }
       
-        rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event))
-        rtcPeerConnection.createAnswer()
+        console.log(rtcPeerConnection)
+        rtcPeerConnection[0].setRemoteDescription(new RTCSessionDescription(event))
+        rtcPeerConnection[rtcPeerConnection.length-1].createAnswer()
             .then(sessionDescription => {
-                rtcPeerConnection.setLocalDescription(sessionDescription);
+                rtcPeerConnection[rtcPeerConnection.length-1].setLocalDescription(sessionDescription);
                 socket.emit('answer', {
                     type: 'answer',
                     sdp: sessionDescription,
@@ -152,7 +124,7 @@ socket.on('offer', function (event) {
 });
 
 socket.on('answer', function (event) {
-    rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event))
+    rtcPeerConnection[0].setRemoteDescription(new RTCSessionDescription(event))
 })
 
 // handler functions

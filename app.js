@@ -45,8 +45,6 @@ io.on('connection', function (socket) {
     })
 
     socket.on('joinroom', function (room) {
-        console.log('create or join to room ', room);
-        
         var myRoom = io.sockets.adapter.rooms[room] || { length: 0 }
         var numClients = myRoom.length;
 
