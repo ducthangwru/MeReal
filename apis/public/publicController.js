@@ -4,7 +4,7 @@ const config = require('../../utils/config')
 const randomString = require('randomstring')
 const validator = require('validator')
 const message = require('../../utils/message')
-const {usersModel} = require('../users/usersModel')
+const usersModel = require('../users/usersModel')
 const {
     error,
     success,
