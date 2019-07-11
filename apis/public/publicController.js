@@ -59,7 +59,6 @@ router.post('/register', async(req, res) => {
         //Mã hóa password
         obj.password = md5(obj.password)
         let user = await usersModel.create(obj)
-        
         return success(res, user)
     }
     catch(e)
@@ -102,7 +101,7 @@ router.post('/login', async(req, res) => {
 
         if(result)
         {
-            let token = await assignToken(result._id, result.username, result.email)
+            let token = await assignToken(result._id, result.username, result.email, result.role)
             return success(res, {token : token, user : result})
         }
         

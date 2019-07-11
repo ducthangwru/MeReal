@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const ObjectId = Schema.Types.ObjectId;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const ObjectId = Schema.Types.ObjectId
 const {STATUS_USER, ROLE_USER} = require('../../utils/enum')
 
 const usersSchema = new Schema(
@@ -18,19 +18,26 @@ const usersSchema = new Schema(
         wallet : {type : Number, default : 0},
         wallet_gift : {type : Array, default : []}
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
-);
+)
 
-let usersModel = mongoose.model('users', usersSchema, 'users');
+let usersModel = mongoose.model('users', usersSchema, 'users')
 
 usersSchema.pre('save', function(next) {
-    let user = this;
-    usersModel.find({username : user.username}, function (e, docs) {
+    let user = this
+    usersModel.find( {$or: [{username : user.username}, {email : user.email}]}, function (e, docs) {
         if (!docs.length){
-            next();
+            next()
         }else{                
-            next(new Error("User exists!"));
+            next(new Error("User exists!"))
         }
-    });
-});
+    })
+})
 
-module.exports = usersSchema;
+usersSchema.set('toJSON', {
+    transform: function(doc, ret, options) {
+        delete ret.password;
+        return ret;
+    }
+})
+
+module.exports = usersSchema

@@ -3,6 +3,7 @@ const message = require('./message')
 const crypto = require('crypto')
 const config = require('./config')
 const nodemailer = require('nodemailer')
+const {ROLE_USER} = require('./enum')
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -19,13 +20,46 @@ const verifyToken = async (req, res, next) => {
         req.user = await verifyAccessToken(token)
         req.user ? next() : error(req, res, message.INVALID_TOKEN)
     } else {
-        error(req, res, message.INVALID_TOKEN)
+        error(res, message.INVALID_TOKEN)
     }
 }
 
-const assignToken = (user_id, username, email) => {
+const verifyTokenAdmin = async (req, res, next) => {
+    var token = req.headers['x-access-token']
+    if (typeof token !== "undefined") {
+        req.token = token
+        req.user = await verifyAccessToken(token)
+        (req.user && req.user.role == ROLE_USER.ADMIN) ? next() : error(req, res, message.INVALID_TOKEN)
+    } else {
+        error(res, message.INVALID_TOKEN)
+    }
+}
+
+const verifyTokenAgent = async (req, res, next) => {
+    var token = req.headers['x-access-token']
+    if (typeof token !== "undefined") {
+        req.token = token
+        req.user = await verifyAccessToken(token)
+        (req.user && req.user.role == ROLE_USER.AGENT) ? next() : error(req, res, message.INVALID_TOKEN)
+    } else {
+        error(res, message.INVALID_TOKEN)
+    }
+}
+
+const verifyTokenAgentOrAdmin = async (req, res, next) => {
+    var token = req.headers['x-access-token']
+    if (typeof token !== "undefined") {
+        req.token = token
+        req.user = await verifyAccessToken(token)
+        (req.user && req.user.role != ROLE_USER.USER) ? next() : error(req, res, message.INVALID_TOKEN)
+    } else {
+        error(res, message.INVALID_TOKEN)
+    }
+}
+
+const assignToken = (user_id, username, email, role) => {
     return new Promise((resolve, reject) => {
-        JWT.sign({username: username, user_id: user_id, email: email}, config.SECRET_KEY, (e, token) => {
+        JWT.sign({username: username, _id: user_id, email: email, role : role}, config.SECRET_KEY, (e, token) => {
             if (e) reject(e)
             else resolve(token)
         })
@@ -138,6 +172,9 @@ const sendEmailForgotPW = async function(email, code) {
 
 module.exports = {
     verifyToken,
+    verifyTokenAdmin,
+    verifyTokenAgent,
+    verifyTokenAgentOrAdmin,
     verify,
     assignToken,
     verifyAccessToken,
