@@ -85,8 +85,16 @@ router.get('/', verifyTokenAdmin, async(req, res) => {
     {
         let obj = {
             fullname : req.query.fullname || '',
-            
+            email : req.query.email || '',
+            role : req.query.role || 0,
+            status : req.query.status || 0
         }
+
+        let result = usersModel.find({
+            $or : [
+                {fullname : fullname}
+            ]
+        })
     }
     catch(e)
     {

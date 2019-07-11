@@ -89,7 +89,7 @@ app.use('/public', public)
 app.use('/user', user)
 
 mongoose.set('useFindAndModify', false)
-mongoose.connect(CONNECT_MONGO, (e) => {
+mongoose.connect(CONNECT_MONGO, { autoIndex: true }, (e) => {
     if (e) {
       console.log(e);
     } else {
