@@ -10,4 +10,7 @@ const messagesSchema = new Schema(
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 
+const mongoosePaginate = require('mongoose-paginate')
+messagesSchema.plugin(mongoosePaginate)
+
 module.exports = messagesSchema

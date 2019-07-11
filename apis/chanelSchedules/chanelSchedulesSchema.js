@@ -16,4 +16,7 @@ const chanelSchedulesSchema = new Schema(
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 
+const mongoosePaginate = require('mongoose-paginate')
+chanelSchedulesSchema.plugin(mongoosePaginate)
+
 module.exports = chanelSchedulesSchema

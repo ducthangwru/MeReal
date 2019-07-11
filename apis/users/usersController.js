@@ -83,18 +83,53 @@ router.get('/profile', verifyToken, async(req, res) => {
 router.get('/', verifyTokenAdmin, async(req, res) => {
     try
     {
-        let obj = {
-            fullname : req.query.fullname || '',
-            email : req.query.email || '',
-            role : req.query.role || 0,
-            status : req.query.status || 0
+        let fullname = req.query.fullname || ''
+        let email = req.query.email || ''
+        let role = req.query.role || 0
+        let status = req.query.status || 0
+        let page = req.query.page || 0
+        let limit = req.query.limit || 20
+
+        let query   = {
+            $and : [
+                (fullname != '') ? {fullname : {$regex: fullname, $options: "i"}} : {},
+                (email != '') ? {email : {$regex: email, $options: "i"}} : {},
+                (role != 0) ?  {role : role} : {},
+                (status != 0) ?  {status : status} : {},
+            ]
+        }
+        
+        let options = {
+            select : '-password',
+            sort:     { fullname: 1 },
+            lean :   true,
+            offset:   parseInt(limit) * parseInt(page), 
+            limit:    parseInt(limit)
         }
 
-        let result = usersModel.find({
-            $or : [
-                {fullname : fullname}
-            ]
-        })
+        let result = await usersModel.paginate(query, options)
+
+        return success(res, result)
+    }
+    catch(e)
+    {
+        return error(res, e.message)
+    }
+})
+
+//Admin xóa user
+router.delete('/', verifyTokenAdmin, async(req, res) => {
+    try
+    {
+        let _id = req.body._id
+
+        if(await usersModel.findById(_id).exec())
+        {
+            await usersModel.findByIdAndRemove(_id).exec()
+            return success(res)
+        }
+        
+        return error(res, message.USER_NOT_EXISTS)
     }
     catch(e)
     {

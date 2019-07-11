@@ -13,4 +13,7 @@ const giftsSchema = new Schema(
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 
+const mongoosePaginate = require('mongoose-paginate')
+giftsSchema.plugin(mongoosePaginate)
+
 module.exports = giftsSchema

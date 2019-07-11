@@ -9,4 +9,7 @@ const answersSchema = new Schema(
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 
+const mongoosePaginate = require('mongoose-paginate')
+answersSchema.plugin(mongoosePaginate)
+
 module.exports = answersSchema

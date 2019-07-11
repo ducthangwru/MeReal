@@ -12,4 +12,7 @@ const chanelGiftsShema = new Schema(
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 
+const mongoosePaginate = require('mongoose-paginate')
+chanelGiftsShema.plugin(mongoosePaginate)
+
 module.exports = chanelGiftsShema

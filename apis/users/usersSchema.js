@@ -20,6 +20,9 @@ const usersSchema = new Schema(
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 
+const mongoosePaginate = require('mongoose-paginate')
+usersSchema.plugin(mongoosePaginate)
+
 let usersModel = mongoose.model('users', usersSchema, 'users')
 
 usersSchema.pre('save', function(next) {

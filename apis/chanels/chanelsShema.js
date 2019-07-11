@@ -12,6 +12,9 @@ const chanelsShema = new Schema(
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 
+const mongoosePaginate = require('mongoose-paginate')
+chanelsShema.plugin(mongoosePaginate)
+
 let chanelsModel = mongoose.model('chanels', usersSchema, 'chanels')
 
 chanelsShema.pre('save', function(next) {

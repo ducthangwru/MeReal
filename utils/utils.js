@@ -18,9 +18,9 @@ const verifyToken = async (req, res, next) => {
     if (typeof token !== "undefined") {
         req.token = token
         req.user = await verifyAccessToken(token)
-        req.user ? next() : error(req, res, message.INVALID_TOKEN)
+        req.user ? next() : error(res, message.INVALID_TOKEN)
     } else {
-        error(res, message.INVALID_TOKEN)
+        return error(res, message.INVALID_TOKEN)
     }
 }
 
@@ -29,9 +29,12 @@ const verifyTokenAdmin = async (req, res, next) => {
     if (typeof token !== "undefined") {
         req.token = token
         req.user = await verifyAccessToken(token)
-        (req.user && req.user.role == ROLE_USER.ADMIN) ? next() : error(req, res, message.INVALID_TOKEN)
+        if(req.user && req.user.role == ROLE_USER.ADMIN) 
+            return next() 
+
+        return error(res, message.INVALID_TOKEN)
     } else {
-        error(res, message.INVALID_TOKEN)
+        return error(res, message.INVALID_TOKEN)
     }
 }
 
@@ -40,9 +43,12 @@ const verifyTokenAgent = async (req, res, next) => {
     if (typeof token !== "undefined") {
         req.token = token
         req.user = await verifyAccessToken(token)
-        (req.user && req.user.role == ROLE_USER.AGENT) ? next() : error(req, res, message.INVALID_TOKEN)
+        if(req.user && req.user.role == ROLE_USER.AGENT) 
+            return next() 
+            
+        return error(res, message.INVALID_TOKEN)
     } else {
-        error(res, message.INVALID_TOKEN)
+        return error(res, message.INVALID_TOKEN)
     }
 }
 
@@ -51,9 +57,12 @@ const verifyTokenAgentOrAdmin = async (req, res, next) => {
     if (typeof token !== "undefined") {
         req.token = token
         req.user = await verifyAccessToken(token)
-        (req.user && req.user.role != ROLE_USER.USER) ? next() : error(req, res, message.INVALID_TOKEN)
+        if(req.user && req.user.role != ROLE_USER.USER) 
+            return next() 
+        
+        return error(res, message.INVALID_TOKEN)
     } else {
-        error(res, message.INVALID_TOKEN)
+        return error(res, message.INVALID_TOKEN)
     }
 }
 
@@ -88,7 +97,7 @@ const verifyAccessToken = async (token) => {
 }
 
 const error = function (res, error) {
-    res.send({success: false, error: error})
+    return res.send({success: false, error: error})
 }
 
 const success = function (res, data, page) {
@@ -111,7 +120,7 @@ const success = function (res, data, page) {
     }
 
     res.status(200)
-    res.send(obj)
+    return res.send(obj)
 }
 
 
