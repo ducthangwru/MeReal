@@ -169,10 +169,16 @@ router.post('/resetpwd', async(req, res) => {
             return error(res, message.INVALID_EMAIL)
 
          //reset password
-        if(await usersModel.findOneAndUpdate({email : email, reset_code : reset_code}, {password : md5(new_password)}).exec())
+        if(await usersModel.findOneAndUpdate(
+                                                {email : email, reset_code : reset_code}, 
+                                                {password : md5(new_password)}
+                                            ).exec())
         {
             //Nếu success đổi random mã code
-            await usersModel.findOneAndUpdate({email : email}, {reset_code : randomString.generate({length: 6, charset: 'numeric'})}).exec()
+            await usersModel.findOneAndUpdate(
+                                                {email : email}, 
+                                                {reset_code : randomString.generate({length: 6, charset: 'numeric'})}
+                                            ).exec()
             return success(res)
         }
          
