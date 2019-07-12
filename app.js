@@ -85,8 +85,8 @@ app.get('/videocall', (req, res) => {
 const public = require('./apis/public/publicController')
 const user = require('./apis/users/usersController')
 
-app.use('/public', public)
-app.use('/user', user)
+app.use('/api/public', public)
+app.use('/api/user', user)
 
 mongoose.set('useFindAndModify', false)
 mongoose.connect(CONNECT_MONGO, { autoIndex: true }, (e) => {
