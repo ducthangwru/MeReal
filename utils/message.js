@@ -7,7 +7,9 @@ const message = {
     INVALID_EMAIL : "Email phải định dạng là xxx@yyy.zz",
     USER_NOT_EXISTS : "Tài khoản này không tồn tại trên hệ thống",
     WRONG_RESET_CODE : "Sai reset code",
-    EMAIL_EXISTS : "Email đã tồn tại"
+    EMAIL_EXISTS : "Email đã tồn tại",
+    GIFT_NOT_EXISTS : "Quà tặng không tồn tại",
+    QUESTION_NOT_EXISTS : "Câu hỏi không tồn tại"
 }
 
 module.exports = message

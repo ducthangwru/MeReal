@@ -84,9 +84,13 @@ app.get('/videocall', (req, res) => {
 
 const public = require('./apis/public/publicController')
 const user = require('./apis/users/usersController')
+const question = require('./apis/questions/questionsController')
+const gift = require('./apis/gifts/giftsController')
 
 app.use('/api/public', public)
 app.use('/api/user', user)
+app.use('/api/question', question)
+app.use('/api/gift', gift)
 
 mongoose.set('useFindAndModify', false)
 mongoose.connect(CONNECT_MONGO, { autoIndex: true }, (e) => {

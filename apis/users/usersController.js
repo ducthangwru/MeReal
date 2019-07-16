@@ -20,7 +20,7 @@ const {
     sendEmailForgotPW
 } = require('../../utils/utils')
 
-const {ROLE_USER} = require('../../utils/enum')
+const {ROLE_USER, STATUS_USER} = require('../../utils/enum')
 
 //Chỉnh sửa profile
 router.put('/profile', verifyToken, async(req, res) => {
@@ -122,10 +122,38 @@ router.delete('/', verifyTokenAdmin, async(req, res) => {
     try
     {
         let _id = req.body._id
+        //check param
+        if (validateParameters([_id], res) == false) 
+            return
 
         if(await usersModel.findById(_id).exec())
         {
             await usersModel.findByIdAndRemove(_id).exec()
+            return success(res)
+        }
+        
+        return error(res, message.USER_NOT_EXISTS)
+    }
+    catch(e)
+    {
+        return error(res, e.message)
+    }
+})
+
+//Admin lock user
+router.put('/status', verifyTokenAdmin, async(req, res) => {
+    try
+    {
+        let _id = req.body._id
+        let status = req.body.status
+
+        //check param
+        if (validateParameters([_id, status], res) == false) 
+            return
+
+        if(await usersModel.findById(_id).exec())
+        {
+            await usersModel.findByIdAndUpdate(_id, {status}).exec()
             return success(res)
         }
         
