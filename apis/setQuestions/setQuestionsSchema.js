@@ -2,17 +2,19 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const ObjectId = Schema.Types.ObjectId
 
-const chanelGiftsShema = new Schema(
+const setQuestionsShema = new Schema(
     {
-        chanel_schedule : {type : ObjectId, require : true,  ref: 'chanel_schedules'},
         gift : {type : ObjectId, require : true,  ref: 'gifts'},
+        user : {type : ObjectId, require : true, ref: 'users'},
         top_to : {type : Number, require : true, default : 0},
         top_from : {type : Number, require : true, default : 0},
-        desc : {type : String, require : true},
+        name : {type : String, require : true},
+        desc : {type : String, require : true, default : ''},
+        status : {type : Number, require : true, default : 1}
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 
 const mongoosePaginate = require('mongoose-paginate')
-chanelGiftsShema.plugin(mongoosePaginate)
+setQuestionsShema.plugin(mongoosePaginate)
 
-module.exports = chanelGiftsShema
+module.exports = setQuestionsShema

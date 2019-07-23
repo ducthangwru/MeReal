@@ -29,7 +29,7 @@ const STATUS_QUESTION = {
     LOCK : -1
 }
 
-const STATUS_CHANEL_SCHEDULE = {
+const STATUS_SET_QUESTION = {
     ACTIVE : 1,
     CLOSE : -1
 }
@@ -41,5 +41,5 @@ module.exports = {
     STATUS_GIFT,
     TYPE_GIFT,
     STATUS_QUESTION,
-    STATUS_CHANEL_SCHEDULE
+    STATUS_SET_QUESTION
 }

@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const config = require('../../utils/config')
 const message = require('../../utils/message')
-const questionModel = require('../questions/questionsModel')
+const setQuestionsModel = require('../setQuestions/setQuestionsModel')
 const {
     error,
     success,
@@ -14,19 +14,24 @@ const {
     assignToken
 } = require('../../utils/utils')
 
-const {STATUS_QUESTION} = require('../../utils/enum')
+const {ROLE_USER} = require('../../utils/enum')
 
-//getQuestion
-router.get('/', verifyToken, async(req, res) => {
+//Lấy danh sách bộ câu hỏi theo user
+router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
     try
     {
+        let user_id = req.user.user_id
         let search = req.query.search || ''
         let page = req.query.page || 0
         let limit = req.query.limit || 20
 
+        if(req.user.role == ROLE_USER.ADMIN)
+            user_id = req.query.user_id
+
         let query   = {
             $and : [
-                (search != '') ? {content : {$regex: search, $options: "i"}} : {}
+                (search != '') ? {name : {$regex: search, $options: "i"}} : {},
+                {user : user_id}
             ]
         }
         
@@ -37,7 +42,7 @@ router.get('/', verifyToken, async(req, res) => {
             limit:    parseInt(limit)
         }
 
-        let result = await questionModel.paginate(query, options)
+        let result = await setQuestionsModel.paginate(query, options)
 
         return success(res, result)
     }
@@ -47,20 +52,27 @@ router.get('/', verifyToken, async(req, res) => {
     }
 })
 
-//Admin thêm câu hỏi
+//Agent hoặc admin thêm bộ câu hỏi
 router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
     try
     {
         let obj = {
-            content : req.body.content,
-            suggest : req.body.suggest
+            gift : req.body.gift,
+            user : req.user.user_id,
+            top_to : req.body.top_to || 0,
+            top_from : req.body.top_from || 0,
+            name : req.body.name,
+            desc : req.body.desc
         }
 
+        if(req.user.role == ROLE_USER.ADMIN)
+            obj.user_id = req.body.user_id
+
          //check param
-        if (validateParameters([obj.content, obj.suggest], res) == false) 
+        if (validateParameters([obj.gift, obj.user, obj.name, obj.desc], res) == false) 
             return
 
-        let result = await questionModel.create(obj)
+        let result = await setQuestionsModel.create(obj)
 
         return success(res, result)
     }
@@ -70,24 +82,33 @@ router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
     }
 })
 
-//Admin sửa question
+//Agent hoặc admin sửa bộ câu hỏi
 router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
     try
     {
-        let _id = req.body._id
-        let content = req.body.content
-        let suggest = req.body.suggest
+        let obj = {
+            _id : req.body._id,
+            gift : req.body.gift,
+            user : req.user.user_id,
+            top_to : req.body.top_to || 0,
+            top_from : req.body.top_from || 0,
+            name : req.body.name,
+            desc : req.body.desc
+        }
 
-         //check param
-        if (validateParameters([_id, content, suggest], res) == false) 
+        if(req.user.role == ROLE_USER.ADMIN)
+            obj.user_id = req.body.user_id
+
+        //check param
+        if (validateParameters([obj.gift, obj.user, obj.name, obj.desc], res) == false) 
             return
 
-        let result = await questionModel.findByIdAndUpdate(_id, {content, suggest}, {new : true}).exec()
+        let result = await setQuestionsModel.findByIdAndUpdate(obj._id, obj, {new : true}).exec()
 
         if(result)
             return success(res, result)
         
-        return error(res, message.QUESTION_NOT_EXISTS)
+        return error(res, message.SET_QUESTION_NOT_EXISTS)
     }
     catch(e)
     {
@@ -95,23 +116,27 @@ router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
     }
 })
 
-//Admin xóa câu hỏi
+//Agent hoặc admin xóa bộ câu hỏi
 router.delete('/', verifyTokenAgentOrAdmin, async(req, res) => {
     try
     {
         let _id = req.body._id
+        let user_id = req.user.user_id
+
+        if(req.user.role == ROLE_USER.ADMIN)
+            user_id = req.body.user_id
 
         //check param
-        if (validateParameters([_id], res) == false) 
+        if (validateParameters([_id, user_id], res) == false) 
             return
 
-        if(await questionModel.findById(_id).exec())
+        if(await setQuestionsModel.findById(_id).exec())
         {
-            await questionModel.findByIdAndRemove(_id).exec()
+            await setQuestionsModel.findOneAndRemove({_id : _id, user : user_id}).exec()
             return success(res)
         }
             
-        return error(res, message.QUESTION_NOT_EXISTS)
+        return error(res, message.SET_QUESTION_NOT_EXISTS)
 
     }
     catch(e)
@@ -137,7 +162,7 @@ router.put('/status', verifyTokenAgentOrAdmin, async(req, res) => {
             return success(res)
         }
         
-        return error(res, message.QUESTION_NOT_EXISTS)
+        return error(res, message.SET_QUESTION_NOT_EXISTS)
     }
     catch(e)
     {

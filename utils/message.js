@@ -9,7 +9,8 @@ const message = {
     WRONG_RESET_CODE : "Sai reset code",
     EMAIL_EXISTS : "Email đã tồn tại",
     GIFT_NOT_EXISTS : "Quà tặng không tồn tại",
-    QUESTION_NOT_EXISTS : "Câu hỏi không tồn tại"
+    QUESTION_NOT_EXISTS : "Câu hỏi không tồn tại",
+    SET_QUESTION_NOT_EXISTS : "Bộ câu hỏi không tồn tại"
 }
 
 module.exports = message
