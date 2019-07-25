@@ -48,7 +48,7 @@ router.get('/', verifyToken, async(req, res) => {
     }
     catch(e)
     {
-        return error(req, res, e)
+        return error(res, e)
     }
 })
 
