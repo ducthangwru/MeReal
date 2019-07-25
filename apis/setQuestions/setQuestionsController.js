@@ -66,7 +66,7 @@ router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
         }
 
         if(req.user.role == ROLE_USER.ADMIN)
-            obj.user_id = req.body.user_id
+            obj.user = req.body.user_id
 
          //check param
         if (validateParameters([obj.gift, obj.user, obj.name, obj.desc], res) == false) 
@@ -97,7 +97,7 @@ router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
         }
 
         if(req.user.role == ROLE_USER.ADMIN)
-            obj.user_id = req.body.user_id
+            obj.user = req.body.user_id
 
         //check param
         if (validateParameters([obj.gift, obj.user, obj.name, obj.desc], res) == false) 
