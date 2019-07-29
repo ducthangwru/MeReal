@@ -15,7 +15,7 @@ const chanelsShema = new Schema(
 const mongoosePaginate = require('mongoose-paginate')
 chanelsShema.plugin(mongoosePaginate)
 
-let chanelsModel = mongoose.model('chanels', usersSchema, 'chanels')
+let chanelsModel = mongoose.model('chanels', chanelsShema, 'chanels')
 
 chanelsShema.pre('save', function(next) {
     let chanel = this;

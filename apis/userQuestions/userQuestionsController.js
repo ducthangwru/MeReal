@@ -107,3 +107,5 @@ router.delete('/', verifyTokenAgentOrAdmin, async(req, res) => {
         return error(res, e.message)
     }
 })
+
+module.exports = router

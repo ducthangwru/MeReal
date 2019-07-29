@@ -86,11 +86,22 @@ const public = require('./apis/public/publicController')
 const user = require('./apis/users/usersController')
 const question = require('./apis/questions/questionsController')
 const gift = require('./apis/gifts/giftsController')
+const answer = require('./apis/answers/answersController')
+const chanel = require('./apis/chanels/chanelsController')
+const setQuestion = require('./apis/setQuestions/setQuestionsController')
+const userHistory = require('./apis/userHistories/userHistoriesController')
+const userQuestion = require('./apis/userQuestions/userQuestionsController')
 
 app.use('/api/public', public)
 app.use('/api/user', user)
 app.use('/api/question', question)
 app.use('/api/gift', gift)
+app.use('/api/answer', answer)
+app.use('/api/chanel', chanel)
+app.use('/api/setQuestion', setQuestion)
+app.use('/api/userHistory', userHistory)
+app.use('/api/userQuestion', userQuestion)
+
 
 mongoose.set('useFindAndModify', false)
 mongoose.connect(CONNECT_MONGO, { autoIndex: true }, (e) => {
