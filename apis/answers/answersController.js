@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 const config = require('../../utils/config')
 const message = require('../../utils/message')
-const answerModel = require('../answers/answersModel')
+const answerModel = require('./answersModel')
+
 const {
     error,
     success,
@@ -25,6 +26,7 @@ router.get('/', verifyToken, async(req, res) => {
         
         let options = {
             sort:     { updatedAt: 1 },
+            select : '-is_true',
             lean :   true,
             offset:   parseInt(limit) * parseInt(page), 
             limit:    parseInt(limit)
@@ -40,20 +42,33 @@ router.get('/', verifyToken, async(req, res) => {
     }
 })
 
+router.get('/details', verifyToken, async(req, res) => {
+    try
+    {
+        let _id = req.query._id
+
+        let result = await answerModel.findById(_id).exec()
+
+        return success(res, result)
+    }
+    catch(e)
+    {
+        return error(res, e)
+    }
+})
+
 //agent tạo answers
 router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
     try
     {
         let obj = {
-            name : req.body.name,
-            user : req.user.user_id,
-            desc : req.body.desc
+            question : req.body.question,
+            content : req.body.content,
+            is_true : req.body.is_true,
         }
 
-        if(req.user.role == ROLE_USER.ADMIN)
-            obj.user = req.body.user_id
          //check param
-        if (validateParameters([obj.name, obj.desc], res) == false) 
+        if (validateParameters([obj.question, obj.content, obb.is_true], res) == false) 
             return
 
         let result = await answerModel.create(obj)
@@ -72,15 +87,12 @@ router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
     {
         let obj = {
             _id : req.body._id,
-            name : req.body.name,
-            user : req.user.user_id,
-            desc : req.body.desc
+            content : req.body.content,
+            is_true : req.body.is_true
         }
 
-        if(req.user.role == ROLE_USER.ADMIN)
-            obj.user = req.body.user_id
          //check param
-        if (validateParameters([obj._id, obj.name, obj.desc], res) == false) 
+        if (validateParameters([obj._id, obj.content, obj.is_true], res) == false) 
             return
 
         let result = await answerModel.findByIdAndUpdate(obj._id, obj, {new : true}).exec()
@@ -88,7 +100,7 @@ router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
         if(result)
             return success(res, result)
     
-        return error(res, message.CHANEL_NOT_EXISTS)
+        return error(res, message.ANSWER_NOT_EXISTS)
     }
     catch(e)
     {
@@ -101,18 +113,14 @@ router.delete('/', verifyTokenAgentOrAdmin, async(req, res) => {
     try
     {
         let _id = req.body._id
-        let user_id = req.user.user_id
-
-        if(req.user.role == ROLE_USER.ADMIN)
-            user_id = req.body.user_id
 
         //check param
-        if (validateParameters([_id, user_id], res) == false) 
+        if (validateParameters([_id], res) == false) 
             return
 
-        if(await chanelModel.findById(_id).exec())
+        if(await answerModel.findById(_id).exec())
         {
-            await chanelModel.findOneAndRemove({_id : _id, user : user_id}).exec()
+            await answerModel.findByIdAndRemove(_id).exec()
             return success(res)
         }
             

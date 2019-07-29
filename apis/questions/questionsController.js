@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const config = require('../../utils/config')
 const message = require('../../utils/message')
-const questionModel = require('../questions/questionsModel')
+const questionModel = require('./questionsModel')
 const {
     error,
     success,

@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const config = require('../../utils/config')
 const message = require('../../utils/message')
-const userHistoriesModel = require('../userHistories/userHistoriesModel')
+const userHistoriesModel = require('./userHistoriesModel')
 const {
     error,
     success,

@@ -11,7 +11,8 @@ const message = {
     GIFT_NOT_EXISTS : "Quà tặng không tồn tại",
     QUESTION_NOT_EXISTS : "Câu hỏi không tồn tại",
     SET_QUESTION_NOT_EXISTS : "Bộ câu hỏi không tồn tại",
-    CHANEL_NOT_EXISTS : "Kênh không tồn tại"
+    CHANEL_NOT_EXISTS : "Kênh không tồn tại",
+    ANSWER_NOT_EXISTS : "Câu trả lời không tồn tại"
 }
 
 module.exports = message
