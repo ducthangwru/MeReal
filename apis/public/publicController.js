@@ -102,6 +102,7 @@ router.post('/login', async(req, res) => {
         if(result)
         {
             let token = await assignToken(result._id, result.username, result.email, result.role)
+            req.session.token = token
             return success(res, {token : token, user : result})
         }
         

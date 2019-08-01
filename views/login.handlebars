@@ -20,28 +20,27 @@
   </div>
   <div class="login-box-body">
 
-    <form>
-      <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email">
-        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-      </div>
-      <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Mật khẩu">
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-      </div>
-      <div class="row">
-        <div class="col-xs-8">
-          <div class="checkbox icheck">
-            <label>
-              <input type="checkbox"> Ghi nhớ mật khẩu
-            </label>
-          </div>
-        </div>
-        <div class="col-xs-4">
-          <button id="btnLogin" class="btn btn-primary btn-block btn-flat">Đăng nhập</button>
+    <div class="form-group has-feedback">
+      <input id="inputUsername" type="text" class="form-control" placeholder="Username">
+      <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+    </div>
+    <div class="form-group has-feedback">
+      <input id= "inputPassword" type="password" class="form-control" placeholder="Mật khẩu">
+      <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+    </div>
+    <div class="row">
+      <div class="col-xs-8">
+        <div class="checkbox">
+          <label>
+            <input id="inputRemember" type="checkbox" onclick="rememberPwd(this)"> Ghi nhớ mật khẩu
+          </label>
         </div>
       </div>
-    </form>
+      <div class="col-xs-4">
+        <button id="btnLogin" class="btn btn-primary btn-block btn-flat">Đăng nhập</button>
+      </div>
+    </div>
+
     <a href="#">Quên mật khẩu</a><br>
     <a href="/register" class="text-center">Đăng ký tài khoản mới</a>
 
@@ -51,15 +50,8 @@
 <script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/icheck.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/login.js"></script>
 
-<script>
-  $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%'
-    });
-  });
-</script>
 </body>
 </html>
