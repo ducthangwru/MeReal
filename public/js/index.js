@@ -311,15 +311,15 @@ function stream(form) {
 		ctrl.stream();
         stream_info.hidden=false;
         end_stream.hidden =false;
-		addLog("Streaming to " + streamName); 
+		addLog("Đang stream đến phòng " + streamName); 
 	});
 	ctrl.receive(function(session){
-	    session.connected(function(session){ addLog(session.number + " has joined."); });
-	    session.ended(function(session) { addLog(session.number + " has left."); console.log(session)});
+	    session.connected(function(session){ addLog(session.number + " đã tham gia"); });
+	    session.ended(function(session) { addLog(session.number + " đã rời đi"); console.log(session)});
 	});
 	ctrl.streamPresence(function(m){
 		here_now.innerHTML=m.occupancy;
-		addLog(m.occupancy + " currently watching.");
+		addLog(m.occupancy + " đang xem");
 	});
 	return false;
 }
@@ -336,21 +336,21 @@ function watch(form){
 	ctrl.ready(function(){
 		ctrl.isStreaming(num, function(isOn){
 			if (isOn) ctrl.joinStream(num);
-			else alert("User is not streaming!");
+			else alert("Người dùng không livestream");
 		});
-		addLog("Joining stream  " + num); 
+		addLog("Đang tham gia stream  " + num); 
 	});
 	ctrl.receive(function(session){
 	    session.connected(function(session){ 
             video_out.appendChild(session.video); 
-            addLog(session.number + " has joined.");
+            addLog(session.number + " đã tham gia");
             stream_info.hidden=false;
         });
-	    session.ended(function(session) { addLog(session.number + " has left."); });
+	    session.ended(function(session) { addLog(session.number + " đã rời đi"); });
 	});
 	ctrl.streamPresence(function(m){
 		here_now.innerHTML=m.occupancy;
-		addLog(m.occupancy + " currently watching.");
+		addLog(m.occupancy + " số người đang xem");
 	});
 	return false;
 }
@@ -370,18 +370,18 @@ function end(){
 //	phone.pubnub.unsubscribe(); // unsubscribe all?
 }
 
-function genEmbed(w,h){
-	if (!streamName) return;
-	var url = "https://kevingleason.me/SimpleRTC/embed.html?stream=" + streamName;
-	var embed    = document.createElement('iframe');
-	embed.src    = url;
-	embed.width  = w;
-	embed.height = h;
-	embed.setAttribute("frameborder", 0);
-	embed_demo.innerHTML = "<a href='embed_demo.html?stream="+streamName+"&width="+w+"&height="+h+"'>Embed Demo</a>" 
-	embed_code.innerHTML = 'Embed Code: ';
-	embed_code.appendChild(document.createTextNode(embed.outerHTML));
-}
+// function genEmbed(w,h){
+// 	if (!streamName) return;
+// 	var url = "https://kevingleason.me/SimpleRTC/embed.html?stream=" + streamName;
+// 	var embed    = document.createElement('iframe');
+// 	embed.src    = url;
+// 	embed.width  = w;
+// 	embed.height = h;
+// 	embed.setAttribute("frameborder", 0);
+// 	embed_demo.innerHTML = "<a href='embed_demo.html?stream="+streamName+"&width="+w+"&height="+h+"'>Embed Demo</a>" 
+// 	embed_code.innerHTML = 'Embed Code: ';
+// 	embed_code.appendChild(document.createTextNode(embed.outerHTML));
+// }
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // Request fresh TURN servers from XirSys - Need to explain.
@@ -421,6 +421,8 @@ function errWrap(fxn, form){
 
 $(document).ready(function() {
 	$('#btnLogout').click(() => {
+		localStorage.setItem('token', '')
+		localStorage.setItem('user', '')
 		window.location.href = '/logout'
 	})
 })

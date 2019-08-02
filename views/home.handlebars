@@ -2,7 +2,7 @@
     
     
 <div id="stream-info" hidden="true">
-        <button id="end" onclick="end()" hidden="true">Done</button>
+        <button id="end" onclick="end()" hidden="true">Xong</button>
         <img src="img/person_dark.png"/>
         <span id="here-now">0</span>       
 </div> 
@@ -10,7 +10,7 @@
     
 <form name="streamForm" id="stream" action="#" onsubmit="return errWrap(stream,this);">
     <span class="input input--nao">
-        <input class="input__field input__field--nao" type="text" name="streamname" placeholder="Enter Stream Name" id="streamname"/>
+        <input class="input__field input__field--nao" type="text" name="streamname" placeholder="Nhập tên phòng để livestream" id="streamname"/>
                 <label class="input__label input__label--nao" for="streamname">
                     <span class="input__label-content input__label-content--nao">        
                     </span>
@@ -28,7 +28,7 @@
 
 <form name="watchForm" id="watch" action="#" onsubmit="return errWrap(watch,this);">
     <span class="input input--nao">
-        <input class="input__field input__field--nao" type="text" name="number" placeholder="Enter Stream To Watch!"/>
+        <input class="input__field input__field--nao" type="text" name="number" placeholder="Nhập tên phòng để xem stream"/>
                 <label class="input__label input__label--nao" for="number">
                     <span class="input__label-content input__label-content--nao">        
                     </span>
@@ -43,18 +43,12 @@
         </button>
 </form>  
     
-<div id="inStream" class="ptext">
+<!-- <div id="inStream" class="ptext">
 	Embed Style: <button onclick="genEmbed(400,600)">Tall</button><button onclick="genEmbed(600,400)">Wide</button><button onclick="genEmbed(500,500)">Square</button><br>
 	<div id="embed-code"></div>
 	<div id="embed-demo"></div>
-</div>
+</div> -->
     
 <div id="logs" class="ptext" style="background-color:white"></div>
-
-<div class="ptext">
-    <p><b>To Use:</b></p>
-    <p>Type a channel to stream to and click Stream.</p>
-    <p>In a separate browser window, join the steam you created.</p>
-</div>
 
 <button id="btnLogout" class="btn btn-danger">Đăng xuất</button>

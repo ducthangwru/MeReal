@@ -140,7 +140,12 @@ app.get('/login', function (req, res, next) {
 })
 
 app.get('/register', function (req, res, next) {
-    res.render('register', {layout: false})
+    if(req.session.token)
+    {
+        res.redirect('/')
+    }
+    else
+        res.render('register', {layout: false})
 })
 
 mongoose.set('useFindAndModify', false)

@@ -41,6 +41,10 @@ router.post('/register', async(req, res) => {
         //check username
         if (!checkRegexUsername(obj.username))
             return error(res, message.INVALID_USERNAME)
+
+        //check email
+        if (!validator.isEmail(obj.email))
+            return error(res, message.INVALID_EMAIL)
         
         //check password
         if (!checkRegexPassword(obj.password))
