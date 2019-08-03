@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000
 const app = express()
 var server = require('http').createServer(app)
 var io = require('socket.io')(server)
-const CONNECT_MONGO = 'mongodb://localhost/mereal'
+const CONNECT_MONGO = 'mongodb://admin:admin123@ds243317.mlab.com:43317/mereal'
 
 // Body parser middleware
 app.use(bodyParser.json())
