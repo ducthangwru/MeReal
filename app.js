@@ -33,8 +33,10 @@ app.use(function (req, res, next) {
     req.headers['if-none-match'] = '';
     req.headers['if-modified-since'] = '';
     if (!req.session.token && req.url !== '/'
-        && req.url !== '/login' 
+        && !req.url.includes('/login') 
         && !req.url.includes('/register') 
+        && !req.url.includes('/forgot') 
+        && !req.url.includes('/resetPassword') 
         && req.url.indexOf(".") === -1 
         && req.url.indexOf("/api/") === -1) {
         res.redirect('/login')
@@ -146,6 +148,19 @@ app.get('/register', function (req, res, next) {
     }
     else
         res.render('register', {layout: false})
+})
+
+app.get('/forgot', function (req, res, next) {
+    if(req.session.token)
+    {
+        res.redirect('/')
+    }
+    else
+        res.render('forgot', {layout: false})
+})
+
+app.get('/resetPassword', function (req, res, next) {
+    res.render('resetPassword', {layout: false})
 })
 
 mongoose.set('useFindAndModify', false)

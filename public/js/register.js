@@ -1,3 +1,5 @@
+let roleUser = 1
+
 $(document).ready(function() {
     $('#btnRegister').click(() => {
         //check repwd
@@ -7,7 +9,8 @@ $(document).ready(function() {
                 username : $('#inputUsername').val(),
                 fullname : $('#inputFullname').val(),
                 email : $('#inputEmail').val(),
-                password : $('#inputPwd').val()
+                password : $('#inputPwd').val(),
+                role : roleUser
             }, (res) => {
                 if(!res.success)
                     alert(res.error)
@@ -21,4 +24,8 @@ $(document).ready(function() {
         else
             alert('Nhập lại mật khẩu không trùng khớp')
     })
+
+    $('#selectRoleUser').on('change', function() {
+        roleUser = this.value
+    });
 })
