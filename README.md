@@ -1,3 +1,9 @@
+Link demo: https://mereal.herokuapp.com/
+
+Tài khoản demo: ducthangwru
+
+Mật khẩu demo: ducthangwru
+
 Ngày 02/08/2019
 1. Đăng ký
 2. Đăng nhập
@@ -9,8 +15,7 @@ Ngày 03/08/2019
 2. Thêm tính năng reset mật khẩu thông qua Email gửi về
 3. Cho phép đăng ký tài khoản Đại lý (Agent)
 
-Link demo: https://mereal.herokuapp.com/
-
-Tài khoản demo: ducthangwru
-
-Mật khẩu demo: ducthangwru
+Ngày 04/08/2019
+1. Tạo trang dashboard
+2. Chỉnh sửa tính năng ghi nhớ mật khẩu
+3. Tạo hình avatar theo tên.
