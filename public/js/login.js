@@ -5,7 +5,11 @@ function rememberPwd(cb) {
 $(document).ready(function() {
     //Nếu tồn tại remember 
     if(localStorage.getItem('rememberPwd') == 'true')
+    {
         $('#inputRemember').prop('checked', true)
+        $('#inputUsername').val(localStorage.getItem('username'))
+        $('#inputPassword').val(localStorage.getItem('password'))
+    }
     else
         $('#inputRemember').prop('checked', false)
 
@@ -20,6 +24,13 @@ $(document).ready(function() {
             {
                 localStorage.setItem('token', res.data.token)
                 localStorage.setItem('user', JSON.stringify(res.data.user))
+
+                if(localStorage.getItem('rememberPwd') == 'true')
+                {
+                    localStorage.setItem('username', $('#inputUsername').val())
+                    localStorage.setItem('password', $('#inputPassword').val())
+                }
+                    
                 window.location.href = '/'
             }
         })

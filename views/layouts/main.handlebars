@@ -1,29 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>MeReal</title>
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Đăng nhập</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.3.0/css/font-awesome.min.css" />
     <script src="js/modernizr.custom.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/normalize.css" />
-
-
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="css/AdminLTE.min.css">
+    <link rel="stylesheet" href="css/_all-skins.min.css">
+    <link rel="stylesheet" href="css/blue.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
 </head>
-<body>
-<div class = "bodyDiv">
-{{{body}}}
-</div>
 
+<body class="hold-transition skin-blue sidebar-mini">
+    <header class="main-header">
+        <a href="/" class="logo">
+            <span class="logo-mini"><b>ME</b>R</span>
+            <span class="logo-lg"><b>ME</b>REAL</span>
+        </a>
 
-<script src="js/jquery.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="https://cdn.pubnub.com/pubnub.min.js"></script>
-<script src="js/webrtc.js"></script>
-<script src="js/index.js"></script>
+        <nav class="navbar navbar-static-top">
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" style="display: -webkit-inline-box;" data-toggle="dropdown">
+                            <span class="hidden-xs">{{user.fullname}}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <div class="textavatar" data-name="{{user.fullname}}"></div>
+                                <p>
+                                    {{user.fullname}}
+                                    <small>{{user.createdAt}}</small>
+                                </p>
+                            </li>
+                            <!-- Menu Body -->
+                            <li class="user-body">
+                                <div class="row">
+                                    <div class="col-xs-6 text-center">
+                                        <a href="#">Lịch sử chơi</a>
+                                    </div>
+                                    <div class="col-xs-6 text-center">
+                                        <a href="#">Ví của tôi</a>
+                                    </div>
+                                </div>
+                                <!-- /.row -->
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat">TT Tài khoản</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="/logout" class="btn btn-default btn-flat">Đăng xuất</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+  <aside class="main-sidebar">
+    <section class="sidebar">
+      <ul class="sidebar-menu" data-widget="tree">
+        <li><a href="/"><i class="fa fa-dashboard"></i> <span>Trang chủ</span></a></li>
+        <li><a href="/"><i class="fa fa-dashboard"></i> <span>Trang chủ</span></a></li>
+        <li><a href="/"><i class="fa fa-dashboard"></i> <span>Trang chủ</span></a></li>
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+    <div class="bodyDiv">
+        {{{body}}}
+    </div>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.textavatar.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="https://cdn.pubnub.com/pubnub.min.js"></script>
+    <script src="js/webrtc.js"></script>
+    <script src="js/index.js"></script>
 </body>
+
 </html>

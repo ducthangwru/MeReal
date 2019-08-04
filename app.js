@@ -6,6 +6,9 @@ const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const moment = require('moment')
 const session = require('express-session')
+const utils = require('./utils/utils')
+const userModel = require('./apis/users/usersModel')
+const {ROLE_USER} = require('./utils/enum')
 const PORT = process.env.PORT || 3000
 const app = express()
 var server = require('http').createServer(app)
@@ -118,13 +121,15 @@ io.on('connection', function (socket) {
     });
 })
 
-app.get('/', function (req, res, next) {
+app.get('/', async (req, res, next) => {
     if(req.session.token)
     {
-        res.render('home')
+        let user = await utils.verifyAccessToken(req.session.token)
+        user = await userModel.findById(user._id).exec()
+        res.render('home', {user : user})
     }
     else
-    res.redirect('/login')
+        res.redirect('/login')
 })
 
 app.get('/logout', function (req, res, next) {

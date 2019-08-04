@@ -420,6 +420,7 @@ function errWrap(fxn, form){
 }
 
 $(document).ready(function() {
+	$('.textavatar').textAvatar({width: 90, height : 90})
 	$('#btnLogout').click(() => {
 		localStorage.setItem('token', '')
 		localStorage.setItem('user', '')
