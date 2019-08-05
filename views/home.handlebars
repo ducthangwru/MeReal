@@ -7,45 +7,8 @@
         <span id="here-now">0</span>
     </div>
 
-    <form name="streamForm" id="stream" action="#" onsubmit="return errWrap(stream,this);">
-        <span class="input input--nao">
-        <input class="input__field input__field--nao" type="text" name="streamname" placeholder="Nhập tên phòng để livestream" id="streamname"/>
-                <label class="input__label input__label--nao" for="streamname">
-                    <span class="input__label-content input__label-content--nao">        
-                    </span>
-        </label>
-        <svg class="graphic graphic--nao" width="300%" height="100%" viewBox="0 0 1200 60" preserveAspectRatio="none">
-            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0" />
-        </svg>
-        </span>
-
-        <button class="cbutton cbutton--effect-radomir" type="submit" value="Stream" name="stream_submit" style="margin-top: 40px; margin-left:-10px">
-            <i class="cbutton__icon fa fa-fw fa fa fa-video-camera"></i>
-        </button>
-    </form>
-
-    <form name="watchForm" id="watch" action="#" onsubmit="return errWrap(watch,this);">
-        <span class="input input--nao">
-        <input class="input__field input__field--nao" type="text" name="number" placeholder="Nhập tên phòng để xem stream"/>
-                <label class="input__label input__label--nao" for="number">
-                    <span class="input__label-content input__label-content--nao">        
-                    </span>
-        </label>
-        <svg class="graphic graphic--nao" width="300%" height="100%" viewBox="0 0 1200 60" preserveAspectRatio="none">
-            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0" />
-        </svg>
-        </span>
-
-        <button class="cbutton cbutton--effect-radomir" type="submit" value="Watch" style="margin-top: 40px; margin-left:-10px">
-            <i class="cbutton__icon fa fa-fw fa fa-eye"></i>
-        </button>
-    </form>
-
-    <!-- <div id="inStream" class="ptext">
-	Embed Style: <button onclick="genEmbed(400,600)">Tall</button><button onclick="genEmbed(600,400)">Wide</button><button onclick="genEmbed(500,500)">Square</button><br>
-	<div id="embed-code"></div>
-	<div id="embed-demo"></div>
-</div> -->
+    <button class="btn btn-primary" onclick=" errWrap(stream);">Stream</button>
+    <button class="btn btn-danger" onclick=" errWrap(watch);">Xem</button>
 
     <div id="logs" class="ptext" style="background-color:white"></div>
 </div>
@@ -65,6 +28,16 @@
             <!-- Conversations are loaded here -->
             <div class="direct-chat-messages">
                 <div class="direct-chat-msg right">
+                    <div class="direct-chat-info clearfix">
+                        <span class="direct-chat-name pull-right">{{user.fullname}}</span>
+                        <div class="textavatar textavatar-chat pull-right" data-name="{{user.fullname}}"></div> 
+                        <span class="direct-chat-timestamp pull-left">05/08/2019 11:11:11</span>
+                    </div>
+
+                    <div class="direct-chat-text">Nội dung chat ở đây</div>
+                </div>
+
+                <div class="direct-chat-msg left">
                     <div class="direct-chat-info clearfix">
                         <span class="direct-chat-name pull-right">{{user.fullname}}</span>
                         <div class="textavatar textavatar-chat pull-right" data-name="{{user.fullname}}"></div> 

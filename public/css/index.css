@@ -34,3 +34,8 @@ margin-bottom: 6px;
     margin-right: 1%;
     height: auto;
 }
+
+.left .direct-chat-text {
+    margin-left: 1%;
+    height: auto;
+}

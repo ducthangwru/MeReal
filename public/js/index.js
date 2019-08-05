@@ -12,375 +12,388 @@
 	
 	
 var CONTROLLER = window.CONTROLLER = function(phone, serverFunc){
-	if (!window.phone) window.phone = phone;
-	var ctrlChan  = controlChannel(phone.number());
-	var pubnub    = phone.pubnub;
-	var userArray = [];
-	subscribe();
+	if (!window.phone) window.phone = phone
+	var ctrlChan  = controlChannel(phone.number())
+	var pubnub    = phone.pubnub
+	var userArray = []
+	subscribe()
 	
-	var CONTROLLER = function(){};
+	var CONTROLLER = function(){}
 	
 	// Get the control version of a users channel
 	function controlChannel(number){
-		return number + "-ctrl";
+		return number + "-ctrl"
 	}
 	
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// Setup Phone and Session callbacks.
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	var readycb   = function(){};
-	var unablecb  = function(){};
-    var receivecb = function(session){};
-    var videotogglecb = function(session, isEnabled){};
-    var audiotogglecb = function(session, isEnabled){};
+	var readycb   = function(){}
+	var unablecb  = function(){}
+    var receivecb = function(session){}
+    var videotogglecb = function(session, isEnabled){}
+    var audiotogglecb = function(session, isEnabled){}
     
-    CONTROLLER.ready   = function(cb) { readycb   = cb };
-    CONTROLLER.unable  = function(cb) { unablecb  = cb };
-    CONTROLLER.receive = function(cb) { receivecb = cb };
-    CONTROLLER.videoToggled = function(cb) { videotogglecb = cb };
-    CONTROLLER.audioToggled = function(cb) { audiotogglecb = cb };
+    CONTROLLER.ready   = function(cb) { readycb   = cb }
+    CONTROLLER.unable  = function(cb) { unablecb  = cb }
+    CONTROLLER.receive = function(cb) { receivecb = cb }
+    CONTROLLER.videoToggled = function(cb) { videotogglecb = cb }
+    CONTROLLER.audioToggled = function(cb) { audiotogglecb = cb }
 	
-	phone.ready(function(){ readycb() });
-	phone.unable(function(){ unablecb() });
+	phone.ready(function(){ readycb() })
+	phone.unable(function(){ unablecb() })
 	phone.receive(function(session){
-		manage_users(session);
-		receivecb(session);
-	});
+		manage_users(session)
+		receivecb(session)
+	})
 	
 	/* Require some boolean form of authentication to accept a call
-	var authcb    = function(){};
+	var authcb    = function(){} 
 	CONTROLLER.answerCall = function(session, auth, cb){
-		auth(acceptCall(session, cb), session);
+		auth(acceptCall(session, cb), session) 
 	}
 	
 	function acceptCall(session, cb){ // Return function bound to session that needs a boolean.
 		return function(accept) {
-			if (accept) cb(session);
-			else phone.hangup(session.number); 
+			if (accept) cb(session) 
+			else phone.hangup(session.number)  
 		}
 	}*/
 	
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// Setup broadcasting, your screen to all.
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	var streamreceivecb = function(m){}; 
-	var streamprescb    = function(m){};
-	var stream_name = "";
+	var streamreceivecb = function(m){}
+	var streamprescb    = function(m){}
+	var stream_name = ""
 	
 	
-	CONTROLLER.streamPresence = function(cb){ streamprescb    = cb; }
-	CONTROLLER.streamReceive  = function(cb){ streamreceivecb = cb; }
+	CONTROLLER.streamPresence = function(cb){ streamprescb    = cb }
+	CONTROLLER.streamReceive  = function(cb){ streamreceivecb = cb }
 	
 	function broadcast(vid){
-	    var video = document.createElement('video');
+	    var video = document.createElement('video')
         video.srcObject    = phone.mystream
-        video.volume = 0.0;
-        video.play();
-	    video.setAttribute( 'autoplay', 'autoplay' );
-	    video.setAttribute( 'data-number', phone.number() );
-	    vid.style.cssText ="-moz-transform: scale(-1, 1); \
-						 	-webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); \
-							transform: scale(-1, 1); filter: FlipH;";
-		vid.appendChild(video);
-    };
+        video.volume = 0.0
+        video.play()
+	    video.setAttribute( 'autoplay', 'autoplay' )
+	    video.setAttribute( 'data-number', phone.number() )
+	    vid.style.cssText ="-moz-transform: scale(-1, 1)  \
+						 	-webkit-transform: scale(-1, 1)  -o-transform: scale(-1, 1)  \
+							transform: scale(-1, 1)  filter: FlipH "
+		vid.appendChild(video)
+    } 
     
     function stream_subscribe(name){
-	    var ch = (name ? name : phone.number()) + "-stream";
+	    var ch = (name ? name : phone.number()) + "-stream" 
 	    pubnub.subscribe({
             channel    : ch,
             message    : streamreceivecb,
             presence   : streamprescb,
-            connect    : function() { stream_name = ch; console.log("Streaming channel " + ch); }
-        });
+            connect    : function() { 
+				stream_name = ch
+				console.log("Streaming channel " + ch) 
+			}
+        }) 
     }
     
     CONTROLLER.stream = function(){
-	    stream_subscribe();
+	    stream_subscribe() 
     }
     
     CONTROLLER.joinStream = function(name){
-	    stream_subscribe(name);
-	    publishCtrl(controlChannel(name), "userJoin", phone.number());
+	    stream_subscribe(name) 
+	    publishCtrl(controlChannel(name), "userJoin", phone.number()) 
     }
     
     CONTROLLER.leaveStream = function(name){
-	    var ch = (name ? name : phone.number()) + "-stream";
+	    var ch = (name ? name : phone.number()) + "-stream" 
 	    pubnub.unsubscribe({
             channel    : ch,
-        });
+        }) 
     }
     
     CONTROLLER.send = function( message, number ) {
-        if (phone.oneway) return stream_message(message);
-        phone.send(message, number);
-    };
+        if (phone.oneway) return stream_message(message) 
+        phone.send(message, number) 
+    } 
     
     function stream_message(message){
-	    if (!stream_name) return; // Not in a stream
+	    if (!stream_name) return  // Not in a stream
 		pubnub.publish({ 
 			channel: stream_name,
 			message: msg,
 			callback : function(m){console.log(m)}
-		});
+		}) 
     }
     
     
     // Give it a div and it will set up the thumbnail image
     CONTROLLER.addLocalStream = function(streamHolder){
-	    broadcast(streamHolder);
-    };
+	    broadcast(streamHolder) 
+    } 
 	
 	CONTROLLER.dial = function(number, servers){ // Authenticate here??
-		if (!servers && serverFunc) servers=serverFunc();
-		var session = phone.dial(number, servers); // Dial Number
-		if (!session) return; // No Duplicate Dialing Allowed
-	};
+		if (!servers && serverFunc) servers=serverFunc() 
+		var session = phone.dial(number, servers)  // Dial Number
+		if (!session) return  // No Duplicate Dialing Allowed
+	} 
 	
 	CONTROLLER.hangup = function(number){
 		if (number) {
-			if (phone.oneway) CONTROLLER.leaveStream(number);
-			phone.hangup(number);
+			if (phone.oneway) CONTROLLER.leaveStream(number) 
+			phone.hangup(number) 
 			return publishCtrl(controlChannel(number), "userLeave", phone.number())
 		} 
-		if (phone.oneway) CONTROLLER.leaveStream();
-		phone.hangup();
-		for (var i=0; i < userArray.length; i++) {
-			var cChan = controlChannel(userArray[i].number);
-			publishCtrl(cChan, "userLeave", phone.number());
+		if (phone.oneway) CONTROLLER.leaveStream() 
+		phone.hangup() 
+		for (var i=0 ; i < userArray.length ; i++) {
+			var cChan = controlChannel(userArray[i].number) 
+			publishCtrl(cChan, "userLeave", phone.number()) 
 		}
-	};
+	} 
 	
 	CONTROLLER.toggleAudio = function(){
-		var audio = false;
-		var audioTracks = window.phone.mystream.getAudioTracks();
-		for (var i = 0, l = audioTracks.length; i < l; i++) {
-			audioTracks[i].enabled = !audioTracks[i].enabled;
-			audio = audioTracks[i].enabled;
+		var audio = false 
+		var audioTracks = window.phone.mystream.getAudioTracks() 
+		for (var i = 0, l = audioTracks.length ; i < l ; i++) {
+			audioTracks[i].enabled = !audioTracks[i].enabled 
+			audio = audioTracks[i].enabled 
 		}
-		publishCtrlAll("userAudio", {user : phone.number(), audio:audio}); // Stream false if paused
-		return audio;
-	};
+		publishCtrlAll("userAudio", {user : phone.number(), audio:audio})  // Stream false if paused
+		return audio 
+	} 
 	
 	CONTROLLER.toggleVideo = function(){
-		var video = false;
-		var videoTracks = window.phone.mystream.getVideoTracks();
-		for (var i = 0, l = videoTracks.length; i < l; i++) {
-			videoTracks[i].enabled = !videoTracks[i].enabled;
-			video = videoTracks[i].enabled;
+		var video = false 
+		var videoTracks = window.phone.mystream.getVideoTracks() 
+		for (var i = 0, l = videoTracks.length ; i < l ; i++) {
+			videoTracks[i].enabled = !videoTracks[i].enabled 
+			video = videoTracks[i].enabled 
 		}
-		publishCtrlAll("userVideo", {user : phone.number(), video:video}); // Stream false if paused
-		return video;
-	};
+		publishCtrlAll("userVideo", {user : phone.number(), video:video})  // Stream false if paused
+		return video 
+	} 
 	
 	CONTROLLER.isOnline = function(number, cb){
 		pubnub.here_now({
 			channel : number,
 			callback : function(m){
-				console.log(m);  // TODO Comment out
-				cb(m.occupancy != 0);
+				console.log(m)   // TODO Comment out
+				cb(m.occupancy != 0) 
 			}
-		});
-	};
+		}) 
+	} 
 	
 	CONTROLLER.isStreaming = function(number, cb){
-		CONTROLLER.isOnline(number+"-stream", cb);
-	};
+		CONTROLLER.isOnline(number+"-stream", cb) 
+	} 
 	
 	CONTROLLER.getVideoElement = function(number){
-		return $('*[data-number="'+number+'"]');
+		return $('*[data-number="'+number+'"]') 
 	}
 	
 	function manage_users(session){
-		if (session.number == phone.number()) return; 	// Do nothing if it is self.
-		var idx = findWithAttr(userArray, "number", session.number); // Find session by number
+		if (session.number == phone.number()) return  	// Do nothing if it is self.
+		var idx = findWithAttr(userArray, "number", session.number)  // Find session by number
 		if (session.closed){
-			if (idx != -1) userArray.splice(idx, 1)[0]; // User leaving
+			if (idx != -1) userArray.splice(idx, 1)[0]  // User leaving
 		} else {  				// New User added to stream/group
 			if (idx == -1) {  	// Tell everyone in array of new user first, then add to array. 
-				if (!phone.oneway) publishCtrlAll("userJoin", session.number);
-				userArray.push(session);
+				if (!phone.oneway) publishCtrlAll("userJoin", session.number) 
+				userArray.push(session) 
 			}
 		}
-		userArray = userArray.filter(function(s){ return !s.closed; }); // Clean to only open talks
-		// console.log(userArray);
+		userArray = userArray.filter(function(s){ return !s.closed  })  // Clean to only open talks
+		// console.log(userArray) 
 	}
 	
 	function add_to_stream(number){
-		if (serverFunc) phone.dial(number, serverFunc());
-		else phone.dial(number);
+		if (serverFunc) phone.dial(number, serverFunc()) 
+		else phone.dial(number) 
 	}
 	
 	function add_to_group(number){
-		var session = serverFunc ? phone.dial(number, serverFunc()) : phone.dial(number); // Dial Number
-		if (!session) return; 	// No Dupelicate Dialing Allowed
+		var session = serverFunc ? phone.dial(number, serverFunc()) : phone.dial(number)  // Dial Number
+		if (!session) return  	// No Dupelicate Dialing Allowed
 	}
 	
 	function publishCtrlAll(type, data){
-		for (var i=0; i < userArray.length; i++) {
-			var cChan = controlChannel(userArray[i].number);
-			publishCtrl(cChan, type, data);
+		for (var i=0 ; i < userArray.length ; i++) {
+			var cChan = controlChannel(userArray[i].number) 
+			publishCtrl(cChan, type, data) 
 		}
 	}
 	
 	function publishCtrl(ch, type, data){
-		// console.log("Pub to " + ch);
-		var msg = {type: type, data: data};
+		// console.log("Pub to " + ch) 
+		var msg = {type: type, data: data} 
 		pubnub.publish({ 
 			channel: ch,
 			message: msg,
 			callback : function(m){console.log(m)}
-		});
+		}) 
 	}
 	
 	function subscribe(){
 		pubnub.subscribe({
             channel    : ctrlChan,
             message    : receive,
-            connect    : function() {} // console.log("Subscribed to " + ctrlChan); }
-        });
+            connect    : function() {} // console.log("Subscribed to " + ctrlChan)  }
+        }) 
 	}
 	
 	function receive(m){
 		switch(m.type) {
 		case "userCall":
-			callAuth(m.data);
-			break;
+			callAuth(m.data) 
+			break 
 		case "userJoin":
-			if (phone.oneway){ add_to_stream(m.data); }// JOIN STREAM HERE!
-			else add_to_group(m.data);
-			break;
+			if (phone.oneway){ add_to_stream(m.data)  }// JOIN STREAM HERE!
+			else add_to_group(m.data) 
+			break 
 		case "userLeave":
-			var idx = findWithAttr(userArray, "number", m.data);
-			if (idx != -1) userArray.splice(idx, 1)[0];
-			break;
+			var idx = findWithAttr(userArray, "number", m.data) 
+			if (idx != -1) userArray.splice(idx, 1)[0] 
+			break 
 		case "userVideo":
-			var idx = findWithAttr(userArray, "number", m.data.user);
-			var vidEnabled = m.data.video;
-			if (idx != -1) videotogglecb(userArray[idx], vidEnabled);
-			break;
+			var idx = findWithAttr(userArray, "number", m.data.user) 
+			var vidEnabled = m.data.video 
+			if (idx != -1) videotogglecb(userArray[idx], vidEnabled) 
+			break 
 		case "userAudio":
-			var idx = findWithAttr(userArray, "number", m.data.user);
-			var audEnabled = m.data.audio;
-			if (idx != -1) audiotogglecb(userArray[idx], audEnabled);
-			break;
+			var idx = findWithAttr(userArray, "number", m.data.user) 
+			var audEnabled = m.data.audio 
+			if (idx != -1) audiotogglecb(userArray[idx], audEnabled) 
+			break 
 		}
-		// console.log(m);
+		// console.log(m) 
 	}
 	
 	function findWithAttr(array, attr, value) {
-	    for(var i = 0; i < array.length; i += 1) {
+	    for(var i = 0 ; i < array.length ; i += 1) {
 	        if(array[i][attr] === value) {
-	            return i;
+	            return i 
 	        }
 	    }
-	    return -1;
+	    return -1 
 	}
 	
-	return CONTROLLER;
+	return CONTROLLER 
 }
 
-})();
+})() 
 
 
 
-var video_out  = document.getElementById("vid-box");
-var embed_code = document.getElementById("embed-code");
-var embed_demo = document.getElementById("embed-demo");
-var here_now   = document.getElementById('here-now');
-var stream_info= document.getElementById('stream-info');
-var end_stream = document.getElementById('end');
+var video_out  = document.getElementById("vid-box") 
+var embed_code = document.getElementById("embed-code") 
+var embed_demo = document.getElementById("embed-demo") 
+var here_now   = document.getElementById('here-now') 
+var stream_info= document.getElementById('stream-info') 
+var end_stream = document.getElementById('end') 
 
-var streamName;
+var streamName 
 
-function stream(form) {
-	streamName = form.streamname.value || Math.floor(Math.random()*100)+'';
+function stream() {
+	streamName = "a" //Tên phòng
 	var phone = window.phone = PHONE({
 	    number        : streamName, // listen on username line else random
 	    publish_key   : 'pub-c-561a7378-fa06-4c50-a331-5c0056d0163c', // Your Pub Key
 	    subscribe_key : 'sub-c-17b7db8a-3915-11e4-9868-02ee2ddab7fe', // Your Sub Key
 	    oneway        : true,
 	    broadcast     : true,
-	});
-	//phone.debug(function(m){ console.log(m); })
-	var ctrl = window.ctrl = CONTROLLER(phone, get_xirsys_servers);
+	})
+	//phone.debug(function(m){ console.log(m)  })
+	var ctrl = window.ctrl = CONTROLLER(phone, get_xirsys_servers) 
 	ctrl.ready(function(){
-		form.streamname.style.background="#55ff5b";
-		form.streamname.value = phone.number(); 
-//		form.stream_submit.hidden="true"; 
-		ctrl.addLocalStream(video_out);
-		ctrl.stream();
-        stream_info.hidden=false;
-        end_stream.hidden =false;
-		addLog("Đang stream đến phòng " + streamName); 
-	});
+		//form.streamname.style.background="#55ff5b"
+		//form.streamname.value = phone.number()
+//		form.stream_submit.hidden="true"  
+		ctrl.addLocalStream(video_out)
+		ctrl.stream()
+        stream_info.hidden=false
+        end_stream.hidden =false
+		addLog("Đang stream đến phòng " + streamName) 
+	})
+
 	ctrl.receive(function(session){
-	    session.connected(function(session){ addLog(session.number + " đã tham gia"); });
-	    session.ended(function(session) { addLog(session.number + " đã rời đi"); console.log(session)});
-	});
+	    session.connected(function(session){ addLog(session.number + " đã tham gia")  })
+		session.ended(function(session) { 
+			addLog(session.number + " đã rời đi")
+			console.log(session)
+		})
+	})
+
 	ctrl.streamPresence(function(m){
-		here_now.innerHTML=m.occupancy;
-		addLog(m.occupancy + " đang xem");
-	});
-	return false;
+		here_now.innerHTML=m.occupancy
+		addLog(m.occupancy + " đang xem")
+	})
+
+	return false
 }
 
 function watch(form){
-	var num = form.number.value;
+	var num = "a"
 	var phone = window.phone = PHONE({
 	    number        : "Viewer" + Math.floor(Math.random()*100), // listen on username line else random
 	    publish_key   : 'pub-c-561a7378-fa06-4c50-a331-5c0056d0163c', // Your Pub Key
 	    subscribe_key : 'sub-c-17b7db8a-3915-11e4-9868-02ee2ddab7fe', // Your Sub Key
 	    oneway        : true
-	});
-	var ctrl = window.ctrl = CONTROLLER(phone, get_xirsys_servers);
+	})
+	
+	var ctrl = window.ctrl = CONTROLLER(phone, get_xirsys_servers)
 	ctrl.ready(function(){
 		ctrl.isStreaming(num, function(isOn){
-			if (isOn) ctrl.joinStream(num);
-			else alert("Người dùng không livestream");
-		});
-		addLog("Đang tham gia stream  " + num); 
-	});
+			if (isOn) ctrl.joinStream(num)
+			else alert("Người dùng không livestream")
+		})
+		addLog("Đang tham gia phòng stream")
+	})
+
 	ctrl.receive(function(session){
 	    session.connected(function(session){ 
-            video_out.appendChild(session.video); 
-            addLog(session.number + " đã tham gia");
-            stream_info.hidden=false;
-        });
-	    session.ended(function(session) { addLog(session.number + " đã rời đi"); });
-	});
+            video_out.appendChild(session.video)
+            addLog(session.number + " đã tham gia")
+            stream_info.hidden=false
+		})
+		
+	    session.ended(function(session) { addLog(session.number + " đã rời đi") })
+	})
+
 	ctrl.streamPresence(function(m){
-		here_now.innerHTML=m.occupancy;
-		addLog(m.occupancy + " số người đang xem");
-	});
-	return false;
+		here_now.innerHTML=m.occupancy
+		addLog(m.occupancy + " số người đang xem")
+	})
+	return false
 }
 
 function getVideo(number){
-	return $('*[data-number="'+number+'"]');
+	return $('*[data-number="'+number+'"]')
 }
 
 function addLog(log){
-	$('#logs').append("<p>"+log+"</p>");
+	$('#logs').append("<p>"+log+"</p>")
 }
 
 function end(){
-	if (!window.phone) return;
-	ctrl.hangup();
-    video_out.innerHTML = "";
-//	phone.pubnub.unsubscribe(); // unsubscribe all?
+	if (!window.phone) return
+	ctrl.hangup() 
+    video_out.innerHTML = ""
+//	phone.pubnub.unsubscribe()  // unsubscribe all?
 }
 
 // function genEmbed(w,h){
-// 	if (!streamName) return;
-// 	var url = "https://kevingleason.me/SimpleRTC/embed.html?stream=" + streamName;
-// 	var embed    = document.createElement('iframe');
-// 	embed.src    = url;
-// 	embed.width  = w;
-// 	embed.height = h;
-// 	embed.setAttribute("frameborder", 0);
+// 	if (!streamName) return 
+// 	var url = "https://kevingleason.me/SimpleRTC/embed.html?stream=" + streamName 
+// 	var embed    = document.createElement('iframe') 
+// 	embed.src    = url 
+// 	embed.width  = w 
+// 	embed.height = h 
+// 	embed.setAttribute("frameborder", 0) 
 // 	embed_demo.innerHTML = "<a href='embed_demo.html?stream="+streamName+"&width="+w+"&height="+h+"'>Embed Demo</a>" 
-// 	embed_code.innerHTML = 'Embed Code: ';
-// 	embed_code.appendChild(document.createTextNode(embed.outerHTML));
+// 	embed_code.innerHTML = 'Embed Code: ' 
+// 	embed_code.appendChild(document.createTextNode(embed.outerHTML)) 
 // }
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -388,7 +401,8 @@ function end(){
 // room=default&application=default&domain=kevingleason.me&ident=gleasonk&secret=b9066b5e-1f75-11e5-866a-c400956a1e19
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 function get_xirsys_servers() {
-    var servers;
+	var servers
+	
     $.ajax({
         type: 'POST',
         url: 'https://service.xirsys.com/ice',
@@ -401,21 +415,21 @@ function get_xirsys_servers() {
             secure: 1,
         },
         success: function(res) {
-	        console.log(res);
-            res = JSON.parse(res);
-            if (!res.e) servers = res.d.iceServers;
+	        console.log(res)
+            res = JSON.parse(res)
+            if (!res.e) servers = res.d.iceServers
         },
         async: false
-    });
-    return servers;
+    })
+    return servers
 }
 
-function errWrap(fxn, form){
+function errWrap(fxn){
 	try {
-		return fxn(form);
+		return fxn()
 	} catch(err) {
-		alert("WebRTC is currently only supported by Chrome, Opera, and Firefox");
-		return false;
+		alert("WebRTC is currently only supported by Chrome, Opera, and Firefox")
+		return false
 	}
 }
 
