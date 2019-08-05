@@ -168,6 +168,14 @@ app.get('/resetPassword', function (req, res, next) {
     res.render('resetPassword', {layout: false})
 })
 
+app.get('/404', function (req, res, next) {
+    res.render('404', {layout : false});
+})
+
+app.use(function(req, res){ 
+    res.redirect("/404") 
+})
+
 mongoose.set('useFindAndModify', false)
 mongoose.connect(CONNECT_MONGO, { autoIndex: true }, (e) => {
     if (e) {
