@@ -22,3 +22,15 @@ background-color: whitesmoke;
 color: #535353;
 margin-bottom: 6px;
 }
+
+.textavatar-chat {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 20px !important;
+    margin-right: 1%;
+}
+
+.right .direct-chat-text {
+    margin-right: 1%;
+    height: auto;
+}

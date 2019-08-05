@@ -1,52 +1,90 @@
-<div id="vid-box"></div>
-    
-    
-<div id="stream-info" hidden="true">
-        <button id="end" onclick="end()" hidden="true">Xong</button>
-        <img src="img/person_dark.png"/>
-        <span id="here-now">0</span>       
-</div> 
+<div class="col-sm-6 col-md-8">
+   <div id="vid-box"></div>
 
-    
-<form name="streamForm" id="stream" action="#" onsubmit="return errWrap(stream,this);">
-    <span class="input input--nao">
+    <div id="stream-info" hidden="true">
+        <button id="end" onclick="end()" hidden="true">Xong</button>
+        <img src="img/person_dark.png" />
+        <span id="here-now">0</span>
+    </div>
+
+    <form name="streamForm" id="stream" action="#" onsubmit="return errWrap(stream,this);">
+        <span class="input input--nao">
         <input class="input__field input__field--nao" type="text" name="streamname" placeholder="Nhập tên phòng để livestream" id="streamname"/>
                 <label class="input__label input__label--nao" for="streamname">
                     <span class="input__label-content input__label-content--nao">        
                     </span>
-                </label>
-            <svg class="graphic graphic--nao" width="300%" height="100%" viewBox="0 0 1200 60" preserveAspectRatio="none">
-                <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"/>
-            </svg>
-    </span>
+        </label>
+        <svg class="graphic graphic--nao" width="300%" height="100%" viewBox="0 0 1200 60" preserveAspectRatio="none">
+            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0" />
+        </svg>
+        </span>
 
-      <button class="cbutton cbutton--effect-radomir" type="submit" value="Stream" name="stream_submit" style="margin-top: 40px; margin-left:-10px">
+        <button class="cbutton cbutton--effect-radomir" type="submit" value="Stream" name="stream_submit" style="margin-top: 40px; margin-left:-10px">
             <i class="cbutton__icon fa fa-fw fa fa fa-video-camera"></i>
         </button>
-</form>
-    
+    </form>
 
-<form name="watchForm" id="watch" action="#" onsubmit="return errWrap(watch,this);">
-    <span class="input input--nao">
+    <form name="watchForm" id="watch" action="#" onsubmit="return errWrap(watch,this);">
+        <span class="input input--nao">
         <input class="input__field input__field--nao" type="text" name="number" placeholder="Nhập tên phòng để xem stream"/>
                 <label class="input__label input__label--nao" for="number">
                     <span class="input__label-content input__label-content--nao">        
                     </span>
-                </label>
-            <svg class="graphic graphic--nao" width="300%" height="100%" viewBox="0 0 1200 60" preserveAspectRatio="none">
-                <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"/>
-            </svg>
-    </span>
+        </label>
+        <svg class="graphic graphic--nao" width="300%" height="100%" viewBox="0 0 1200 60" preserveAspectRatio="none">
+            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0" />
+        </svg>
+        </span>
 
-       <button class="cbutton cbutton--effect-radomir" type="submit" value="Watch" style="margin-top: 40px; margin-left:-10px">
-                <i class="cbutton__icon fa fa-fw fa fa-eye"></i>
+        <button class="cbutton cbutton--effect-radomir" type="submit" value="Watch" style="margin-top: 40px; margin-left:-10px">
+            <i class="cbutton__icon fa fa-fw fa fa-eye"></i>
         </button>
-</form>  
-    
-<!-- <div id="inStream" class="ptext">
+    </form>
+
+    <!-- <div id="inStream" class="ptext">
 	Embed Style: <button onclick="genEmbed(400,600)">Tall</button><button onclick="genEmbed(600,400)">Wide</button><button onclick="genEmbed(500,500)">Square</button><br>
 	<div id="embed-code"></div>
 	<div id="embed-demo"></div>
 </div> -->
-    
-<div id="logs" class="ptext" style="background-color:white"></div>
+
+    <div id="logs" class="ptext" style="background-color:white"></div>
+</div>
+<div class="col-sm-6 col-md-4">
+    <br>
+     <div class="box box-warning direct-chat direct-chat-warning">
+        <div class="box-header with-border">
+            <h3 class="box-title">Chat</h3>
+
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <!-- Conversations are loaded here -->
+            <div class="direct-chat-messages">
+                <div class="direct-chat-msg right">
+                    <div class="direct-chat-info clearfix">
+                        <span class="direct-chat-name pull-right">{{user.fullname}}</span>
+                        <div class="textavatar textavatar-chat pull-right" data-name="{{user.fullname}}"></div> 
+                        <span class="direct-chat-timestamp pull-left">05/08/2019 11:11:11</span>
+                    </div>
+
+                    <div class="direct-chat-text">Nội dung chat ở đây</div>
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <form action="#" method="post">
+                <div class="input-group">
+                    <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                    <span class="input-group-btn">
+                            <button type="button" class="btn btn-warning btn-flat">Send</button>
+                          </span>
+                </div>
+            </form>
+        </div>
+        <!-- /.box-footer-->
+    </div>
+</div>
