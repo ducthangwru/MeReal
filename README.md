@@ -23,3 +23,6 @@ Ngày 04/08/2019
 Ngày 05/08/2019
 1. Update giao diện dashboard
 2. Thêm chatbox
+
+Ngày 06/08/2019
+1. Đăng nhập xong có thể chat all.

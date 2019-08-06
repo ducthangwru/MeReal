@@ -39,3 +39,21 @@ margin-bottom: 6px;
     margin-left: 1%;
     height: auto;
 }
+
+@media only screen and (max-height: 600px) {
+    .direct-chat-messages {
+        height: 250px !important;
+    }
+}
+
+@media only screen and (max-height: 900px) {
+    .direct-chat-messages {
+        height: 350px !important;
+    }
+}
+
+@media only screen and (min-height: 800px) {
+    .direct-chat-messages {
+        height: 600px !important;
+    }
+}

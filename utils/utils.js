@@ -66,9 +66,9 @@ const verifyTokenAgentOrAdmin = async (req, res, next) => {
     }
 }
 
-const assignToken = (user_id, username, email, role) => {
+const assignToken = (user_id, username, email, role, fullname) => {
     return new Promise((resolve, reject) => {
-        JWT.sign({username: username, _id: user_id, email: email, role : role}, config.SECRET_KEY, (e, token) => {
+        JWT.sign({username: username, _id: user_id, email: email, role : role, fullname : fullname}, config.SECRET_KEY, (e, token) => {
             if (e) reject(e)
             else resolve(token)
         })

@@ -1,5 +1,6 @@
 const config = require('../../utils/config')
 const userModel = require('../users/usersModel')
+const moment = require('moment')
 const {verifyAccessToken} = require('../../utils/utils')
 
 const createSocket = (io) => {
@@ -31,7 +32,8 @@ const createSocket = (io) => {
                 socket.on('send', (data) => {
                     try
                     {
-                        socket.broadcast.to(config.SECRET_KEY).emit('received', {user : socket.user, data : data})
+                        if(data.msg)
+                            socket.broadcast.to(config.SECRET_KEY).emit('received', {user : socket.user, data : data})
                     }
                     catch(e)
                     {

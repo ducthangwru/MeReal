@@ -435,6 +435,7 @@ function errWrap(fxn){
 
 $(document).ready(function() {
 	var socket = io(`${window.location.href}?token=${localStorage.getItem('token')}`)
+	var u = JSON.parse(localStorage.getItem('user'))
 	
 	$('.textavatar').textAvatar({width: 90, height : 90})
 	$('#btnLogout').click(() => {
@@ -443,10 +444,73 @@ $(document).ready(function() {
 		window.location.href = '/logout'
 	})
 
-	socket.on('connect', function () {
-		socket.send('hi')
-		socket.on('message', function (msg) {
-		// my msg
-		})
+	// $('#divChat').append(`<div>${u.username} đã tham gia</div>`)
+	// socket.on('joined', function (user) {
+	// 	$('#divChat').append(`<div>${user.username} đã tham gia</div>`)
+	// })
+
+	socket.on('received', function (data) {
+		if(data.user._id == u._id)
+		{
+			$('#divChat').append(`
+				<div class="direct-chat-msg right">
+					<div class="direct-chat-info clearfix">
+						<span class="direct-chat-name pull-right">${data.user.username}</span>
+						<span class="direct-chat-timestamp pull-left">${data.data.time}</span>
+					</div>
+
+					<div class="direct-chat-text">${data.data.msg}</div>
+				</div>
+			`)
+		}
+		else
+		{
+			$('#divChat').append(`
+				<div class="direct-chat-msg left">
+					<div class="direct-chat-info clearfix">
+						<span class="direct-chat-name pull-right">${data.user.username}</span>
+						<span class="direct-chat-timestamp pull-left">${data.data.time}</span>
+					</div>
+
+					<div class="direct-chat-text">${data.data.msg}</div>
+				</div>
+			`)
+		}
+		
+		$("#divChat").animate({ scrollTop: $('#divChat').prop("scrollHeight")}, 1000)
 	})
+
+	$("#inputMessage").on('keyup', function (e) {
+		if (e.keyCode == 13) {
+			sendMessage()
+		}
+	});
+
+	$('#btnSend').click(() => {
+		sendMessage()
+	})
+
+	function sendMessage() {
+		let time = moment(new Date()).format('DD/MM/YYYY HH:mm:ss')
+		let msg = $('#inputMessage').val()
+
+		if(msg)
+		{
+			$('#divChat').append(`
+				<div class="direct-chat-msg right">
+					<div class="direct-chat-info clearfix">
+						<span class="direct-chat-name pull-right">${u.username}</span>
+						<span class="direct-chat-timestamp pull-left">${time}</span>
+					</div>
+
+					<div class="direct-chat-text">${msg}</div>
+				</div>
+			`)
+			
+			socket.emit('send', {msg, time})
+
+			$('#inputMessage').val('')
+			$("#divChat").animate({ scrollTop: $('#divChat').prop("scrollHeight")}, 500)
+		}
+	}
 })
