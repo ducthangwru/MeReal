@@ -13,6 +13,9 @@ const PORT = process.env.PORT || 3000
 const app = express()
 var server = require('http').createServer(app)
 var io = require('socket.io')(server)
+const socket = require('./apis/chat/socket')
+socket.createSocket(io)
+
 const CONNECT_MONGO = 'mongodb://admin:admin123@ds243317.mlab.com:43317/mereal'
 
 // Body parser middleware
@@ -67,59 +70,6 @@ app.use('/api/chanel', chanel)
 app.use('/api/setQuestion', setQuestion)
 app.use('/api/userHistory', userHistory)
 app.use('/api/userQuestion', userQuestion)
-
-// signaling
-io.on('connection', function (socket) {
-    console.log('a user connected')
-
-    socket.on('create or join', function (room) {
-        console.log('create or join to room ', room);
-        
-        var myRoom = io.sockets.adapter.rooms[room] || { length: 0 }
-        var numClients = myRoom.length;
-
-        console.log(room, ' has ', numClients, ' clients')
-
-        if (numClients == 0) {
-            socket.join(room)
-            socket.emit('created', room)
-        } else if (numClients == 1) {
-            socket.join(room);
-            socket.emit('joined', room)
-        } else {
-            socket.emit('full', room)
-        }
-    })
-
-    socket.on('joinroom', function (room) {
-        var myRoom = io.sockets.adapter.rooms[room] || { length: 0 }
-        var numClients = myRoom.length;
-
-        if (numClients == 0) {
-            socket.join(room)
-            socket.emit('created', room)
-        } else if (numClients >= 1) {
-            socket.join(room);
-            socket.emit('joined', {room : room, id : socket.id})
-        }
-    })
-
-    socket.on('ready', function (room){
-        socket.broadcast.to(room).emit('ready')
-    })
-
-    socket.on('candidate', function (event){
-        socket.broadcast.to(event.room).emit('candidate', event)
-    })
-
-    socket.on('offer', function(event){
-        socket.broadcast.to(event.room).emit('offer',event.sdp)
-    })
-
-    socket.on('answer', function(event){
-        socket.broadcast.to(event.room).emit('answer',event.sdp)
-    });
-})
 
 app.get('/', async (req, res, next) => {
     if(req.session.token)

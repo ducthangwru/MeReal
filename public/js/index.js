@@ -434,10 +434,19 @@ function errWrap(fxn){
 }
 
 $(document).ready(function() {
+	var socket = io(`${window.location.href}?token=${localStorage.getItem('token')}`)
+	
 	$('.textavatar').textAvatar({width: 90, height : 90})
 	$('#btnLogout').click(() => {
 		localStorage.setItem('token', '')
 		localStorage.setItem('user', '')
 		window.location.href = '/logout'
+	})
+
+	socket.on('connect', function () {
+		socket.send('hi')
+		socket.on('message', function (msg) {
+		// my msg
+		})
 	})
 })
