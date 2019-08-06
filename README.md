@@ -19,3 +19,7 @@ Ngày 04/08/2019
 1. Tạo trang dashboard
 2. Chỉnh sửa tính năng ghi nhớ mật khẩu
 3. Tạo hình avatar theo tên.
+
+Ngày 05/08/2019
+1. Update giao diện dashboard
+2. Thêm chatbox
