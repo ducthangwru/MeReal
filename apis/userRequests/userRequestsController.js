@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const config = require('../../utils/config')
 const message = require('../../utils/message')
-const setQuestionsModel = require('./setQuestionsModel')
+const userRequestsModel = require('./userRequestsModel')
 const {
     error,
     success,
@@ -42,7 +42,7 @@ router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
             limit:    parseInt(limit)
         }
 
-        let result = await setQuestionsModel.paginate(query, options)
+        let result = await userRequestsModel.paginate(query, options)
 
         return success(res, result)
     }
@@ -72,7 +72,7 @@ router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
         if (validateParameters([obj.gift, obj.user, obj.name, obj.desc], res) == false) 
             return
 
-        let result = await setQuestionsModel.create(obj)
+        let result = await userRequestsModel.create(obj)
 
         return success(res, result)
     }
@@ -103,7 +103,7 @@ router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
         if (validateParameters([obj.gift, obj.user, obj.name, obj.desc], res) == false) 
             return
 
-        let result = await setQuestionsModel.findByIdAndUpdate(obj._id, obj, {new : true}).exec()
+        let result = await userRequestsModel.findByIdAndUpdate(obj._id, obj, {new : true}).exec()
 
         if(result)
             return success(res, result)
@@ -130,9 +130,9 @@ router.delete('/', verifyTokenAgentOrAdmin, async(req, res) => {
         if (validateParameters([_id, user_id], res) == false) 
             return
 
-        if(await setQuestionsModel.findById(_id).exec())
+        if(await userRequestsModel.findById(_id).exec())
         {
-            await setQuestionsModel.findOneAndRemove({_id : _id, user : user_id}).exec()
+            await userRequestsModel.findOneAndRemove({_id : _id, user : user_id}).exec()
             return success(res)
         }
             
@@ -156,9 +156,9 @@ router.put('/status', verifyTokenAgentOrAdmin, async(req, res) => {
         if (validateParameters([_id, status], res) == false) 
             return
 
-        if(await questionModel.findById(_id).exec())
+        if(await userRequestsModel.findById(_id).exec())
         {
-            await questionModel.findByIdAndUpdate(_id, {status}).exec()
+            await userRequestsModel.findByIdAndUpdate(_id, {status}).exec()
             return success(res)
         }
         

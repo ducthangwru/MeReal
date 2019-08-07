@@ -21,16 +21,16 @@ router.get('/', verifyToken, async(req, res) => {
     try
     {
         let user_id = req.user.user_id
-        let set_question = req.query.set_question || ''
         let page = req.query.page || 0
         let limit = req.query.limit || 20
+        let date = req.query.date || ''
 
         if(req.user.role == ROLE_USER.ADMIN)
             user_id = req.query.user_id
 
         let query   = {
             $and : [
-                (set_question != '') ? {set_question : set_question} : {},
+                (date != '') ? {content : {"$gte": date, "$lt": date.addDays(1)}} : {},
                 {user : user_id}
             ]
         }

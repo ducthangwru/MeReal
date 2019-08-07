@@ -5,6 +5,7 @@ const {STATUS_GIFT, TYPE_GIFT} = require('../../utils/enum')
 
 const giftsSchema = new Schema(
     {
+        user : {type : ObjectId, require : true, ref : 'users'},
         name : {type : String, require : true},
         desc : {type : String, require : true},
         type : {type : Number, require : true, default : TYPE_GIFT.MONEY},

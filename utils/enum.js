@@ -29,9 +29,25 @@ const STATUS_QUESTION = {
     LOCK : -1
 }
 
-const STATUS_SET_QUESTION = {
-    ACTIVE : 1,
-    CLOSE : -1
+const STATUS_USER_REQUEST = {
+    PENDING : 0,
+    ACTIVED : 1,
+    CANCEL : -1
+}
+
+const LIVESTREAM_TIME_ENUM = {
+    K1 : {
+        FROM : "09:00",
+        TO : "10:00"
+    },
+    K2 : {
+        FROM : "15:00",
+        TO : "16:00"
+    },
+    K3 : {
+        FROM : "20:00",
+        TO : "21:00"
+    }
 }
 
 module.exports = {
@@ -41,5 +57,6 @@ module.exports = {
     STATUS_GIFT,
     TYPE_GIFT,
     STATUS_QUESTION,
-    STATUS_SET_QUESTION
+    LIVESTREAM_TIME_ENUM,
+    STATUS_USER_REQUEST
 }

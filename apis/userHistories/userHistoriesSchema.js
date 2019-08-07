@@ -4,7 +4,6 @@ const ObjectId = Schema.Types.ObjectId
 
 const userHistoriesSchema = new Schema(
     {
-        set_question : {type : ObjectId, require : true,  ref: 'set_questions'},
         user : {type : ObjectId, require : true, ref : 'users'},
         score : {type : Number, require : true, default : 0},
         step : {type : Number, require : true, default : 0}
