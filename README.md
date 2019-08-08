@@ -1,8 +1,17 @@
 Link demo: https://mereal.herokuapp.com/
 
-Tài khoản demo: ducthangwru
+User:
 
-Mật khẩu demo: ducthangwru
+    Tài khoản/mật khẩu: 
+    ducthangwru/ducthangwru
+
+Agent: 
+    Tài khoản/mật khẩu:
+    tiendatleo/ducthangwru
+
+Admin:
+    Tài khoản/mật khẩu:
+    admin/ducthangwru
 
 Ngày 02/08/2019
 1. Đăng ký
