@@ -41,7 +41,7 @@
                             <li class="user-header">
                                 <div class="textavatar" data-name="{{user.fullname}}"></div>
                                 <p>
-                                    {{user.fullname}}
+                                    {{user.username}}
                                     <small>{{user.createdAt}}</small>
                                 </p>
                             </li>
@@ -74,9 +74,7 @@
     </header>
     <aside class="main-sidebar">
     <section class="sidebar">
-      <ul class="sidebar-menu" data-widget="tree">
-        <li><a href="/"><i class="fa fa-dashboard"></i> <span>Trang chủ</span></a></li>
-        <li><a href="/"><i class="fa fa-dashboard"></i> <span>Trang chủ</span></a></li>
+      <ul id="ulMenu" class="sidebar-menu" data-widget="tree" data-name="{{user.role}}">
         <li><a href="/"><i class="fa fa-dashboard"></i> <span>Trang chủ</span></a></li>
       </ul>
     </section>

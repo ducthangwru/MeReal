@@ -434,6 +434,8 @@ function errWrap(fxn){
 }
 
 $(document).ready(function() {
+
+	var role = $('#ulMenu').attr("data-name")
 	var socket = io(`${window.location.href}?token=${localStorage.getItem('token')}`)
 	var u = JSON.parse(localStorage.getItem('user'))
 	
@@ -512,5 +514,29 @@ $(document).ready(function() {
 			$('#inputMessage').val('')
 			$("#divChat").animate({ scrollTop: $('#divChat').prop("scrollHeight")}, 500)
 		}
+	}
+
+	//Nếu nó là user
+	if(role == 1)
+	{
+		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-history"></i> <span>Lịch sử chơi<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-wrench"></i> <span>Tài khoản<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/logout"><i class="fa fa-share"></i> <span>Đăng xuất</span></a></li>`)
+	}
+	//Nếu nó là agent
+	else if(role == 2)
+	{
+		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-gift"></i> <span>Quản lý quà tặng<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-question"></i> <span>Quản lý câu hỏi<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/request"><i class="fa fa-book"></i> <span>Quản lý yêu cầu<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-wrench"></i> <span>Tài khoản<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/logout"><i class="fa fa-share"></i> <span>Đăng xuất</span></a></li>`)
+	}
+	else if(role == 3)
+	{
+		$('#ulMenu').append(`<li><a href="/request"><i class="fa fa-book"></i> <span>Quản lý yêu cầu<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/request"><i class="fa fa-users"></i> <span>Quản lý người dùng<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-wrench"></i> <span>Tài khoản<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/logout"><i class="fa fa-share"></i> <span>Đăng xuất</span></a></li>`)
 	}
 })
