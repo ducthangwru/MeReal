@@ -31,3 +31,6 @@ Ngày 06/08/2019
 Ngày 07/08/2019
 1. Livestream duy nhất 1 phòng.
 2. Demo ai cũng livestream được.
+
+Ngày 08/08/2019
+1. Cập nhật menu theo phân quyền user
