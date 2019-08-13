@@ -434,10 +434,17 @@ function errWrap(fxn){
 }
 
 $(document).ready(function() {
-
-	var role = $('#ulMenu').attr("data-name")
+	document.title = 'MeReal - Web Livestream tương tác'
 	var socket = io(`${window.location.href}?token=${localStorage.getItem('token')}`)
 	var u = JSON.parse(localStorage.getItem('user'))
+	var role = u.role
+	getProfile(localStorage.getItem('token'), '', (data) => {
+		if(data)
+		{
+			localStorage.setItem('user', JSON.stringify(data))
+			u = JSON.parse(localStorage.getItem('user'))
+		}
+	})
 	
 	$('.textavatar').textAvatar({width: 90, height : 90})
 	$('#btnLogout').click(() => {

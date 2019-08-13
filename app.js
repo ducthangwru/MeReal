@@ -116,6 +116,10 @@ app.get('/resetPassword', function (req, res, next) {
     res.render('resetPassword', {layout: false})
 })
 
+app.get('/profile', function (req, res, next) {
+    res.render('profile')
+})
+
 app.get('/404', function (req, res, next) {
     res.render('404', {layout : false});
 })

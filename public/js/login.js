@@ -14,7 +14,7 @@ $(document).ready(function() {
         $('#inputRemember').prop('checked', false)
 
     $('#btnLogin').click(function() {
-        callAPI('public/login', 'post', '', {
+        callAPI('public/login', 'post', '', '', {
             username : $('#inputUsername').val(),
             password : $('#inputPassword').val()
         }, (res) => {

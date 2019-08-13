@@ -28,27 +28,22 @@ router.put('/profile', verifyToken, async(req, res) => {
     {
         let obj = {
             fullname : req.body.fullname,
-            email : req.body.email,
             _id : req.user._id
         }
 
         //Nếu nó là admin
         if(req.user.role == ROLE_USER.ADMIN)
-            obj._id = req.body._id
+            obj._id = req.body._id ? req.body._id : req.user._id
 
         //check param
-        if (validateParameters([obj.fullname, obj.email], res) == false) 
+        if (validateParameters([obj.fullname], res) == false) 
             return
 
         let user = await usersModel.findById(obj._id).exec()
-        //check trùng email
-        if(user.email != obj.email && await usersModel.findOne({email : obj.email}).exec())
-            return error(res, message.EMAIL_EXISTS)
 
-        let result = await usersModel.findByIdAndUpdate(obj._id, obj, {new: true}).exec()
-
-        if(result)
+        if(user)
         {
+            let result = await usersModel.findByIdAndUpdate(obj._id, obj, {new: true}).exec()
             return success(res, result)
         }
 
@@ -72,6 +67,41 @@ router.get('/profile', verifyToken, async(req, res) => {
             return success(res, result)
 
         return error(res, message.USER_NOT_EXISTS)
+    }
+    catch(e)
+    {
+        return error(res, e.message)
+    }
+})
+
+//Đổi mật khẩu
+router.put('/changepwd', verifyToken, async(req, res) => {
+    try
+    {
+        let obj = {
+            _id : req.user._id,
+            old_password : req.body.old_password,
+            new_password : req.body.new_password
+        }
+
+        //check param
+        if (validateParameters([obj.old_password, obj.new_password], res) == false) 
+            return
+
+        if (!checkRegexPassword(obj.old_password))
+            return error(res, message.INVALID_PASSWORD)
+
+        if (!checkRegexPassword(obj.new_password))
+            return error(res, message.INVALID_PASSWORD)
+
+        let user = await usersModel.findOne({_id : obj._id, password : md5(obj.old_password)}).exec()
+        if(user)
+        {
+            let result = await usersModel.findByIdAndUpdate(obj._id, {password : md5(obj.new_password)}, {new: true}).exec()
+            return success(res, result)
+        }
+
+        return error(res, message.WRONG_PASSWORD)
     }
     catch(e)
     {

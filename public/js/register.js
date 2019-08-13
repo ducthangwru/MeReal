@@ -5,7 +5,7 @@ $(document).ready(function() {
         //check repwd
         if($('#inputPwd').val() === $('#inputRePwd').val())
         {
-            callAPI('public/register', 'post', '', {
+            callAPI('public/register', 'post', '', '', {
                 username : $('#inputUsername').val(),
                 fullname : $('#inputFullname').val(),
                 email : $('#inputEmail').val(),

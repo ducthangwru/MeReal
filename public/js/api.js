@@ -1,12 +1,13 @@
 const base_url = ""
 
-const callAPI = (path, method, query, data, callback) => {
+const callAPI = (path, method, query, token, data, callback) => {
     let settings = {
         "async": true,
         "url": `${base_url}/api/${path}?${query}`,
         "method": method,
         "headers": {
-          "Content-Type": "application/x-www-form-urlencoded"
+          "Content-Type": "application/x-www-form-urlencoded",
+          "x-access-token" : token
         },
         "data": data
       }
@@ -18,6 +19,15 @@ const callAPI = (path, method, query, data, callback) => {
     .fail((e) => {
         callback({success : false, error: e.message })
     })
+}
+
+const getProfile = (token, _id, callback) => {
+  callAPI('user/profile', 'get', _id ? '_id=${_id}' : '', token, '', (res) => {
+    if(res.success)
+      callback(res.data)
+    else
+      callback(null)
+  })
 }
 
 function getParameterByName(name, url) {

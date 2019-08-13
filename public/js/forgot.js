@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('#btnForgot').click(function() {
-        callAPI('public/forgotpwd', 'post', '', {
+        callAPI('public/forgotpwd', 'post', '', '', {
             email : $('#inputEmail').val()
         }, (res) => {
             if(!res.success)

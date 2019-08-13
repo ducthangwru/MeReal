@@ -12,7 +12,7 @@ $(document).ready(function() {
     $('#btnResetPwd').click(() => {
         if($('#inputPwd').val() === $('#inputRePwd').val())
         {
-            callAPI('public/resetpwd', 'post', '', {
+            callAPI('public/resetpwd', 'post', '', '', {
                 email : $('#inputEmail').val(),
                 reset_code : $('#inputCode').val(),
                 new_password : $('#inputPwd').val()
