@@ -43,3 +43,7 @@ Ngày 07/08/2019
 
 Ngày 08/08/2019
 1. Cập nhật menu theo phân quyền user
+
+Ngày 13/08/2019
+1. Thêm tính năng thay đổi thông tin tài khoản
+2. Thêm tính năng đổi mật khẩu
