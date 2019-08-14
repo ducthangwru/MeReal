@@ -5,6 +5,8 @@ const {STATUS_QUESTION} = require('../../utils/enum')
 
 const questionsSchema = new Schema(
     {
+        user_request : {type : Object, require : true, ref : 'user_requests'},
+        user : {type : ObjectId, require : true, ref : 'users'},
         content : {type : String, require : true},
         suggest : {type : String},
         status : {type : Number, default : STATUS_QUESTION.ACTIVE},

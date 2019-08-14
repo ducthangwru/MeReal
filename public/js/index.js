@@ -443,6 +443,10 @@ $(document).ready(function() {
 		{
 			localStorage.setItem('user', JSON.stringify(data))
 			u = JSON.parse(localStorage.getItem('user'))
+
+			$('#spanFullname').text(u.fullname)
+			$('#divFullname').attr('data-name', u.fullname)
+			$('#pUsername').html(`${u.username}<small>${moment(u.createdAt).format('DD/MM/YYYY HH:mm:ss')}</small>`)
 		}
 	})
 	
@@ -527,15 +531,15 @@ $(document).ready(function() {
 	if(role == 1)
 	{
 		$('#btnStream').hide()
-		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-history"></i> <span>Lịch sử chơi<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/history"><i class="fa fa-history"></i> <span>Lịch sử chơi<span></span></a></li>`)
 		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-wrench"></i> <span>Tài khoản<span></span></a></li>`)
 		$('#ulMenu').append(`<li><a href="/logout"><i class="fa fa-share"></i> <span>Đăng xuất</span></a></li>`)
 	}
 	//Nếu nó là agent
 	else if(role == 2)
 	{
-		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-gift"></i> <span>Quản lý quà tặng<span></span></a></li>`)
-		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-question"></i> <span>Quản lý câu hỏi<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/gift"><i class="fa fa-gift"></i> <span>Quản lý quà tặng<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/question"><i class="fa fa-question"></i> <span>Quản lý câu hỏi<span></span></a></li>`)
 		$('#ulMenu').append(`<li><a href="/request"><i class="fa fa-book"></i> <span>Quản lý yêu cầu<span></span></a></li>`)
 		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-wrench"></i> <span>Tài khoản<span></span></a></li>`)
 		$('#ulMenu').append(`<li><a href="/logout"><i class="fa fa-share"></i> <span>Đăng xuất</span></a></li>`)
@@ -544,7 +548,7 @@ $(document).ready(function() {
 	{
 		$('#btnStream').hide()
 		$('#ulMenu').append(`<li><a href="/request"><i class="fa fa-book"></i> <span>Quản lý yêu cầu<span></span></a></li>`)
-		$('#ulMenu').append(`<li><a href="/request"><i class="fa fa-users"></i> <span>Quản lý người dùng<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/user"><i class="fa fa-users"></i> <span>Quản lý người dùng<span></span></a></li>`)
 		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-wrench"></i> <span>Tài khoản<span></span></a></li>`)
 		$('#ulMenu').append(`<li><a href="/logout"><i class="fa fa-share"></i> <span>Đăng xuất</span></a></li>`)
 	}

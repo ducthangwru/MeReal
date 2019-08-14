@@ -57,3 +57,7 @@ margin-bottom: 6px;
         height: 600px !important;
     }
 }
+
+.table-hover>tbody>tr:hover {
+    background-color: #00a5ad !important;
+}

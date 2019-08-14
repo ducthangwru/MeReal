@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="css/_all-skins.min.css">
     <link rel="stylesheet" href="css/blue.css">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
     <link href="css/SourceSansPro.css" rel="stylesheet">
 </head>
 
@@ -34,15 +35,13 @@
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" style="display: -webkit-inline-box;" data-toggle="dropdown">
-                            <span class="hidden-xs">{{user.fullname}}</span>
+                            <span id="spanFullname" class="hidden-xs"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <div class="textavatar" data-name="{{user.fullname}}"></div>
-                                <p>
-                                    {{user.username}}
-                                    <small>{{user.createdAt}}</small>
+                                <div id="divFullname" class="textavatar" data-name="{{user.fullname}}"></div>
+                                <p id="pUsername">
                                 </p>
                             </li>
                             <!-- Menu Body -->
@@ -60,7 +59,7 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">TT Tài khoản</a>
+                                    <a href="/profile" class="btn btn-default btn-flat">TT Tài khoản</a>
                                 </div>
                                 <div class="pull-right">
                                     <a href="/logout" class="btn btn-default btn-flat">Đăng xuất</a>
@@ -83,6 +82,8 @@
 
     <script src="js/jquery.js"></script>
     <script src="js/jquery.textavatar.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.bootstrap.min.js"></script>
     
     <div class="content-wrapper bodyDiv">
         {{{body}}}

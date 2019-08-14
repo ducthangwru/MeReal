@@ -56,18 +56,16 @@ const user = require('./apis/users/usersController')
 const question = require('./apis/questions/questionsController')
 const gift = require('./apis/gifts/giftsController')
 const answer = require('./apis/answers/answersController')
-const setQuestion = require('./apis/userRequests/userRequestsController')
+const userRequest = require('./apis/userRequests/userRequestsController')
 const userHistory = require('./apis/userHistories/userHistoriesController')
-const userQuestion = require('./apis/userQuestions/userQuestionsController')
 
 app.use('/api/public', public)
 app.use('/api/user', user)
 app.use('/api/question', question)
 app.use('/api/gift', gift)
 app.use('/api/answer', answer)
-app.use('/api/setQuestion', setQuestion)
+app.use('/api/userRequest', userRequest)
 app.use('/api/userHistory', userHistory)
-app.use('/api/userQuestion', userQuestion)
 
 app.get('/', async (req, res, next) => {
     if(req.session.token)
@@ -118,6 +116,10 @@ app.get('/resetPassword', function (req, res, next) {
 
 app.get('/profile', function (req, res, next) {
     res.render('profile')
+})
+
+app.get('/question', function (req, res, next) {
+    res.render('question')
 })
 
 app.get('/404', function (req, res, next) {
