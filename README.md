@@ -47,3 +47,7 @@ Ngày 08/08/2019
 Ngày 13/08/2019
 1. Thêm tính năng thay đổi thông tin tài khoản
 2. Thêm tính năng đổi mật khẩu
+
+Ngày 14/08/2019
+1. Fix bug thông tin cá nhân không được thay đổi khi thay đổi thông tin tài khoản
+2. Tạo giao diện trang quản lý question
