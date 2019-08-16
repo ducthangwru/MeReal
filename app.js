@@ -122,6 +122,22 @@ app.get('/question', function (req, res, next) {
     res.render('question')
 })
 
+app.get('/gift', function (req, res, next) {
+    res.render('gift')
+})
+
+app.get('/request', function (req, res, next) {
+    res.render('request')
+})
+
+app.get('/user', function (req, res, next) {
+    res.render('user')
+})
+
+app.get('/history', function (req, res, next) {
+    res.render('history')
+})
+
 app.get('/404', function (req, res, next) {
     res.render('404', {layout : false});
 })

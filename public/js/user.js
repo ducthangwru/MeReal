@@ -1,7 +1,7 @@
 $(document).ready(function() {
     var dataSource = []
 
-    var tableQuestion = $('#tableQuestion').DataTable({
+    var tableUser = $('#tableUser').DataTable({
         scrollY:        '50vh',
         sDom: '<"row view-filter"<"col-sm-12"<"pull-left"l><"pull-right"f><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
         scrollCollapse: true,
@@ -13,8 +13,9 @@ $(document).ready(function() {
         columns: [
             {},
             {title: "STT"},
-            {title: "Nội dung"},
-            {title: "Gợi ý"},
+            {title: "Tên đăng nhập"},
+            {title: "Họ tên"},
+            {title: "Email"},
             {title: "Trạng thái"},
             {title: "Thao tác"}
         ],
@@ -32,13 +33,13 @@ $(document).ready(function() {
             },
             {
                 orderable: true,
-                "width": "30%",
+                "width": "20%",
                 "className": 'text-center',
                 "targets": 2
             },
             {
                 orderable: true,
-                "width": "30%",
+                "width": "20%",
                 "className": 'text-center',
                 "targets": 3
             },
@@ -49,60 +50,17 @@ $(document).ready(function() {
                 "targets": 4
             },
             {
-                orderable: false,
+                orderable: true,
                 "width": "20%",
                 "className": 'text-center',
                 "targets": 5
+            },
+            {
+                orderable: false,
+                "width": "20%",
+                "className": 'text-center',
+                "targets": 6
             }
         ]
     })
-
-    var tableAnswer = $('#tableAnswer').DataTable({
-        scrollY:        '50vh',
-        sDom: '<"row view-filter"<"col-sm-12"<"pull-left"l><"pull-right"f><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
-        scrollCollapse: true,
-        paging:         false,
-        search : true,
-        select: {
-            style : "multi"
-        },
-        columns: [
-            {},
-            {title: "STT"},
-            {title: "Nội dung"},
-            {title: "Đúng/Sai"},
-            {title: "Thao tác"}
-        ],
-        columnDefs: [{
-                orderable: false,
-                "width": "0%",
-                visible : false,
-                "targets": 0
-            },
-            {
-                orderable: false,
-                "width": "5%",
-                "className": 'text-center',
-                "targets": 1
-            },
-            {
-                orderable: true,
-                "width": "50%",
-                "className": 'text-center',
-                "targets": 2
-            },
-            {
-                orderable: true,
-                "width": "20%",
-                "className": 'text-center',
-                "targets": 3
-            },
-            {
-                orderable: false,
-                "width": "25%",
-                "className": 'text-center',
-                "targets": 4
-            },
-        ]
-   })
 })

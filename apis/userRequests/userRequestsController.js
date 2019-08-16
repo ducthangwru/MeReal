@@ -30,7 +30,7 @@ router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
 
         let query   = {
             $and : [
-                (search != '') ? {name : {$regex: search, $options: "i"}} : {},
+                (search != '') ? {desc : {$regex: search, $options: "i"}} : {},
                 {user : user_id}
             ]
         }
@@ -59,9 +59,7 @@ router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
         let obj = {
             gift : req.body.gift,
             user : req.user.user_id,
-            top_to : req.body.top_to || 0,
-            top_from : req.body.top_from || 0,
-            name : req.body.name,
+            top_win : req.body.top_win || 0,
             desc : req.body.desc
         }
 
@@ -69,7 +67,7 @@ router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
             obj.user = req.body.user_id
 
          //check param
-        if (validateParameters([obj.gift, obj.user, obj.name, obj.desc], res) == false) 
+        if (validateParameters([obj.gift, obj.user, obj.desc], res) == false) 
             return
 
         let result = await userRequestsModel.create(obj)
@@ -90,9 +88,7 @@ router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
             _id : req.body._id,
             gift : req.body.gift,
             user : req.user.user_id,
-            top_to : req.body.top_to || 0,
-            top_from : req.body.top_from || 0,
-            name : req.body.name,
+            top_win : req.body.top_win || 0,
             desc : req.body.desc
         }
 
@@ -100,7 +96,7 @@ router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
             obj.user = req.body.user_id
 
         //check param
-        if (validateParameters([obj.gift, obj.user, obj.name, obj.desc], res) == false) 
+        if (validateParameters([obj.gift, obj.user, obj.desc], res) == false) 
             return
 
         let result = await userRequestsModel.findByIdAndUpdate(obj._id, obj, {new : true}).exec()
