@@ -21,12 +21,18 @@ router.get('/', verifyToken, async(req, res) => {
     try
     {
         let search = req.query.search || ''
+        let _id = req.query._id
         let page = req.query.page || 0
         let limit = req.query.limit || 20
 
+         //check param
+        if (validateParameters([_id], res) == false) 
+            return
+
         let query   = {
             $and : [
-                (search != '') ? {content : {$regex: search, $options: "i"}} : {}
+                (search != '') ? {content : {$regex: search, $options: "i"}} : {},
+                {user_request : _id}
             ]
         }
         
@@ -47,17 +53,19 @@ router.get('/', verifyToken, async(req, res) => {
     }
 })
 
-//Admin thêm câu hỏi
-router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
+//Agent thêm câu hỏi
+router.post('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let obj = {
             content : req.body.content,
-            suggest : req.body.suggest
+            suggest : req.body.suggest,
+            user : req.user._id,
+            user_request : req.body.user_request
         }
 
          //check param
-        if (validateParameters([obj.content, obj.suggest], res) == false) 
+        if (validateParameters([obj.content, obj.suggest, obj.user_request], res) == false) 
             return
 
         let result = await questionModel.create(obj)
@@ -71,7 +79,7 @@ router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
 })
 
 //Admin sửa question
-router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
+router.put('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let _id = req.body._id

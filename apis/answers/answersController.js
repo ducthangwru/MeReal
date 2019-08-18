@@ -21,8 +21,15 @@ router.get('/', verifyToken, async(req, res) => {
     {
         let page = req.query.page || 0
         let limit = req.query.limit || 20
+        let _id = req.query._id
 
-        let query   = {}
+        //check param
+        if (validateParameters([_id], res) == false) 
+            return
+
+        let query   = {
+            question : _id
+        }
         
         let options = {
             sort:     { updatedAt: 1 },
@@ -58,7 +65,7 @@ router.get('/details', verifyToken, async(req, res) => {
 })
 
 //agent tạo answers
-router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
+router.post('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let obj = {
@@ -67,7 +74,7 @@ router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
             is_true : req.body.is_true,
         }
 
-         //check param
+        //check param
         if (validateParameters([obj.question, obj.content, obb.is_true], res) == false) 
             return
 

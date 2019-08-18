@@ -7,10 +7,11 @@ const userRequestsSchema = new Schema(
         gift : {type : ObjectId, require : true,  ref: 'gifts'},
         user : {type : ObjectId, require : true, ref: 'users'},
         top_win : {type : Number, require : true, default : 0},
+        price : {type : Number, require : true, default : 0},
         time : {type : String, require : true},
         date : {type : Date, require : true},
         desc : {type : String, require : true, default : ''},
-        status : {type : Number, require : true, default : STATUS_USER_REQUEST.PENDING}
+        status : {type : Number, require : true, default : STATUS_USER_REQUEST.SAVE}
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 

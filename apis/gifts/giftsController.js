@@ -47,8 +47,8 @@ router.get('/', verifyToken, async(req, res) => {
     }
 })
 
-//Admin thêm quà tặng, thưởng
-router.post('/', verifyTokenAdmin, async(req, res) => {
+//Agent thêm quà tặng, thưởng
+router.post('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let obj = {
@@ -77,8 +77,8 @@ router.post('/', verifyTokenAdmin, async(req, res) => {
     }
 })
 
-//Admin sửa quà tặng, thưởng
-router.put('/', verifyTokenAdmin, async(req, res) => {
+//Agent sửa quà tặng, thưởng
+router.put('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let obj = {
@@ -112,8 +112,8 @@ router.put('/', verifyTokenAdmin, async(req, res) => {
     }
 })
 
-//Admin xóa câu hỏi
-router.delete('/', verifyTokenAdmin, async(req, res) => {
+//Agent xóa câu hỏi
+router.delete('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let _id = req.body._id

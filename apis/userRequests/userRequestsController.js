@@ -20,13 +20,13 @@ const {ROLE_USER} = require('../../utils/enum')
 router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
     try
     {
-        let user_id = req.user.user_id
+        let user_id = req.user._id
         let search = req.query.search || ''
         let page = req.query.page || 0
         let limit = req.query.limit || 20
 
         if(req.user.role == ROLE_USER.ADMIN)
-            user_id = req.query.user_id
+            user_id = req.query._id
 
         let query   = {
             $and : [
@@ -52,22 +52,23 @@ router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
     }
 })
 
-//Agent hoặc admin thêm bộ câu hỏi
-router.post('/', verifyTokenAgentOrAdmin, async(req, res) => {
+//Agent thêm yêu cầu
+//Chưa xác thực đã tồn tại yêu cầu ngày đó hay chưa hoặc thời gian đó đã được admin duyệt của người khác chưa
+router.post('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let obj = {
             gift : req.body.gift,
-            user : req.user.user_id,
+            user : req.user._id,
             top_win : req.body.top_win || 0,
-            desc : req.body.desc
+            desc : req.body.desc,
+            price : req.body.price,
+            time : req.body.time,
+            date : req.body.date
         }
-
-        if(req.user.role == ROLE_USER.ADMIN)
-            obj.user = req.body.user_id
-
-         //check param
-        if (validateParameters([obj.gift, obj.user, obj.desc], res) == false) 
+        
+        //check param
+        if (validateParameters([obj.gift, obj.user, obj.desc, obj.price, obj.time, obj.date], res) == false) 
             return
 
         let result = await userRequestsModel.create(obj)
