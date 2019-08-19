@@ -75,7 +75,7 @@ router.post('/', verifyTokenAgent, async(req, res) => {
         }
 
         //check param
-        if (validateParameters([obj.question, obj.content, obb.is_true], res) == false) 
+        if (validateParameters([obj.question, obj.content, obj.is_true], res) == false) 
             return
 
         let result = await answerModel.create(obj)
@@ -89,7 +89,7 @@ router.post('/', verifyTokenAgent, async(req, res) => {
 })
 
 //agent sửa answers
-router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
+router.put('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let obj = {

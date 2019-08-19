@@ -16,6 +16,7 @@ $(document).ready(function() {
             {title: "Mô tả"},
             {title: "Đại lý"},
             {title: "Quà tặng"},
+            {title: "Báo giá"},
             {title: "Top win"},
             {title: "Khung giờ"},
             {title: "Ngày"},
@@ -36,7 +37,7 @@ $(document).ready(function() {
             },
             {
                 orderable: true,
-                "width": "15%",
+                "width": "10%",
                 "className": 'text-center',
                 "targets": 2
             },
@@ -54,7 +55,7 @@ $(document).ready(function() {
             },
             {
                 orderable: true,
-                "width": "10%",
+                "width": "8%",
                 "className": 'text-center',
                 "targets": 5
             },
@@ -77,10 +78,16 @@ $(document).ready(function() {
                 "targets": 8
             },
             {
-                orderable: false,
-                "width": "13%",
+                orderable: true,
+                "width": "10%",
                 "className": 'text-center',
                 "targets": 9
+            },
+            {
+                orderable: false,
+                "width": "10%",
+                "className": 'text-center',
+                "targets": 10
             }
         ]
     })

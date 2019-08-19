@@ -56,6 +56,7 @@ router.post('/', verifyTokenAgent, async(req, res) => {
             desc : req.body.desc,
             type : req.body.type,
             price : req.body.price,
+            user : req.user._id
         }
 
          //check param
