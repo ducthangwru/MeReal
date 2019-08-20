@@ -1,5 +1,7 @@
 $(document).ready(function() {
     var dataSource = []
+    var token = localStorage.getItem('token')
+    loadDataHistory()
 
     var tableHistory = $('#tableHistory').DataTable({
         scrollY:        '50vh',
@@ -52,8 +54,41 @@ $(document).ready(function() {
                 orderable: true,
                 "width": "25%",
                 "className": 'text-center',
-                "targets": 5
+                "targets": 5,
+                "mRender": function(data, type, row) {
+                    return moment(row[5]).format('DD/MM/YYYY HH:mm:ss')
+                }
             }
-        ]
+        ],
+        "fnRowCallback": function(nRow, aData, iDisplayIndex) {
+            $("td:first", nRow).html(iDisplayIndex + 1)
+            return nRow
+        }
     })
+
+    function loadDataHistory() {
+        dataSource = []
+        tableHistory ? tableHistory.clear().draw() : null
+
+        callAPI('userHistory', 'GET', '', token, null, (res) => {
+            if(!res.success)
+                alert(res.error)
+            else
+            {
+                for (let i = 0; i < res.data.docs.length; i++) {
+                    dataSource.push([ 
+                        res.data.docs[i]._id,
+                        '',
+                        res.data.docs[i].user_live.username,
+                        res.data.docs[i].score,
+                        res.data.docs[i].gift.name,
+                        res.data.docs[i].createdAt,
+                        ''
+                    ])
+                }
+
+                tableHistory.rows.add(dataSource).draw()
+            }
+        })
+    }
 })

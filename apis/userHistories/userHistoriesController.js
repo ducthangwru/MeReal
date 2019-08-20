@@ -20,24 +20,22 @@ const {ROLE_USER} = require('../../utils/enum')
 router.get('/', verifyToken, async(req, res) => {
     try
     {
-        let user_id = req.user.user_id
+        let user_id = req.user._id
         let page = req.query.page || 0
         let limit = req.query.limit || 20
         let date = req.query.date || ''
 
-        if(req.user.role == ROLE_USER.ADMIN)
-            user_id = req.query.user_id
-
         let query   = {
             $and : [
                 (date != '') ? {content : {"$gte": date, "$lt": date.addDays(1)}} : {},
-                {user : user_id}
+                (req.user.role != ROLE_USER.ADMIN) ? {user : user_id} : {}
             ]
         }
         
         let options = {
             sort:     { updatedAt: 1 },
             lean :   true,
+            populate : [{path : 'user', select : '-password'}, {path : 'user_live', select : '-password'}, 'gift'],
             offset:   parseInt(limit) * parseInt(page), 
             limit:    parseInt(limit)
         }

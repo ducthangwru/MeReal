@@ -16,7 +16,7 @@ const {
 
 const {ROLE_USER} = require('../../utils/enum')
 
-//Lấy danh sách bộ câu hỏi theo user
+//Lấy danh sách các request
 router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
     try
     {
@@ -25,19 +25,18 @@ router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
         let page = req.query.page || 0
         let limit = req.query.limit || 20
 
-        if(req.user.role == ROLE_USER.ADMIN)
-            user_id = req.query._id
-
         let query   = {
             $and : [
                 (search != '') ? {desc : {$regex: search, $options: "i"}} : {},
-                {user : user_id}
+                (req.user.role != ROLE_USER.ADMIN) ? {user : user_id} : {}
             ]
         }
         
         let options = {
             sort:     { updatedAt: 1 },
             lean :   true,
+            populate: [{path : 'user', select: '-password'}, 'gift'],
+            select: '-user.password',
             offset:   parseInt(limit) * parseInt(page), 
             limit:    parseInt(limit)
         }
@@ -81,8 +80,8 @@ router.post('/', verifyTokenAgent, async(req, res) => {
     }
 })
 
-//Agent hoặc admin sửa bộ câu hỏi
-router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
+//Agent sửa request
+router.put('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let obj = {
@@ -113,8 +112,8 @@ router.put('/', verifyTokenAgentOrAdmin, async(req, res) => {
     }
 })
 
-//Agent hoặc admin xóa bộ câu hỏi
-router.delete('/', verifyTokenAgentOrAdmin, async(req, res) => {
+//Agent xóa bộ câu hỏi
+router.delete('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let _id = req.body._id
@@ -142,7 +141,7 @@ router.delete('/', verifyTokenAgentOrAdmin, async(req, res) => {
     }
 })
 
-//Admin đổi trạng thái câu hỏi
+//Agent đổi trạng thái
 router.put('/status', verifyTokenAgentOrAdmin, async(req, res) => {
     try
     {
