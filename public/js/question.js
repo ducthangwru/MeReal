@@ -142,6 +142,10 @@ $(document).ready(function() {
         loadAnswerByQuestion(tableQuestion.row(this).data()[0])
     })
 
+    $('#btnAddQuestion').click(() => {
+        $('#exampleModal').modal('show')
+    })
+
     function loadDataRequest() {
         callAPI('userRequest', 'GET', '', token, null, (res) => {
             if(!res.success)
