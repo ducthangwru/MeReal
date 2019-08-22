@@ -45,7 +45,7 @@
     </table>
 </div>
 
-<div class="modal fade in" id="exampleModal">
+<div class="modal fade in" id="exampleModal" style="text-align:left">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -54,7 +54,17 @@
                 <h4 class="modal-title">Thêm mới câu hỏi</h4>
             </div>
             <div class="modal-body">
-                <p>One fine body…</p>
+                <label for="#inputContent">Nội dung: <strong>*</strong></label>
+                <input type="text" class="form-control" id="inputContent" placeholder="Nội dung">
+
+                <label for="#inputContent">Gợi ý: <strong>*</strong></label>
+                <input type="text" class="form-control" id="inputContent" placeholder="Nội dung">
+
+                <label for="#inputContent">Trạng thái: <strong>*</strong></label>
+                <select id="selectRequest" class="form-control">
+                    <option value="1" selected>Hoạt động</option>
+                    <option value="-1">Khóa</option>
+                </select>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
