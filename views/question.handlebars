@@ -29,13 +29,13 @@
 
 <div class="row" style="margin:1%">
     <div class="col-sm-12 col-md-12">
-        <h1>DANH SÁCH CÂU TRẢ LỜI</h1>
+        <h1 id="h1Answer">DANH SÁCH CÂU TRẢ LỜI</h1>
     </div>
 </div>
 
 <div class="row" style="margin:0%">
     <div class="col-sm-6 col-md-2" style="text-align:left">
-        <button class="btn btn-success">Thêm câu trả lời</button>
+        <button id="btnAddAnswer" class="btn btn-success">Thêm câu trả lời</button>
     </div>
     <div class="col-sm-0 col-md-10"></div>
 </div>
@@ -45,30 +45,58 @@
     </table>
 </div>
 
-<div class="modal fade in" id="exampleModal" style="text-align:left">
+<div class="modal fade in" id="modalAddEditQuestion" style="text-align:left">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Thêm mới câu hỏi</h4>
+                <h4 id="h4AddEditQuestion" class="modal-title">Thêm mới câu hỏi</h4>
             </div>
             <div class="modal-body">
+                <p hidden id="idQuestion"></p>
                 <label for="#inputContent">Nội dung: <strong>*</strong></label>
                 <input type="text" class="form-control" id="inputContent" placeholder="Nội dung">
 
-                <label for="#inputContent">Gợi ý: <strong>*</strong></label>
-                <input type="text" class="form-control" id="inputContent" placeholder="Nội dung">
+                <label for="#inputSuggest">Gợi ý: <strong>*</strong></label>
+                <input type="text" class="form-control" id="inputSuggest" placeholder="Gợi ý">
 
-                <label for="#inputContent">Trạng thái: <strong>*</strong></label>
-                <select id="selectRequest" class="form-control">
+                <label for="#selectStatus">Trạng thái: <strong>*</strong></label>
+                <select id="selectStatus" class="form-control">
                     <option value="1" selected>Hoạt động</option>
                     <option value="-1">Khóa</option>
                 </select>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Tạo mới</button>
+                <button id="btnAddEditQuestion" type="button" class="btn btn-primary">Tạo mới</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade in" id="modalAddEditAnswer" style="text-align:left">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 id="h4AddEditAnswer" class="modal-title">Thêm mới câu trả lời</h4>
+            </div>
+            <div class="modal-body">
+                <p hidden id="idAnswer"></p>
+                <label for="#inputContentAnswer">Nội dung: <strong>*</strong></label>
+                <input type="text" class="form-control" id="inputContentAnswer" placeholder="Nội dung">
+
+                <label for="#selectTrueFalse">Đúng/Sai: <strong>*</strong></label>
+                <select id="selectTrueFalse" class="form-control">
+                    <option value="true" selected>Đúng</option>
+                    <option value="false">Sai</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
+                <button id="btnAddEditAnswer" type="button" class="btn btn-primary">Tạo mới</button>
             </div>
         </div>
     </div>

@@ -3,6 +3,7 @@ const router = express.Router()
 const config = require('../../utils/config')
 const message = require('../../utils/message')
 const questionModel = require('./questionsModel')
+const answerModel = require('../answers/answersModel')
 const {
     error,
     success,
@@ -60,12 +61,13 @@ router.post('/', verifyTokenAgent, async(req, res) => {
         let obj = {
             content : req.body.content,
             suggest : req.body.suggest,
+            status : req.body.status,
             user : req.user._id,
             user_request : req.body.user_request
         }
 
          //check param
-        if (validateParameters([obj.content, obj.suggest, obj.user_request], res) == false) 
+        if (validateParameters([obj.content, obj.suggest, obj.user_request, obj.status], res) == false) 
             return
 
         let result = await questionModel.create(obj)
@@ -85,12 +87,13 @@ router.put('/', verifyTokenAgent, async(req, res) => {
         let _id = req.body._id
         let content = req.body.content
         let suggest = req.body.suggest
+        let status = req.body.status
 
          //check param
-        if (validateParameters([_id, content, suggest], res) == false) 
+        if (validateParameters([_id, content, suggest,status], res) == false) 
             return
 
-        let result = await questionModel.findByIdAndUpdate(_id, {content, suggest}, {new : true}).exec()
+        let result = await questionModel.findByIdAndUpdate(_id, {content, suggest, status}, {new : true}).exec()
 
         if(result)
             return success(res, result)
@@ -104,10 +107,11 @@ router.put('/', verifyTokenAgent, async(req, res) => {
 })
 
 //Admin xóa câu hỏi
-router.delete('/', verifyTokenAgentOrAdmin, async(req, res) => {
+router.delete('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let _id = req.body._id
+        let user = req.user._id
 
         //check param
         if (validateParameters([_id], res) == false) 
@@ -115,7 +119,8 @@ router.delete('/', verifyTokenAgentOrAdmin, async(req, res) => {
 
         if(await questionModel.findById(_id).exec())
         {
-            await questionModel.findByIdAndRemove(_id).exec()
+            await questionModel.findOneAndRemove({_id, user}).exec()
+            await answerModel.deleteMany({question : _id}).exec()
             return success(res)
         }
             

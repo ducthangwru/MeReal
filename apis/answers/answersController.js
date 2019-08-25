@@ -16,7 +16,7 @@ const {
 } = require('../../utils/utils')
 
 //lấy danh sách answers
-router.get('/', verifyToken, async(req, res) => {
+router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
     try
     {
         let page = req.query.page || 0
@@ -33,7 +33,6 @@ router.get('/', verifyToken, async(req, res) => {
         
         let options = {
             sort:     { updatedAt: 1 },
-            select : '-is_true',
             lean :   true,
             offset:   parseInt(limit) * parseInt(page), 
             limit:    parseInt(limit)
@@ -78,6 +77,9 @@ router.post('/', verifyTokenAgent, async(req, res) => {
         if (validateParameters([obj.question, obj.content, obj.is_true], res) == false) 
             return
 
+        if(obj.is_true == true)
+            await answerModel.updateMany({question}, {is_true : false}).exec()
+
         let result = await answerModel.create(obj)
 
         return success(res, result)
@@ -94,13 +96,17 @@ router.put('/', verifyTokenAgent, async(req, res) => {
     {
         let obj = {
             _id : req.body._id,
+            question : req.body.question,
             content : req.body.content,
             is_true : req.body.is_true
         }
 
          //check param
-        if (validateParameters([obj._id, obj.content, obj.is_true], res) == false) 
+        if (validateParameters([obj._id, obj.content, obj.is_true, obj.question], res) == false) 
             return
+
+        if(obj.is_true == true)
+            await answerModel.updateMany({question}, {is_true : false}).exec()
 
         let result = await answerModel.findByIdAndUpdate(obj._id, obj, {new : true}).exec()
 
