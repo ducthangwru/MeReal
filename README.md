@@ -51,3 +51,8 @@ Ngày 13/08/2019
 Ngày 14/08/2019
 1. Fix bug thông tin cá nhân không được thay đổi khi thay đổi thông tin tài khoản
 2. Tạo giao diện trang quản lý question
+
+Ngày 25/08/2019
+1. Thêm, sửa, xóa câu hỏi
+2. Thêm, sửa, xóa câu trả lời
+3. Hiển thị dữ liệu trên tất cả các form từ database
