@@ -22,7 +22,7 @@ router.get('/', verifyToken, async(req, res) => {
     {
         let user_id = req.user._id
         let page = req.query.page || 0
-        let limit = req.query.limit || 20
+        let limit = req.query.limit || 1000
         let date = req.query.date || ''
 
         let query   = {

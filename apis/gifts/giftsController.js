@@ -22,7 +22,7 @@ router.get('/', verifyToken, async(req, res) => {
     {
         let search = req.query.search || ''
         let page = req.query.page || 0
-        let limit = req.query.limit || 20
+        let limit = req.query.limit || 1000
 
         let query   = {
             $and : [

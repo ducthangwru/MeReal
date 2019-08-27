@@ -20,7 +20,7 @@ router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
     try
     {
         let page = req.query.page || 0
-        let limit = req.query.limit || 20
+        let limit = req.query.limit || 1000
         let _id = req.query._id
 
         //check param

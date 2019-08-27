@@ -24,7 +24,7 @@ router.get('/', verifyToken, async(req, res) => {
         let search = req.query.search || ''
         let _id = req.query._id
         let page = req.query.page || 0
-        let limit = req.query.limit || 20
+        let limit = req.query.limit || 1000
 
          //check param
         if (validateParameters([_id], res) == false) 
