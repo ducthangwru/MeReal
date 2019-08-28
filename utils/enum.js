@@ -37,20 +37,26 @@ const STATUS_USER_REQUEST = {
     SAVE : -2
 }
 
-const LIVESTREAM_TIME_ENUM = {
-    K1 : {
-        FROM : "09:00",
-        TO : "10:00"
+const LIVESTREAM_TIME_ENUM = [
+    {
+        id : 1,
+        from : "09:00",
+        to : "10:00",
+        price : 10000000 //10.000.000 VNĐ
     },
-    K2 : {
-        FROM : "15:00",
-        TO : "16:00"
+    {
+        id : 2,
+        from : "15:00",
+        to : "16:00",
+        price : 20000000 //20.000.000 VNĐ
     },
-    K3 : {
-        FROM : "20:00",
-        TO : "21:00"
+    {
+        id : 3,
+        from : "20:00",
+        to : "21:00",
+        price : 50000000 //50.000.000 VNĐ
     }
-}
+]
 
 module.exports = {
     STATUS_USER,

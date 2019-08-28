@@ -16,6 +16,7 @@ var tableUser = $('#tableUser').DataTable({
         {title: "Tên đăng nhập"},
         {title: "Họ tên"},
         {title: "Email"},
+        {title: "Quyền"},
         {title: "Trạng thái"},
         {title: "Thao tác"}
     ],
@@ -51,21 +52,37 @@ var tableUser = $('#tableUser').DataTable({
         },
         {
             orderable: true,
-            "width": "20%",
+            "width": "15%",
             "className": 'text-center',
             "targets": 5,
             "mRender": function(data, type, row) {
-                return (row[5] == 1) ? `<a class="label label-success">Hoạt động</a>` : `<a class="label label-danger">Khóa</a>`
+                if(row[5] == 1) 
+                    return `<a class="label label-default">Người dùng</a>` 
+                else if(row[5] == 2)
+                    return `<a class="label label-warning">Đại lý</a>`
+                else if(row[5] == 3)
+                    return `<a class="label label-success">Quản trị viên</a>`
+            }
+        },
+        {
+            orderable: true,
+            "width": "15%",
+            "className": 'text-center',
+            "targets": 6,
+            "mRender": function(data, type, row) {
+                return (row[6] == 1) ? `<a class="label label-success">Hoạt động</a>` : `<a class="label label-danger">Khóa</a>`
             }
         },
         {
             orderable: false,
-            "width": "20%",
+            "width": "10%",
             "className": 'text-center',
-            "targets": 6,
+            "targets": 7,
             "mRender": function(data, type, row) {
-                return `<a class="label label-success"><i class="fa fa-edit"></i></a>
-                        <a class="label label-danger"><i class="fa fa-trash"></i></a>`
+                let lock = ''
+                lock = (row[6] == 1) ? `lock` : `check`
+                return `<a class="label label-success" onclick="lockUser('${encodeURI(JSON.stringify(row))}')"><i class="fa fa-${lock}"></i></a>
+                        <a class="label label-danger" onclick="deleteUser('${row[0]}')"><i class="fa fa-trash"></i></a>`
             }
         }
     ],
@@ -95,6 +112,7 @@ function loadDataUser() {
                     res.data.docs[i].username,
                     res.data.docs[i].fullname,
                     res.data.docs[i].email,
+                    res.data.docs[i].role,
                     res.data.docs[i].status,
                     ''
                 ])
@@ -103,4 +121,28 @@ function loadDataUser() {
             tableUser.rows.add(dataSource).draw()
         }
     })
+}
+
+function lockUser(data) {
+    data = JSON.parse(decodeURI(data))
+    let r = null
+    if(data[6] == 1)
+        r = confirm("Bạn có chắc chắn muốn khóa tài khoản này?")
+    else
+        r = confirm("Bạn có chắc chắn muốn mở khóa tài khoản này?")
+
+    if (r == true) {
+        callAPI('user/status', 'PUT', '', token, {
+            _id : data[0],
+            status : data[6] * -1
+        }, (res) => {
+            if(!res.success)
+                alert(res.error)
+            else
+            {
+                alert('Thành công!')
+                loadDataUser()
+            }
+        })
+    }
 }

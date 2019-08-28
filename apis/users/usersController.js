@@ -181,11 +181,13 @@ router.put('/status', verifyTokenAdmin, async(req, res) => {
         if (validateParameters([_id, status], res) == false) 
             return
 
-        if(await usersModel.findById(_id).exec())
+        if(_id != req.user._id && await usersModel.findById(_id).exec())
         {
             await usersModel.findByIdAndUpdate(_id, {status}).exec()
             return success(res)
         }
+        else if(_id == req.user._id)
+            return error(res, message.USER_IS_ADMIN)
         
         return error(res, message.USER_NOT_EXISTS)
     }

@@ -13,7 +13,9 @@ const message = {
     SET_QUESTION_NOT_EXISTS : "Bộ câu hỏi không tồn tại",
     CHANEL_NOT_EXISTS : "Kênh không tồn tại",
     ANSWER_NOT_EXISTS : "Câu trả lời không tồn tại",
-    WRONG_PASSWORD : "Mật khẩu cũ không đúng"
+    WRONG_PASSWORD : "Mật khẩu cũ không đúng",
+    USER_IS_ADMIN : "Tài khoản này là quản trị viên",
+    USER_LOCKED : "Tài khoản đã bị khóa. Liên hệ admin"
 }
 
 module.exports = message

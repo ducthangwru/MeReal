@@ -549,6 +549,7 @@ $(document).ready(function() {
 		$('#btnStream').hide()
 		$('#ulMenu').append(`<li><a href="/request"><i class="fa fa-book"></i> <span>Quản lý yêu cầu<span></span></a></li>`)
 		$('#ulMenu').append(`<li><a href="/user"><i class="fa fa-users"></i> <span>Quản lý người dùng<span></span></a></li>`)
+		$('#ulMenu').append(`<li><a href="/time"><i class="fa fa-calendar"></i> <span>Cấu hình khung giờ<span></span></a></li>`)
 		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-wrench"></i> <span>Tài khoản<span></span></a></li>`)
 		$('#ulMenu').append(`<li><a href="/logout"><i class="fa fa-share"></i> <span>Đăng xuất</span></a></li>`)
 	}

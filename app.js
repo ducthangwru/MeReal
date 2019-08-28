@@ -58,6 +58,7 @@ const gift = require('./apis/gifts/giftsController')
 const answer = require('./apis/answers/answersController')
 const userRequest = require('./apis/userRequests/userRequestsController')
 const userHistory = require('./apis/userHistories/userHistoriesController')
+const time = require('./apis/times/timesController')
 
 app.use('/api/public', public)
 app.use('/api/user', user)
@@ -66,6 +67,7 @@ app.use('/api/gift', gift)
 app.use('/api/answer', answer)
 app.use('/api/userRequest', userRequest)
 app.use('/api/userHistory', userHistory)
+app.use('/api/time', time)
 
 app.get('/', async (req, res, next) => {
     if(req.session.token)
@@ -136,6 +138,10 @@ app.get('/user', function (req, res, next) {
 
 app.get('/history', function (req, res, next) {
     res.render('history')
+})
+
+app.get('/time', function (req, res, next) {
+    res.render('time')
 })
 
 app.get('/404', function (req, res, next) {

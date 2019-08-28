@@ -59,3 +59,5 @@ Ngày 25/08/2019
 
 Ngày 28/08/2019
 1. Thêm, sửa, xóa quà tặng
+2. Khóa/mở khóa, xóa tài khoản người dùng
+3. Thêm menu cấu hình khung giờ

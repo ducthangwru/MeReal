@@ -16,6 +16,7 @@ const {
     assignToken,
     sendEmailForgotPW
 } = require('../../utils/utils')
+const {STATUS_USER} = require('../../utils/enum')
 
 //API đăng ký tài khoản
 router.post('/register', async(req, res) => {
@@ -103,12 +104,14 @@ router.post('/login', async(req, res) => {
                                         password : md5(password)
                                     }).exec()
 
-        if(result)
+        if(result && result.status == STATUS_USER.ACTIVE)
         {
             let token = await assignToken(result._id, result.username, result.email, result.role, result.fullname)
             req.session.token = token
             return success(res, {token : token, user : result})
         }
+        else if(result && result.status == STATUS_USER.LOCK)
+            return error(res, message.USER_LOCKED)
         
         return error(res, message.WRONG_USER)
     }
