@@ -16,7 +16,8 @@ const ROLE_USER = {
 
 const STATUS_GIFT = {
     ACTIVE : 1,
-    LOCK : -1
+    LOCK : -1,
+    DELETE : 0
 }
 
 const TYPE_GIFT = {

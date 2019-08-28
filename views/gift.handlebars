@@ -6,7 +6,7 @@
 
 <div class="row" style="margin:0%; text-align:left;">
     <div class="col-sm-6 col-md-2">
-        <button class="btn btn-success">Thêm quà tặng</button>
+        <button id="btnAddGift" class="btn btn-success">Thêm quà tặng</button>
     </div>
     <div class="col-sm-0 col-md-10"></div>
 </div>
@@ -14,6 +14,45 @@
 <div class="row" style="margin:1%">
     <table id="tableGift" class="table table-bordered table-hover" style="color: white;background-color: #3c8dbc;">
     </table>
+</div>
+
+<div class="modal fade in" id="modalAddEditGift" style="text-align:left">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 id="h4AddEditGift" class="modal-title">Thêm mới quà tặng</h4>
+            </div>
+            <div class="modal-body">
+                <p hidden id="idGift"></p>
+                <label for="#inputName">Tên quà tặng: <strong>*</strong></label>
+                <input type="text" class="form-control" id="inputName" placeholder="Tên quà tặng">
+
+                <label for="#inputDesc">Gợi ý: <strong>*</strong></label>
+                <input type="text" class="form-control" id="inputDesc" placeholder="Mô tả">
+
+                <label for="#selectType">Trạng thái: <strong>*</strong></label>
+                <select id="selectType" class="form-control">
+                    <option value="1" selected>Tiền mặt</option>
+                    <option value="2">Sản phẩm</option>
+                </select>
+
+                <label for="#inputPrice">Giá (VNĐ): <strong>*</strong></label>
+                <input type="number" class="form-control" id="inputPrice" placeholder="Giá (VNĐ)">
+
+                <label for="#selectStatus">Trạng thái: <strong>*</strong></label>
+                <select id="selectStatus" class="form-control">
+                    <option value="1" selected>Hoạt động</option>
+                    <option value="-1">Khóa</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
+                <button id="btnAddEditGift" type="button" class="btn btn-primary">Tạo mới</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="js/gift.js"></script>

@@ -56,3 +56,6 @@ Ngày 25/08/2019
 1. Thêm, sửa, xóa câu hỏi
 2. Thêm, sửa, xóa câu trả lời
 3. Hiển thị dữ liệu trên tất cả các form từ database
+
+Ngày 28/08/2019
+1. Thêm, sửa, xóa quà tặng

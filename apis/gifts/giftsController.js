@@ -56,6 +56,7 @@ router.post('/', verifyTokenAgent, async(req, res) => {
             desc : req.body.desc,
             type : req.body.type,
             price : req.body.price,
+            status : req.body.status,
             user : req.user._id
         }
 
@@ -64,7 +65,8 @@ router.post('/', verifyTokenAgent, async(req, res) => {
                 obj.name, 
                 obj.desc,
                 obj.type,
-                obj.price
+                obj.price,
+                obj.status
             ], res) == false) 
             return
 
@@ -88,6 +90,7 @@ router.put('/', verifyTokenAgent, async(req, res) => {
             desc : req.body.desc,
             type : req.body.type,
             price : req.body.price,
+            status : req.body.status
         }
 
          //check param
@@ -96,7 +99,8 @@ router.put('/', verifyTokenAgent, async(req, res) => {
                 obj.name, 
                 obj.desc,
                 obj.type,
-                obj.price
+                obj.price,
+                obj.status
             ], res) == false) 
             return
 
@@ -123,14 +127,12 @@ router.delete('/', verifyTokenAgent, async(req, res) => {
         if (validateParameters([_id], res) == false) 
             return
 
-        if(await giftModel.findById(_id).exec())
-        {
-            await giftModel.findByIdAndRemove(_id).exec()
-            return success(res)
-        }
-            
-        return error(res, message.GIFT_NOT_EXISTS)
+        let result = await giftModel.findByIdAndUpdate(_id, {status : STATUS_GIFT.DELETE}, {new : true}).exec()
 
+        if(result)
+            return success(res, result)
+        
+        return error(res, message.GIFT_NOT_EXISTS)
     }
     catch(e)
     {
