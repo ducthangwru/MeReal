@@ -6,7 +6,7 @@
 
 <div class="row" style="margin:0%; text-align:left;">
     <div class="col-sm-6 col-md-2">
-        <button class="btn btn-success">Thêm yêu cầu</button>
+        <button id="btnAddRequest" class="btn btn-success">Thêm yêu cầu</button>
     </div>
     <div class="col-sm-0 col-md-10"></div>
 </div>
@@ -14,6 +14,58 @@
 <div class="row" style="margin:1%">
     <table id="tableRequest" class="table table-bordered table-hover" style="color: white;background-color: #3c8dbc;">
     </table>
+</div>
+
+<div class="modal fade in" id="modalAddEditRequest" style="text-align:left">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 id="h4AddEditRequest" class="modal-title">Thêm mới yêu cầu</h4>
+            </div>
+            <div class="modal-body">
+                <p hidden id="idRequest"></p>
+                <label for="#inputDesc">Mô tả: <strong>*</strong></label>
+                <input type="text" class="form-control" id="inputDesc" placeholder="Mô tả">
+                
+                <label for="#selectGift">Chọn quà tặng: <strong>*</strong></label>
+                <select id="selectGift" class="form-control">
+                </select>
+
+                <label for="#selectTime">Chọn khung giờ: <strong>*</strong></label>
+                <select id="selectTime" class="form-control">
+                </select>
+
+                <div class="form-group">
+                    <label for="#inputDate">Chọn ngày: <strong>*</strong></label>
+
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <input id="inputDate" type="text" class="form-control" data-inputmask="'alias': 'date'" placeholder="dd/mm/yyyy"/>
+                    </div>
+                </div>
+
+                <label for="#inputPrice">Báo giá: <strong>*</strong></label>
+                <input type="text" class="form-control" id="inputPrice" placeholder="Báo giá">
+
+                <label for="#inputTopWin">Top win: <strong>*</strong></label>
+                <input type="number" class="form-control" id="inputTopWin" placeholder="Top Win">
+
+                <label for="#selectStatus">Trạng thái: <strong>*</strong></label>
+                <select id="selectStatus" class="form-control">
+                    <option value="1" selected>Lưu</option>
+                    <option value="-1">Gửi</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
+                <button id="btnAddEditRequest" type="button" class="btn btn-primary">Tạo mới</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="js/request.js"></script>

@@ -14,7 +14,7 @@ const {
     assignToken
 } = require('../../utils/utils')
 
-const {ROLE_USER} = require('../../utils/enum')
+const {ROLE_USER, STATUS_USER_REQUEST} = require('../../utils/enum')
 
 //Lấy danh sách các request
 router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
@@ -28,7 +28,8 @@ router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
         let query   = {
             $and : [
                 (search != '') ? {desc : {$regex: search, $options: "i"}} : {},
-                (req.user.role != ROLE_USER.ADMIN) ? {user : user_id} : {}
+                (req.user.role != ROLE_USER.ADMIN) ? {user : user_id} : {},
+                //(req.user.role == ROLE_USER.ADMIN) ? {status : { $ne:  STATUS_USER_REQUEST.SAVE}} : {}
             ]
         }
         
@@ -63,11 +64,12 @@ router.post('/', verifyTokenAgent, async(req, res) => {
             desc : req.body.desc,
             price : req.body.price,
             time : req.body.time,
-            date : req.body.date
+            date : req.body.date,
+            status : req.body.status
         }
         
         //check param
-        if (validateParameters([obj.gift, obj.user, obj.desc, obj.price, obj.time, obj.date], res) == false) 
+        if (validateParameters([obj.gift, obj.user, obj.desc, obj.price, obj.time, obj.date, obj.status], res) == false) 
             return
 
         let result = await userRequestsModel.create(obj)
