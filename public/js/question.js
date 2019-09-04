@@ -1,4 +1,5 @@
 var token = localStorage.getItem('token')
+var u = JSON.parse(localStorage.getItem('user'))
 var dataQuestionSource = []
 var dataAnswerSource = []
 var idQuestion = null
@@ -133,8 +134,18 @@ var tableAnswer = $('#tableAnswer').DataTable({
     }
 })
 
+if(u.role == 3)
+{
+    $('#divSelectRequest').hide()
+    $('#btnAddQuestion').hide()
+    $('#btnAddAnswer').hide()
+}
+
+var idParam = getParameterByName('id')
+
 $(document).ready(function() {
     loadDataRequest()
+    loadQuestionByRequest(idParam)
 
     $('#selectRequest').on('change', function() {
         loadQuestionByRequest(this.value)
@@ -371,4 +382,15 @@ function editAnswer(data) {
     $('#selectTrueFalse').val(`${data[3]}`) 
     $('#modalAddEditAnswer').modal('show')
 }
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  }
+  
 

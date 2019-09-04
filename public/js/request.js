@@ -130,7 +130,7 @@ var tableRequest = $('#tableRequest').DataTable({
                 if(u.role == 3)
                 {
                     return `
-                    <a class="label label-warning"><i class="fa fa-question"></i></a>
+                    <a class="label label-warning" href="/question?id=${row[0]}"><i class="fa fa-question"></i></a>
                     <a class="label label-success"><i class="fa fa-check"></i></a>
                     <a class="label label-danger"><i class="fa fa-lock"></i></a>`
                 }
