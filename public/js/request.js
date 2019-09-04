@@ -1,6 +1,7 @@
 var dataSource = []
 var token = localStorage.getItem('token')
 var u = JSON.parse(localStorage.getItem('user'))
+var dataTime = null
 
 var tableRequest = $('#tableRequest').DataTable({
     scrollY:        '50vh',
@@ -73,7 +74,13 @@ var tableRequest = $('#tableRequest').DataTable({
             orderable: true,
             "width": "10%",
             "className": 'text-center',
-            "targets": 7
+            "targets": 7,
+            "mRender": function(data, type, row) {
+                for (let i = 0; i < dataTime.length; i++) {
+                    if(dataTime[i].id == row[7])
+                        return `${dataTime[i].from}-${dataTime[i].to}`
+                }
+            }
         },
         {
             orderable: true,
@@ -99,7 +106,7 @@ var tableRequest = $('#tableRequest').DataTable({
                 switch(row[9])
                 {
                     case 0:
-                        nRow =  `<a class="label label-warning">Chờ duyệt</a>`
+                        nRow =  `<a class="label label-warning">Đã gửi</a>`
                         break
                     case 1:
                         nRow =  `<a class="label label-success">Đã duyệt</a>`
@@ -129,8 +136,12 @@ var tableRequest = $('#tableRequest').DataTable({
                 }
                 else
                 {
-                    return `<a class="label label-success"><i class="fa fa-edit"></i></a>
-                    <a class="label label-danger"><i class="fa fa-trash"></i></a>`
+                    let hidden = ''
+                    if(row[9] != -2)
+                        hidden = 'hidden'
+
+                    return `<a class="label label-success" onclick="editRequest('${encodeURI(JSON.stringify(row))}')" ${hidden}><i class="fa fa-edit"></i></a>
+                    <a class="label label-danger" onclick="deleteRequest('${row[0]}')" ${hidden}><i class="fa fa-trash"></i></a>`
                 }
             }
         }
@@ -179,18 +190,22 @@ $(document).ready(function() {
                     $('#inputDesc').val('')
                     $('#inputPrice').val('')
                     $('#inputDate').val('')
-                    $('#btnAddEditRequest').modal('hide')
                     loadDataRequest()
+                    $('#modalAddEditRequest').modal('hide')
                 }
             })
         }
         else if($('#btnAddEditRequest').attr('data-name') == 'edit')
         {
             callAPI('userRequest', 'PUT', '', token, {
-                content: $('#inputContent').val(),
-                suggest : $('#inputSuggest').val(),
-                status : $('#selectStatus').val(),
-                _id: $('#idQuestion').text() 
+                gift: $('#selectGift').val(),
+                top_win : $('#inputTopWin').val(),
+                desc : $('#inputDesc').val(),
+                price : $('#inputPrice').val(),
+                time : $('#selectTime').val(),
+                date: $('#inputDate').val(),
+                status: $('#selectStatus').val(),
+                _id: $('#idRequest').text() 
             }, (res) => {
                 if(!res.success)
                     alert(res.error)
@@ -200,8 +215,8 @@ $(document).ready(function() {
                     $('#inputDesc').val('')
                     $('#inputPrice').val('')
                     $('#inputDate').val('')
-                    $('#btnAddEditRequest').modal('hide')
                     loadDataRequest()
+                    $('#modalAddEditRequest').modal('hide')
                 }
             })
         }
@@ -238,6 +253,21 @@ function loadDataRequest() {
     })
 }
 
+function editRequest(data) {
+    data = JSON.parse(decodeURI(data))
+    $('#h4AddEditRequest').text('Sửa yêu cầu')
+    $('#btnAddEditRequest').text('Cập nhật')
+    $('#btnAddEditRequest').attr('data-name', 'edit')
+    $('#inputTopWin').val(data[6])
+    $('#inputDesc').val(data[2])
+    $('#inputPrice').val(data[5])
+    $('#selectTime').val(data[7])
+    $('#inputDate').val(moment(data[8]).format('DD/MM/YYYY'))
+    $('#selectStatus').val(data[9])
+    $('#idRequest').text(data[0]) 
+    $('#modalAddEditRequest').modal('show')
+}
+
 function loadDataGift() {
     callAPI('gift', 'GET', '', token, null, (res) => {
         if(!res.success)
@@ -259,9 +289,27 @@ function loadDataTime() {
         else
         {
             $('#selectTime').append(`<option value="0" selected>---Chọn thời gian---</option>`)
+            dataTime = res.data
             for (let i = 0; i < res.data.length; i++) {
                 $('#selectTime').append(`<option value="${res.data[i].id}">${res.data[i].from}-${res.data[i].to}. Giá min: ${numeral(res.data[i].price).format('0,0')} (VNĐ)</option>`)
             }
         }
     })
+}
+
+function deleteRequest(requestId) {
+    let r = confirm("Bạn có chắc chắn muốn xóa!")
+    if (r == true) {
+        callAPI('userrequest', 'DELETE', '', token, {
+            _id : requestId
+        }, (res) => {
+            if(!res.success)
+                alert(res.error)
+            else
+            {
+                alert('Xóa thành công!')
+                loadDataRequest()
+            }
+        })
+    }
 }

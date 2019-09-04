@@ -87,21 +87,23 @@ router.put('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let obj = {
-            _id : req.body._id,
             gift : req.body.gift,
-            user : req.user.user_id,
+            user : req.user._id,
             top_win : req.body.top_win || 0,
-            desc : req.body.desc
+            desc : req.body.desc,
+            price : req.body.price,
+            time : req.body.time,
+            date : req.body.date,
+            status : req.body.status,
+            _id : req.body._id,
+            user : req.user._id
         }
-
-        if(req.user.role == ROLE_USER.ADMIN)
-            obj.user = req.body.user_id
-
+        
         //check param
-        if (validateParameters([obj.gift, obj.user, obj.desc], res) == false) 
+        if (validateParameters([obj._id, obj.gift, obj.user, obj.desc, obj.price, obj.time, obj.date, obj.status], res) == false) 
             return
 
-        let result = await userRequestsModel.findByIdAndUpdate(obj._id, obj, {new : true}).exec()
+        let result = await userRequestsModel.findOneAndUpdate({_id : _id, user : user_id}, obj, {new : true}).exec()
 
         if(result)
             return success(res, result)
@@ -119,13 +121,10 @@ router.delete('/', verifyTokenAgent, async(req, res) => {
     try
     {
         let _id = req.body._id
-        let user_id = req.user.user_id
-
-        if(req.user.role == ROLE_USER.ADMIN)
-            user_id = req.body.user_id
+        let user_id = req.user._id
 
         //check param
-        if (validateParameters([_id, user_id], res) == false) 
+        if (validateParameters([_id], res) == false) 
             return
 
         if(await userRequestsModel.findById(_id).exec())
