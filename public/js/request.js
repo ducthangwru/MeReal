@@ -131,8 +131,8 @@ var tableRequest = $('#tableRequest').DataTable({
                 {
                     return `
                     <a class="label label-warning" href="/question?id=${row[0]}"><i class="fa fa-question"></i></a>
-                    <a class="label label-success"><i class="fa fa-check"></i></a>
-                    <a class="label label-danger"><i class="fa fa-lock"></i></a>`
+                    <a class="label label-success" onclick="acceptRequest('${row[0]}')"><i class="fa fa-check"></i></a>
+                    <a class="label label-danger" onclick="cancelRequest('${row[0]}')"><i class="fa fa-lock"></i></a>`
                 }
                 else
                 {
@@ -308,6 +308,42 @@ function deleteRequest(requestId) {
             else
             {
                 alert('Xóa thành công!')
+                loadDataRequest()
+            }
+        })
+    }
+}
+
+function acceptRequest(requestId) {
+    let r = confirm("Bạn có chắc chắn muốn chấp nhận yêu cầu này?")
+    if (r == true) {
+        callAPI('userrequest/status', 'PUT', '', token, {
+            _id : requestId,
+            status : 1
+        }, (res) => {
+            if(!res.success)
+                alert(res.error)
+            else
+            {
+                alert('Thành công!')
+                loadDataRequest()
+            }
+        })
+    }
+}
+
+function cancelRequest(requestId) {
+    let r = confirm("Bạn có chắc chắn muốn hủy yêu cầu này?")
+    if (r == true) {
+        callAPI('userrequest/status', 'PUT', '', token, {
+            _id : requestId,
+            status : -1
+        }, (res) => {
+            if(!res.success)
+                alert(res.error)
+            else
+            {
+                alert('Thành công!')
                 loadDataRequest()
             }
         })

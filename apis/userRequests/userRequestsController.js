@@ -143,7 +143,7 @@ router.delete('/', verifyTokenAgent, async(req, res) => {
 })
 
 //Agent đổi trạng thái
-router.put('/status', verifyTokenAgentOrAdmin, async(req, res) => {
+router.put('/status', verifyTokenAdmin, async(req, res) => {
     try
     {
         let _id = req.body._id
