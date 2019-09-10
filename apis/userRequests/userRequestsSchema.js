@@ -8,7 +8,7 @@ const userRequestsSchema = new Schema(
         user : {type : ObjectId, require : true, ref: 'users'},
         top_win : {type : Number, require : true, default : 0},
         price : {type : Number, require : true, default : 0},
-        time : {type : String, require : true},
+        time : {type : Number, require : true},
         date : {type : Date, require : true},
         desc : {type : String, require : true, default : ''},
         status : {type : Number, require : true, default : STATUS_USER_REQUEST.SAVE}

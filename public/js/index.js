@@ -7,9 +7,10 @@
  * TODO: make getVideoElement a native non-jQuery function
  *
  */
+var token = localStorage.getItem('token');
+var u = JSON.parse(localStorage.getItem('user'));
 
 (function(){
-	
 	
 var CONTROLLER = window.CONTROLLER = function(phone, serverFunc){
 	if (!window.phone) window.phone = phone
@@ -296,40 +297,55 @@ var end_stream = document.getElementById('end')
 var streamName 
 
 function stream() {
-	streamName = "a" //Tên phòng
-	var phone = window.phone = PHONE({
-	    number        : streamName, // listen on username line else random
-	    publish_key   : 'pub-c-561a7378-fa06-4c50-a331-5c0056d0163c', // Your Pub Key
-	    subscribe_key : 'sub-c-17b7db8a-3915-11e4-9868-02ee2ddab7fe', // Your Sub Key
-	    oneway        : true,
-	    broadcast     : true,
-	})
-	//phone.debug(function(m){ console.log(m)  })
-	var ctrl = window.ctrl = CONTROLLER(phone, get_xirsys_servers) 
-	ctrl.ready(function(){
-		//form.streamname.style.background="#55ff5b"
-		//form.streamname.value = phone.number()
-//		form.stream_submit.hidden="true"  
-		ctrl.addLocalStream(video_out)
-		ctrl.stream()
-        stream_info.hidden=false
-        end_stream.hidden =false
-		addLog("Đang stream đến phòng " + streamName) 
-	})
+	//Kiểm tra xem user đó có được livestream ko
+	callAPI('userrequest/check', 'GET', '', token, null, (res) => {
+		if(!res.success)
+		{
+			alert(res.error)
+		}
+		else
+		{
+			$('#btnStart').show()
+			$('#btnStream').hide()
+			$('#btnWatch').hide()
 
-	ctrl.receive(function(session){
-	    session.connected(function(session){ addLog(session.number + " đã tham gia")  })
-		session.ended(function(session) { 
-			addLog(session.number + " đã rời đi")
-			console.log(session)
-		})
-	})
+			streamName = "a" //Tên phòng
+			var phone = window.phone = PHONE({
+				number        : streamName, // listen on username line else random
+				publish_key   : 'pub-c-561a7378-fa06-4c50-a331-5c0056d0163c', // Your Pub Key
+				subscribe_key : 'sub-c-17b7db8a-3915-11e4-9868-02ee2ddab7fe', // Your Sub Key
+				oneway        : true,
+				broadcast     : true,
+			})
+			//phone.debug(function(m){ console.log(m)  })
+			var ctrl = window.ctrl = CONTROLLER(phone, get_xirsys_servers) 
+			ctrl.ready(function(){
+				//form.streamname.style.background="#55ff5b"
+				//form.streamname.value = phone.number()
+		//		form.stream_submit.hidden="true"  
+				ctrl.addLocalStream(video_out)
+				ctrl.stream()
+				stream_info.hidden=false
+				end_stream.hidden =false
+				//addLog("Đang stream đến phòng " + streamName) 
+			})
 
-	ctrl.streamPresence(function(m){
-		here_now.innerHTML=m.occupancy
-		addLog(m.occupancy + " đang xem")
-	})
+			ctrl.receive(function(session){
+				session.connected(function(session){ 
+					//addLog(session.number + " đã tham gia")  
+				})
+				session.ended(function(session) { 
+					//addLog(session.number + " đã rời đi")
+					console.log(session)
+				})
+			})
 
+			ctrl.streamPresence(function(m){
+				here_now.innerHTML=m.occupancy
+				//addLog(m.occupancy + " đang xem")
+			})
+		}
+	})
 	return false
 }
 
@@ -345,25 +361,31 @@ function watch(form){
 	var ctrl = window.ctrl = CONTROLLER(phone, get_xirsys_servers)
 	ctrl.ready(function(){
 		ctrl.isStreaming(num, function(isOn){
-			if (isOn) ctrl.joinStream(num)
+			if (isOn) 
+			{
+				ctrl.joinStream(num)
+				$('#btnWatch').hide()
+			}
 			else alert("Người dùng không livestream")
 		})
-		addLog("Đang tham gia phòng stream")
+		//addLog("Đang tham gia phòng stream")
 	})
 
 	ctrl.receive(function(session){
 	    session.connected(function(session){ 
             video_out.appendChild(session.video)
-            addLog(session.number + " đã tham gia")
+            //addLog(session.number + " đã tham gia")
             stream_info.hidden=false
 		})
 		
-	    session.ended(function(session) { addLog(session.number + " đã rời đi") })
+	    session.ended(function(session) { 
+			//addLog(session.number + " đã rời đi") 
+		})
 	})
 
 	ctrl.streamPresence(function(m){
 		here_now.innerHTML=m.occupancy
-		addLog(m.occupancy + " số người đang xem")
+		//addLog(m.occupancy + " số người đang xem")
 	})
 	return false
 }
@@ -379,6 +401,10 @@ function addLog(log){
 function end(){
 	if (!window.phone) return
 	ctrl.hangup() 
+	$('#btnStream').show()
+	$('#btnStart').hide()
+	$('#btnWatch').hide()
+	stream_info.hidden = true
     video_out.innerHTML = ""
 //	phone.pubnub.unsubscribe()  // unsubscribe all?
 }
@@ -461,6 +487,20 @@ $(document).ready(function() {
 	// socket.on('joined', function (user) {
 	// 	$('#divChat').append(`<div>${user.username} đã tham gia</div>`)
 	// })
+
+	callAPI('userrequest/check', 'GET', '', token, null, (res) => {
+		if(!res.success)
+		{
+			$('#btnStream').hide()
+			$('#btnStart').hide()
+			$('#btnWatch').show()
+		}
+		else
+		{
+			$('#btnStream').show()
+			$('#btnWatch').hide()
+		}
+	})
 
 	socket.on('received', function (data) {
 		if(data.user._id == u._id)

@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const config = require('../../utils/config')
 const message = require('../../utils/message')
+const moment = require('moment')
 const userRequestsModel = require('./userRequestsModel')
 const {
     error,
@@ -14,7 +15,7 @@ const {
     assignToken
 } = require('../../utils/utils')
 
-const {ROLE_USER, STATUS_USER_REQUEST} = require('../../utils/enum')
+const {ROLE_USER, STATUS_USER_REQUEST, LIVESTREAM_TIME_ENUM} = require('../../utils/enum')
 
 //Lấy danh sách các request
 router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
@@ -160,6 +161,35 @@ router.put('/status', verifyTokenAdmin, async(req, res) => {
         }
         
         return error(res, message.SET_QUESTION_NOT_EXISTS)
+    }
+    catch(e)
+    {
+        return error(res, e.message)
+    }
+})
+
+router.get('/check', verifyTokenAgent, async(req, res) => {
+    try
+    {
+        let user_id = req.user._id
+        let dateNow = moment().format('YYYY-MM-DD')
+        let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
+        let timeNow = moment(moment(), 'HH:mm:ss')
+
+        let result = await userRequestsModel.findOne({user : user_id, date :  { $gte: dateNow, $lte: dateTomorrow}, status : STATUS_USER_REQUEST.ACTIVED}).exec()
+        let check = false
+
+        for (let i = 0; i < LIVESTREAM_TIME_ENUM.length; i++) {
+            if(result.time == LIVESTREAM_TIME_ENUM[i].id)
+            {
+                let timeBefore30 = moment(LIVESTREAM_TIME_ENUM[i].from, 'HH:mm:ss').add(-30, 'minutes')
+                let timeTo = moment(LIVESTREAM_TIME_ENUM[i].to, 'HH:mm:ss')
+                if(timeNow.isAfter(timeBefore30) && timeNow.isBefore(timeTo))
+                    check = true
+            }
+        }
+
+        return check ? success(res) : error(res, message.NOT_EXIST_TIME)
     }
     catch(e)
     {

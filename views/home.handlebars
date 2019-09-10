@@ -1,16 +1,26 @@
 <div class="col-sm-6 col-md-9" style="margin-top:1%">
    <div id="vid-box"></div>
 
-    <div id="stream-info" hidden="true">
-        <button id="end" onclick="end()" hidden="true">Xong</button>
-        <img src="img/person_dark.png" />
-        <span id="here-now">0</span>
+    <div class="row" style="margin: 5%">
+        <div class="col-sm-6 col-md-6">
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div id="stream-info" hidden="true">
+                <label>Số người đang xem</label>
+                <img src="img/person_dark.png" />
+                <span id="here-now">0</span>
+            </div>
+        </div>
     </div>
+    
+    <div class="row">
+        <button id="btnStream" class="btn btn-primary" onclick=" errWrap(stream);" hidden>Stream</button>
+        <button id="btnWatch" class="btn btn-danger" onclick=" errWrap(watch);">Xem</button>
+        <button class="btn btn-danger" id="end" onclick="end()" hidden="true">End Live</button>
+        <!-- <div id="logs" class="ptext" style="background-color:white"></div> -->
 
-    <button id="btnStream" class="btn btn-primary" onclick=" errWrap(stream);">Stream</button>
-    <button id="btnWatch" class="btn btn-danger" onclick=" errWrap(watch);">Xem</button>
-
-    <div id="logs" class="ptext" style="background-color:white"></div>
+        <button id="btnStart" class="btn btn-primary" hidden>Bắt đầu</button>
+    </div>
 </div>
 <div class="col-sm-6 col-md-3">
     <br>
