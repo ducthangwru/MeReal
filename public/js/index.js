@@ -9,6 +9,7 @@
  */
 var token = localStorage.getItem('token');
 var u = JSON.parse(localStorage.getItem('user'));
+var request;
 
 (function(){
 	
@@ -308,7 +309,7 @@ function stream() {
 			$('#btnStart').show()
 			$('#btnStream').hide()
 			$('#btnWatch').hide()
-
+			request = res.data
 			streamName = "a" //Tên phòng
 			var phone = window.phone = PHONE({
 				number        : streamName, // listen on username line else random
@@ -463,6 +464,7 @@ $(document).ready(function() {
 	document.title = 'MeReal - Web Livestream tương tác'
 	var socket = io(`${window.location.href}?token=${localStorage.getItem('token')}`)
 	var u = JSON.parse(localStorage.getItem('user'))
+	var index = 0
 	var role = u.role
 	getProfile(localStorage.getItem('token'), '', (data) => {
 		if(data)
@@ -499,6 +501,7 @@ $(document).ready(function() {
 		{
 			$('#btnStream').show()
 			$('#btnWatch').hide()
+			request = res.data
 		}
 	})
 
@@ -533,6 +536,18 @@ $(document).ready(function() {
 		$("#divChat").animate({ scrollTop: $('#divChat').prop("scrollHeight")}, 1000)
 	})
 
+	socket.on('start1', function (data) {
+		$('#divContent').append(data)
+	})
+
+	socket.on('contentQuestion', function (data) {
+		$('#divContent').append(data)
+	})
+
+	socket.on('contentAnswer', function (data) {
+		$('#divAnswer').append(data)
+	})
+
 	$("#inputMessage").on('keyup', function (e) {
 		if (e.keyCode == 13) {
 			sendMessage()
@@ -541,6 +556,40 @@ $(document).ready(function() {
 
 	$('#btnSend').click(() => {
 		sendMessage()
+	})
+
+	$('#btnStart').click(() => {
+		//Nếu mà click vào nút bắt đầu thì ẩn nó đi hiển thị nút Câu hỏi tiếp theo
+		if($('#btnStart').attr('data-name') == 'start')
+		{
+			$('#btnStart').attr('data-name', 'next')
+			$('#btnStart').text('Tiếp')
+			let start1 = `<h3>${request.desc}</h3> <br> <p>Giải thưởng: ${request.gift.name} trị giá: ${numeral(request.gift.price).format('0,0')} VNĐ</p>`
+			$('#divContent').append(start1)
+			socket.emit('start1', start1)
+		}
+		else if($('#btnStart').attr('data-name') == 'next')
+		{
+			callAPI('question/details', 'GET', `user_request=${request._id}&index=${index}`, token, null, (res) => {
+				if(res.success)
+				{
+					$('#divContent').html('')
+					let contentQuestion = `<h3>${res.data.question.content}</h3> <p>Gợi ý: ${res.data.question.suggest}</p>`
+					$('#divContent').html(contentQuestion)
+
+					socket.emit('contentQuestion', contentQuestion)
+
+					$('#divAnswer').html('')
+					for (let i = 0; i < res.data.answers.length; i++) {
+						$('#divAnswer').append(`<input type="radio" name="${res.data.question._id}" value="${res.data.answers[i]._id}">${res.data.answers[i].content}<br>`)
+					}
+
+					socket.emit('contentAnswer', $('#divAnswer').html())
+					
+					index++
+				}
+			})
+		}
 	})
 
 	function sendMessage() {

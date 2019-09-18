@@ -40,6 +40,39 @@ const createSocket = (io) => {
                         log.error(e)
                     }
                 })
+
+                socket.on('start1', (data) => {
+                    try
+                    {
+                        socket.broadcast.to(config.SECRET_KEY).emit('start1', data)
+                    }
+                    catch(e)
+                    {
+                        log.error(e)
+                    }
+                })
+
+                socket.on('contentQuestion', (data) => {
+                    try
+                    {
+                        socket.broadcast.to(config.SECRET_KEY).emit('contentQuestion', data)
+                    }
+                    catch(e)
+                    {
+                        log.error(e)
+                    }
+                })
+
+                socket.on('contentAnswer', (data) => {
+                    try
+                    {
+                        socket.broadcast.to(config.SECRET_KEY).emit('contentAnswer', data)
+                    }
+                    catch(e)
+                    {
+                        log.error(e)
+                    }
+                })
             }
             catch(e)
             {

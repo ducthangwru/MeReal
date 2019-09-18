@@ -54,6 +54,28 @@ router.get('/', verifyToken, async(req, res) => {
     }
 })
 
+router.get('/details', verifyTokenAgent, async(req, res) => {
+    try
+    {
+        let user = req.user._id
+        let user_request = req.query.user_request
+        let index = req.query.index || 0
+
+         //check param
+        if (validateParameters([user, user_request, index], res) == false) 
+            return
+
+        let result = await questionModel.find({user, user_request, status : STATUS_QUESTION.ACTIVE}).exec()
+        let answers = await answerModel.find({question : result[index]._id}).select('-is_true').exec()
+
+        return success(res, {question : result[index], answers : answers, length : result.length})
+    }
+    catch(e)
+    {
+        return error(res, e.message)
+    }
+})
+
 //Agent thêm câu hỏi
 router.post('/', verifyTokenAgent, async(req, res) => {
     try

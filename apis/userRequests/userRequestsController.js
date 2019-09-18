@@ -176,7 +176,7 @@ router.get('/check', verifyTokenAgent, async(req, res) => {
         let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
         let timeNow = moment(moment(), 'HH:mm:ss')
 
-        let result = await userRequestsModel.findOne({user : user_id, date :  { $gte: dateNow, $lte: dateTomorrow}, status : STATUS_USER_REQUEST.ACTIVED}).exec()
+        let result = await userRequestsModel.findOne({user : user_id, date :  { $gte: dateNow, $lte: dateTomorrow}, status : STATUS_USER_REQUEST.ACTIVED}).populate('gift').exec()
         let check = false
 
         for (let i = 0; i < LIVESTREAM_TIME_ENUM.length; i++) {
@@ -189,7 +189,7 @@ router.get('/check', verifyTokenAgent, async(req, res) => {
             }
         }
 
-        return check ? success(res) : error(res, message.NOT_EXIST_TIME)
+        return check ? success(res, result) : error(res, message.NOT_EXIST_TIME)
     }
     catch(e)
     {

@@ -22,7 +22,7 @@ const callAPI = (path, method, query, token, data, callback) => {
 }
 
 const getProfile = (token, _id, callback) => {
-  callAPI('user/profile', 'get', _id ? '_id=${_id}' : '', token, '', (res) => {
+  callAPI('user/profile', 'get', _id ? `_id=${_id}` : '', token, '', (res) => {
     if(res.success)
       callback(res.data)
     else
