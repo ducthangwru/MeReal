@@ -144,6 +144,10 @@ app.get('/time', function (req, res, next) {
     res.render('time')
 })
 
+app.get('/privacy_policy_of_xeminh.html', function (req, res, next) {
+    res.render('privacy', {layout : false})
+})
+
 app.get('/404', function (req, res, next) {
     res.render('404', {layout : false});
 })
