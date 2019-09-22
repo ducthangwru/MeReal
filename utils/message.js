@@ -16,7 +16,8 @@ const message = {
     WRONG_PASSWORD : "Mật khẩu cũ không đúng",
     USER_IS_ADMIN : "Tài khoản này là quản trị viên",
     USER_LOCKED : "Tài khoản đã bị khóa. Liên hệ admin",
-    NOT_EXIST_TIME : "Không được phép livestream do thời gian không nằm trong khung giờ"
+    NOT_EXIST_TIME : "Không được phép livestream do thời gian không nằm trong khung giờ",
+    ERROR : "Có lỗi xảy ra"
 }
 
 module.exports = message

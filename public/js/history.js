@@ -79,9 +79,9 @@ $(document).ready(function() {
                     dataSource.push([ 
                         res.data.docs[i]._id,
                         '',
-                        res.data.docs[i].user_live.username,
+                        res.data.docs[i].user_request.user.username,
                         res.data.docs[i].score,
-                        res.data.docs[i].gift.name,
+                        res.data.docs[i].gift ? res.data.docs[i].gift.name : 'Không có dữ liệu',
                         res.data.docs[i].createdAt,
                         ''
                     ])

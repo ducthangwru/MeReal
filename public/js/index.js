@@ -541,18 +541,31 @@ $(document).ready(function() {
 	})
 
 	socket.on('contentQuestion', function (data) {
-		$('#divContent').append(data)
+		$('#divContent').append(data.content)
 	})
 
 	socket.on('contentAnswer', function (data) {
-		$('#divAnswer').append(data)
+		$('#divAnswer').append(data.content)
+		$(`input[name="${data.data.question._id}"]:radio`).change(function(){
+			callAPI('userHistory', 'POST', '', token, {
+				user_request :  data.request._id,
+				question : data.data.question._id,
+				answer : this.value
+			}, (res) => {})
+
+			for (let i = 0; i < data.data.answers.length; i++) {
+				$(`#r_${data.data.answers[i]._id}`).prop('disabled', true)
+			}
+
+			$(`#r_${this.value}`).prop('disabled', false)
+		})
 	})
 
 	$("#inputMessage").on('keyup', function (e) {
 		if (e.keyCode == 13) {
 			sendMessage()
 		}
-	});
+	})
 
 	$('#btnSend').click(() => {
 		sendMessage()
@@ -577,14 +590,14 @@ $(document).ready(function() {
 					let contentQuestion = `<h3>${res.data.question.content}</h3> <p>Gợi ý: ${res.data.question.suggest}</p>`
 					$('#divContent').html(contentQuestion)
 
-					socket.emit('contentQuestion', contentQuestion)
+					socket.emit('contentQuestion', {content : contentQuestion})
 
 					$('#divAnswer').html('')
 					for (let i = 0; i < res.data.answers.length; i++) {
-						$('#divAnswer').append(`<input type="radio" name="${res.data.question._id}" value="${res.data.answers[i]._id}">${res.data.answers[i].content}<br>`)
+						$('#divAnswer').append(`<input type="radio" id="r_${res.data.answers[i]._id}" name="${res.data.question._id}" value="${res.data.answers[i]._id}">${res.data.answers[i].content}<br>`)
 					}
 
-					socket.emit('contentAnswer', $('#divAnswer').html())
+					socket.emit('contentAnswer', {content : $('#divAnswer').html(), data : res.data, request : request})
 					
 					index++
 				}
