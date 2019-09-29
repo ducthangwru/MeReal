@@ -11,7 +11,8 @@ const userRequestsSchema = new Schema(
         time : {type : Number, require : true},
         date : {type : Date, require : true},
         desc : {type : String, require : true, default : ''},
-        status : {type : Number, require : true, default : STATUS_USER_REQUEST.SAVE}
+        status : {type : Number, require : true, default : STATUS_USER_REQUEST.SAVE},
+        step : {type : Number, require : true, default : 0}
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 

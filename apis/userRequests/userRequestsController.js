@@ -73,6 +73,8 @@ router.post('/', verifyTokenAgent, async(req, res) => {
         if (validateParameters([obj.gift, obj.user, obj.desc, obj.price, obj.time, obj.date, obj.status], res) == false) 
             return
 
+        obj.date = moment(obj.date, 'DD/MM/YYYY').add(1, 'days')
+
         let result = await userRequestsModel.create(obj)
 
         return success(res, result)
@@ -172,11 +174,12 @@ router.get('/check', verifyTokenAgent, async(req, res) => {
     try
     {
         let user_id = req.user._id
+        let stream = req.query.stream
         let dateNow = moment().format('YYYY-MM-DD')
         let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
         let timeNow = moment(moment(), 'HH:mm:ss')
 
-        let result = await userRequestsModel.findOne({user : user_id, date :  { $gte: dateNow, $lte: dateTomorrow}, status : STATUS_USER_REQUEST.ACTIVED}).populate('gift').exec()
+        let result = await userRequestsModel.findOne({user : user_id, date :  { $gte: dateNow, $lte: dateTomorrow}, $or : [{status : STATUS_USER_REQUEST.ACTIVED}, {status : STATUS_USER_REQUEST.PLAYED}]}).populate('gift').exec()
         let check = false
 
         for (let i = 0; i < LIVESTREAM_TIME_ENUM.length; i++) {
@@ -188,6 +191,9 @@ router.get('/check', verifyTokenAgent, async(req, res) => {
                     check = true
             }
         }
+
+        if(stream)
+            await userRequestsModel.findOneAndUpdate({user : user_id, date :  { $gte: dateNow, $lte: dateTomorrow}, status : STATUS_USER_REQUEST.ACTIVED}, {status : STATUS_USER_REQUEST.PLAYED}).exec()
 
         return check ? success(res, result) : error(res, message.NOT_EXIST_TIME)
     }

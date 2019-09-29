@@ -34,7 +34,8 @@ const STATUS_USER_REQUEST = {
     PENDING : 0,
     ACTIVED : 1,
     CANCEL : -1,
-    SAVE : -2
+    SAVE : -2,
+    PLAYED : 2
 }
 
 const LIVESTREAM_TIME_ENUM = [

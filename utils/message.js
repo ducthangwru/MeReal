@@ -17,7 +17,8 @@ const message = {
     USER_IS_ADMIN : "Tài khoản này là quản trị viên",
     USER_LOCKED : "Tài khoản đã bị khóa. Liên hệ admin",
     NOT_EXIST_TIME : "Không được phép livestream do thời gian không nằm trong khung giờ",
-    ERROR : "Có lỗi xảy ra"
+    ERROR : "Có lỗi xảy ra",
+    LIVESTREAM_PLAYED : "Livestream đã được chơi"
 }
 
 module.exports = message

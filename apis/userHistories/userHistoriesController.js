@@ -77,16 +77,24 @@ router.post('/', verifyToken, async(req, res) => {
         {
             //Kiểm tra xem câu hỏi gửi lên có phải là câu hỏi hiện tại đang phát ko
             let listQuestion = await questionModel.find({user_request : obj.user_request}).exec()
-            if(listQuestion[history.step + 1]._id == obj.question)
-                await userHistoriesModel.findOneAndUpdate({user : obj.user, user_request : obj.user_request},  {$inc : { step: 1 }}).exec()
-            else
-                return error(res, message.ERROR)
+            for (let i = 0; i < listQuestion.length; i++) {
+                if(listQuestion[i]._id == obj.question)
+                    await userHistoriesModel.findOneAndUpdate({user : obj.user, user_request : obj.user_request},  {step : i + 1}).exec()
+            }
         }
 
         //Kiểm tra xem đáp án đúng ko. Nếu đúng thì cộng thêm điểm cho nè.
         let answer = await answerModel.findById(obj.answer).exec()
-        if(answer.is_true)
+        if(answer && answer.is_true)
+        {
             await userHistoriesModel.findOneAndUpdate({user : obj.user, user_request : obj.user_request},  {$inc : { score: 1 }}).exec()
+        }
+        
+        if(answer)
+        {
+            await answerModel.findByIdAndUpdate(obj.answer, {$inc : { num: 1 }}).exec()
+        }
+            
 
         return success(res)
     }
@@ -109,7 +117,7 @@ router.get('/step', verifyToken, async(req, res) => {
         let history = await userHistoriesModel.findOne({user, user_request}).exec()
         let listQuestion = await questionModel.find({user_request : user_request, status : STATUS_QUESTION.ACTIVE}).exec()
 
-        return success(res, {step : history.step, score : history.score, total_question : listQuestion.length})
+        return success(res, {step : history ? history.step : 1, score : history ? history.score : 0, total_question : listQuestion.length})
     }
     catch(e)
     {

@@ -63,6 +63,21 @@ router.get('/details', verifyToken, async(req, res) => {
     }
 })
 
+router.get('/byQuestion', verifyToken, async(req, res) => {
+    try
+    {
+        let _id = req.query._id
+
+        let result = await answerModel.find({question : _id}).exec()
+
+        return success(res, result)
+    }
+    catch(e)
+    {
+        return error(res, e)
+    }
+})
+
 //agent tạo answers
 router.post('/', verifyTokenAgent, async(req, res) => {
     try

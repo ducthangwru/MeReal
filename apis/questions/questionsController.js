@@ -4,6 +4,7 @@ const config = require('../../utils/config')
 const message = require('../../utils/message')
 const questionModel = require('./questionsModel')
 const answerModel = require('../answers/answersModel')
+const userRequestModel = require('../userRequests/userRequestsModel')
 const {
     error,
     success,
@@ -15,7 +16,7 @@ const {
     assignToken
 } = require('../../utils/utils')
 
-const {STATUS_QUESTION} = require('../../utils/enum')
+const {STATUS_QUESTION, STATUS_USER_REQUEST} = require('../../utils/enum')
 
 //getQuestion
 router.get('/', verifyToken, async(req, res) => {
@@ -67,6 +68,7 @@ router.get('/details', verifyTokenAgent, async(req, res) => {
 
         let result = await questionModel.find({user, user_request, status : STATUS_QUESTION.ACTIVE}).exec()
         let answers = await answerModel.find({question : result[index]._id}).select('-is_true').exec()
+        await userRequestModel.findByIdAndUpdate(user_request, {step : index + 1}).exec()
 
         return success(res, {question : result[index], answers : answers, length : result.length})
     }
@@ -82,18 +84,22 @@ router.post('/', verifyTokenAgent, async(req, res) => {
     {
         let obj = {
             content : req.body.content,
-            suggest : req.body.suggest,
+            suggest : req.body.suggest || '',
             status : req.body.status,
             user : req.user._id,
             user_request : req.body.user_request
         }
 
          //check param
-        if (validateParameters([obj.content, obj.suggest, obj.user_request, obj.status], res) == false) 
+        if (validateParameters([obj.content, obj.user_request, obj.status], res) == false) 
             return
 
-        let result = await questionModel.create(obj)
+        let userRequest = await userRequestModel.findById({_id : obj.user_request}).exec()
 
+        if(userRequest.status == STATUS_USER_REQUEST.PLAYED)
+            return error(res, message.LIVESTREAM_PLAYED)
+
+        let result = await questionModel.create(obj)
         return success(res, result)
     }
     catch(e)
@@ -108,15 +114,20 @@ router.put('/', verifyTokenAgent, async(req, res) => {
     {
         let _id = req.body._id
         let content = req.body.content
-        let suggest = req.body.suggest
+        let suggest = req.body.suggest || ''
         let status = req.body.status
 
          //check param
-        if (validateParameters([_id, content, suggest,status], res) == false) 
+        if (validateParameters([_id, content,status], res) == false) 
             return
 
-        let result = await questionModel.findByIdAndUpdate(_id, {content, suggest, status}, {new : true}).exec()
+        let question = await questionModel.findById(_id).exec()
+        let userRequest = await userRequestModel.findById({_id : question.user_request}).exec()
 
+        if(userRequest.status == STATUS_USER_REQUEST.PLAYED)
+            return error(res, message.LIVESTREAM_PLAYED)
+
+        let result = await questionModel.findByIdAndUpdate(_id, {content, suggest, status}, {new : true}).exec()
         if(result)
             return success(res, result)
         

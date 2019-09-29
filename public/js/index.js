@@ -299,7 +299,7 @@ var streamName
 
 function stream() {
 	//Kiểm tra xem user đó có được livestream ko
-	callAPI('userrequest/check', 'GET', '', token, null, (res) => {
+	callAPI('userrequest/check', 'GET', 'stream=played', token, null, (res) => {
 		if(!res.success)
 		{
 			alert(res.error)
@@ -559,6 +559,8 @@ $(document).ready(function() {
 
 			$(`#r_${this.value}`).prop('disabled', false)
 		})
+
+		countDown(data.request._id, true, data.data.question._id)
 	})
 
 	$("#inputMessage").on('keyup', function (e) {
@@ -586,6 +588,7 @@ $(document).ready(function() {
 			callAPI('question/details', 'GET', `user_request=${request._id}&index=${index}`, token, null, (res) => {
 				if(res.success)
 				{
+					$('#labelQuestion').text(`Câu hỏi: ${index + 1}`)
 					$('#divContent').html('')
 					let contentQuestion = `<h3>${res.data.question.content}</h3> <p>Gợi ý: ${res.data.question.suggest}</p>`
 					$('#divContent').html(contentQuestion)
@@ -594,16 +597,61 @@ $(document).ready(function() {
 
 					$('#divAnswer').html('')
 					for (let i = 0; i < res.data.answers.length; i++) {
-						$('#divAnswer').append(`<input type="radio" id="r_${res.data.answers[i]._id}" name="${res.data.question._id}" value="${res.data.answers[i]._id}">${res.data.answers[i].content}<br>`)
+						$('#divAnswer').append(`<input type="radio" id="r_${res.data.answers[i]._id}" name="${res.data.question._id}" value="${res.data.answers[i]._id}">${i + 1}.${res.data.answers[i].content}<br>`)
 					}
 
 					socket.emit('contentAnswer', {content : $('#divAnswer').html(), data : res.data, request : request})
 					
 					index++
+					countDown(null, null, res.data.question._id)
+
+					if(index == res.data.length)
+					{
+						$('#btnStart').attr('data-name', 'top_win')
+						$('#btnStart').text('Danh sách trúng thưởng')
+					}
 				}
 			})
 		}
 	})
+
+	function countDown(request_id, isClient, question_id) {
+		var distance = 10000
+
+		callAPI('userHistory/step', 'GET', `user_request=${request_id ? request_id : request._id}`, token, null, (res) => {
+			if(res.success)
+			{
+				$('#labelScore').text(`Điểm: ${res.data.score}/${res.data.total_question}`)
+			}
+		})
+
+		var x = setInterval(function() {
+			$('#btnStart').hide()
+			$('#labelTime').text(`${distance / 1000} s`)
+			distance -= 1000
+			if (distance < 0) {
+				$('#divContent').html('Hết giờ!')
+				$('#divAnswer').html('')
+				
+				if(!isClient)
+					$('#btnStart').show()
+
+				callAPI('answer/byQuestion', 'GET', `_id=${question_id}`, token, null, (res) => {
+					if(res.success)
+					{
+						$('#divModal').html('')
+						
+						for (let i = 0; i < res.data.length; i++) {
+							$('#divModal').append(`<label class="label label-${res.data[i].is_true ? 'success' : 'danger'}">${i + 1}. ${res.data[i].content} -- ${res.data[i].num} lựa chọn</label><br>`)
+						}
+						$('#modalEndAnswer').modal('show')
+					}
+				})
+
+				clearInterval(x)
+			}
+		  }, 1000)
+	}
 
 	function sendMessage() {
 		let time = moment(new Date()).format('DD/MM/YYYY HH:mm:ss')

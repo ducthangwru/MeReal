@@ -7,6 +7,7 @@ const answersSchema = new Schema(
         question : {type : ObjectId, require : true, ref : 'questions'},
         content : {type : String, require : true},
         is_true : {type : Boolean, require : true},
+        num : {type : Number, require : true, default : 0}
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 
