@@ -65,12 +65,21 @@ router.get('/details', verifyTokenAgent, async(req, res) => {
          //check param
         if (validateParameters([user, user_request, index], res) == false) 
             return
+        
+        // Kiểm tra xem đã đến câu bao nhiêu
+        let userRequest = await userRequestModel.findById(user_request).exec()
+
+        index = (userRequest && index == 0) ? userRequest.step + 1 : index
 
         let result = await questionModel.find({user, user_request, status : STATUS_QUESTION.ACTIVE}).exec()
-        let answers = await answerModel.find({question : result[index]._id}).select('-is_true').exec()
-        await userRequestModel.findByIdAndUpdate(user_request, {step : index + 1}).exec()
 
-        return success(res, {question : result[index], answers : answers, length : result.length})
+        if(index >= result.length)
+            return success(res, {question : null, answers : null, length : result.length, index : parseInt(index)})
+
+        let answers = await answerModel.find({question : result[index]._id}).select('-is_true').exec()
+        await userRequestModel.findByIdAndUpdate(user_request, {step : index}).exec()
+
+        return success(res, {question : result[index], answers : answers, length : result.length, index : parseInt(index)})
     }
     catch(e)
     {

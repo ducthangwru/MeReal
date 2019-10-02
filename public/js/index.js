@@ -541,7 +541,8 @@ $(document).ready(function() {
 	})
 
 	socket.on('contentQuestion', function (data) {
-		$('#divContent').append(data.content)
+		$('#labelQuestion').text(`Câu hỏi: ${data.index + 1}`)
+		$('#divContent').html(data.content)
 	})
 
 	socket.on('contentAnswer', function (data) {
@@ -588,27 +589,32 @@ $(document).ready(function() {
 			callAPI('question/details', 'GET', `user_request=${request._id}&index=${index}`, token, null, (res) => {
 				if(res.success)
 				{
-					$('#labelQuestion').text(`Câu hỏi: ${index + 1}`)
-					$('#divContent').html('')
-					let contentQuestion = `<h3>${res.data.question.content}</h3> <p>Gợi ý: ${res.data.question.suggest}</p>`
-					$('#divContent').html(contentQuestion)
-
-					socket.emit('contentQuestion', {content : contentQuestion})
-
-					$('#divAnswer').html('')
-					for (let i = 0; i < res.data.answers.length; i++) {
-						$('#divAnswer').append(`<input type="radio" id="r_${res.data.answers[i]._id}" name="${res.data.question._id}" value="${res.data.answers[i]._id}">${i + 1}.${res.data.answers[i].content}<br>`)
-					}
-
-					socket.emit('contentAnswer', {content : $('#divAnswer').html(), data : res.data, request : request})
-					
-					index++
-					countDown(null, null, res.data.question._id)
+					index = res.data.index
 
 					if(index == res.data.length)
 					{
 						$('#btnStart').attr('data-name', 'top_win')
 						$('#btnStart').text('Danh sách trúng thưởng')
+					}
+					else
+					{
+						$('#labelQuestion').text(`Câu hỏi: ${index + 1}`)
+						$('#divContent').html('')
+						let contentQuestion = `<h3>${res.data.question.content}</h3> <p>Gợi ý: ${res.data.question.suggest}</p>`
+						$('#divContent').html(contentQuestion)
+
+						socket.emit('contentQuestion', {content : contentQuestion, index : index})
+
+						$('#divAnswer').html('')
+						for (let i = 0; i < res.data.answers.length; i++) {
+							$('#divAnswer').append(`<input type="radio" id="r_${res.data.answers[i]._id}" name="${res.data.question._id}" value="${res.data.answers[i]._id}">${i + 1}.${res.data.answers[i].content}<br>`)
+						}
+
+						socket.emit('contentAnswer', {content : $('#divAnswer').html(), data : res.data, request : request})
+						
+						index++
+
+						countDown(null, null, res.data.question._id)
 					}
 				}
 			})
@@ -645,6 +651,13 @@ $(document).ready(function() {
 							$('#divModal').append(`<label class="label label-${res.data[i].is_true ? 'success' : 'danger'}">${i + 1}. ${res.data[i].content} -- ${res.data[i].num} lựa chọn</label><br>`)
 						}
 						$('#modalEndAnswer').modal('show')
+					}
+				})
+
+				callAPI('userHistory/step', 'GET', `user_request=${request_id ? request_id : request._id}`, token, null, (res) => {
+					if(res.success)
+					{
+						$('#labelScore').text(`Điểm: ${res.data.score}/${res.data.total_question}`)
 					}
 				})
 
