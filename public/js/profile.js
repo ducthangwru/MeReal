@@ -1,6 +1,51 @@
+const BASE_URL = "https://api.cloudinary.com/v1_1/ducthangwru/upload"
+const CLOUD_NAME = 'mereal'
+
 $(document).ready(function() {
     var token = localStorage.getItem('token')
     var u = null
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader()
+          
+          reader.onload = function(e) {
+            $('#imgAvatar').attr('src', e.target.result)
+          }
+          
+          reader.readAsDataURL(input.files[0])
+        }
+      }
+      
+      $("#inputUploadAvatar").change(function() {
+        readURL(this)
+        if(this.files && this.files[0])
+        {
+            console.log(this.files[0])
+            var form = new FormData();
+            form.append("file", this.files[0]);
+            form.append("upload_preset", "mereal");
+
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "https://api.cloudinary.com/v1_1/ducthangwru/upload",
+                "method": "POST",
+                "headers": {
+                    "Content-Type": "multipart/form-data"
+                },
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form
+            }
+
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+            });
+        }
+       
+    })
 
     getProfile(token, null, (data) => {
         u = data

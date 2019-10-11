@@ -28,6 +28,7 @@ router.put('/profile', verifyToken, async(req, res) => {
     {
         let obj = {
             fullname : req.body.fullname,
+            avatar : req.body.avatar || null,
             _id : req.user._id
         }
 

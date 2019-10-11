@@ -4,6 +4,7 @@ const crypto = require('crypto')
 const config = require('./config')
 const nodemailer = require('nodemailer')
 const {ROLE_USER} = require('./enum')
+const cloudinary = require('cloudinary').v2
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',

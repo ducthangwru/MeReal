@@ -11,6 +11,8 @@ var token = localStorage.getItem('token');
 var u = JSON.parse(localStorage.getItem('user'));
 var request;
 
+$.cloudinary.config({ cloud_name: 'ducthangwru', api_key: '581286618712862', api_secret : 'VxHXdcMzuF0KiNnSy4dRSrQqRQA'});
+
 (function(){
 	
 var CONTROLLER = window.CONTROLLER = function(phone, serverFunc){
