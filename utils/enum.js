@@ -47,8 +47,8 @@ const LIVESTREAM_TIME_ENUM = [
     },
     {
         id : 2,
-        from : "15:00",
-        to : "16:00",
+        from : "12:00",
+        to : "18:00",
         price : 20000000 //20.000.000 VNĐ
     },
     {

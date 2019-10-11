@@ -619,6 +619,15 @@ $(document).ready(function() {
 				}
 			})
 		}
+		else if($('#btnStart').attr('data-name') == 'top_win')
+		{
+			callAPI('userHistory/winner', 'GET', `user_request=${request._id}`, token, null, (res) => {
+				if(res.success)
+				{
+					
+				}
+			})
+		}
 	})
 
 	function countDown(request_id, isClient, question_id) {

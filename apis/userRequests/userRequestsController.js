@@ -15,7 +15,7 @@ const {
     assignToken
 } = require('../../utils/utils')
 
-const {ROLE_USER, STATUS_USER_REQUEST, LIVESTREAM_TIME_ENUM} = require('../../utils/enum')
+const {ROLE_USER, STATUS_USER_REQUEST, LIVESTREAM_TIME_ENUM, TYPE_GIFT} = require('../../utils/enum')
 
 //Lấy danh sách các request
 router.get('/', verifyTokenAgentOrAdmin, async(req, res) => {
@@ -196,6 +196,39 @@ router.get('/check', verifyTokenAgent, async(req, res) => {
             await userRequestsModel.findOneAndUpdate({user : user_id, date :  { $gte: dateNow, $lte: dateTomorrow}, status : STATUS_USER_REQUEST.ACTIVED}, {status : STATUS_USER_REQUEST.PLAYED}).exec()
 
         return check ? success(res, result) : error(res, message.NOT_EXIST_TIME)
+    }
+    catch(e)
+    {
+        return error(res, e.message)
+    }
+})
+
+router.get('/winner', verifyTokenAgent, async(req, res) => {
+    try
+    {
+        let user_request = req.query.user_request
+        let listWinner = []
+ 
+        //check param
+        if (validateParameters([user_request], res) == false) 
+            return
+
+        let userRequest = await userRequestsModel.findById(user_request).populate('gift').exec()
+        //check xem đã kết thúc chưa
+        //Nếu chưa thì xử lý phát thưởng
+        if(!userRequest.end)
+        { 
+            //check xem nó là loại phần thưởng gì
+            //Nếu là tiền mặt
+            if(userRequest.gift.type == TYPE_GIFT.MONEY)
+            {
+                //Số tiền chia đều cho top_win
+                let money = userRequest.gift.price / userRequest.top_win
+                //
+            }
+        }
+
+        return success(res, {step : history ? history.step : 1, score : history ? history.score : 0, total_question : listQuestion.length})
     }
     catch(e)
     {
