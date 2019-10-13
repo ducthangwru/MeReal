@@ -4,7 +4,49 @@ const crypto = require('crypto')
 const config = require('./config')
 const nodemailer = require('nodemailer')
 const {ROLE_USER} = require('./enum')
-const cloudinary = require('cloudinary').v2
+const multer  = require('multer')
+const path = require('path')
+
+const checkFileType = (file, cb) => {
+    const fileTypes = /jpeg|png|jpg/
+    const extName = fileTypes.test(path.extname(file.originalname).toLowerCase())
+    if (extName) {
+        return cb(null, true)
+    } else {
+        cb({message: 'ERROR: File type error !'})
+    }
+}
+
+const upObject = (req, res) => {
+    dir = `uploads/`
+
+    storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, dir)
+        },
+        filename: function (req, file, cb) {
+          cb(null,  Date.now() + '_' + file.originalname)
+        }
+    })
+
+    upload = multer({
+        storage: storage,
+        limits: {fileSize: config.MAX_FILE_SIZE},
+        fileFilter: (req, file, cb) => {
+            checkFileType(file, cb)
+        }
+    }).fields([
+        { name: 'avatar', maxCount: 1 },
+        { name: 'image', maxCount: 1 }
+    ])
+
+    return new Promise((resolve, reject) => {
+        upload(req, res, (err) => {
+            if (err) reject(err)
+            else resolve()
+        })
+    })
+}
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -194,5 +236,6 @@ module.exports = {
     checkRegexPassword,
     md5,
     validateParameters,
-    sendEmailForgotPW
+    sendEmailForgotPW,
+    upObject
 }

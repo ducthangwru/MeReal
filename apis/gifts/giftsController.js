@@ -39,6 +39,10 @@ router.get('/', verifyToken, async(req, res) => {
 
         let result = await giftModel.paginate(query, options)
 
+        for (let i = 0; i < result.docs.length; i++) {
+            result.docs[i].image = result.docs[i].image ? config.BASE_URL + '/uploads/' + result.docs[i].image : config.NO_IMAGE
+        }
+
         return success(res, result)
     }
     catch(e)
@@ -51,13 +55,16 @@ router.get('/', verifyToken, async(req, res) => {
 router.post('/', verifyTokenAgent, async(req, res) => {
     try
     {
+        await upObject(req, res)
+
         let obj = {
             name : req.body.name,
             desc : req.body.desc,
             type : req.body.type,
             price : req.body.price,
             status : req.body.status,
-            user : req.user._id
+            user : req.user._id,
+            image : req.files['image'][0].filename || null
         }
 
          //check param
@@ -84,13 +91,16 @@ router.post('/', verifyTokenAgent, async(req, res) => {
 router.put('/', verifyTokenAgent, async(req, res) => {
     try
     {
+        await upObject(req, res)
+
         let obj = {
             _id : req.body._id,
             name : req.body.name,
             desc : req.body.desc,
             type : req.body.type,
             price : req.body.price,
-            status : req.body.status
+            status : req.body.status,
+            image : req.files['image'][0].filename || null
         }
 
          //check param

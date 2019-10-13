@@ -14,6 +14,7 @@ var tableGift = $('#tableGift').DataTable({
         {},
         {title: "STT"},
         {title: "Tên"},
+        {title: "Hình ảnh"},
         {title: "Mô tả"},
         {title: "Loại"},
         {title: "Giá (VNĐ)"},
@@ -35,24 +36,25 @@ var tableGift = $('#tableGift').DataTable({
         },
         {
             orderable: true,
-            "width": "20%",
+            "width": "15%",
             "className": 'text-center',
             "targets": 2
         },
         {
             orderable: true,
-            "width": "25%",
+            "width": "15%",
             "className": 'text-center',
-            "targets": 3
+            "targets": 3,
+            "data": "img",
+            "render" : function ( url, type, row) {
+            return '<img height="75%" width="75%" src="'+row[3]+'"/>';
+            }
         },
         {
             orderable: true,
             "width": "15%",
             "className": 'text-center',
-            "targets": 4,
-            "mRender": function(data, type, row) {
-                return (row[4] == 1) ? `<a class="label label-success">Tiền mặt</a>` : `<a class="label label-warning">Sản phẩm</a>`
-            }
+            "targets": 4
         },
         {
             orderable: true,
@@ -60,18 +62,27 @@ var tableGift = $('#tableGift').DataTable({
             "className": 'text-center',
             "targets": 5,
             "mRender": function(data, type, row) {
-                return numeral(row[5]).format('0,0')
+                return (row[5] == 1) ? `<a class="label label-success">Tiền mặt</a>` : `<a class="label label-warning">Sản phẩm</a>`
+            }
+        },
+        {
+            orderable: true,
+            "width": "15%",
+            "className": 'text-center',
+            "targets": 6,
+            "mRender": function(data, type, row) {
+                return numeral(row[6]).format('0,0')
             }
         },
         {
             orderable: true,
             "width": "10%",
             "className": 'text-center',
-            "targets": 6,
+            "targets": 7,
             "mRender": function(data, type, row) {
-                if(row[6] == 1) 
+                if(row[7] == 1) 
                     return `<a class="label label-success">Hoạt động</a>` 
-                else if(row[6] == -1)
+                else if(row[7] == -1)
                     return `<a class="label label-warning">Khóa</a>`
                 else
                     return `<a class="label label-danger">Đã xóa</a>`
@@ -81,7 +92,7 @@ var tableGift = $('#tableGift').DataTable({
             orderable: false,
             "width": "10%",
             "className": 'text-center',
-            "targets": 7,
+            "targets": 8,
             "mRender": function(data, type, row) {
                 return `<a class="label label-success" onclick="editGift('${encodeURI(JSON.stringify(row))}')"><i class="fa fa-edit"></i></a>
                         <a class="label label-danger" onclick="deleteGift('${row[0]}')"><i class="fa fa-trash"></i></a>`
@@ -169,6 +180,7 @@ function loadDataGift() {
                     res.data.docs[i]._id,
                     '',
                     res.data.docs[i].name,
+                    res.data.docs[i].image,
                     res.data.docs[i].desc,
                     res.data.docs[i].type,
                     res.data.docs[i].price,

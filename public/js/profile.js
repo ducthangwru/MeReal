@@ -19,32 +19,6 @@ $(document).ready(function() {
       
       $("#inputUploadAvatar").change(function() {
         readURL(this)
-        if(this.files && this.files[0])
-        {
-            console.log(this.files[0])
-            var form = new FormData();
-            form.append("file", this.files[0]);
-            form.append("upload_preset", "mereal");
-
-            var settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": "https://api.cloudinary.com/v1_1/ducthangwru/upload",
-                "method": "POST",
-                "headers": {
-                    "Content-Type": "multipart/form-data"
-                },
-                "processData": false,
-                "contentType": false,
-                "mimeType": "multipart/form-data",
-                "data": form
-            }
-
-            $.ajax(settings).done(function (response) {
-                console.log(response);
-            });
-        }
-       
     })
 
     getProfile(token, null, (data) => {
@@ -68,9 +42,11 @@ $(document).ready(function() {
             })
 
             $('#btnSave').click(() => {
-                callAPI('user/profile', 'put', '', token, {
-                    fullname : $('#inputFullname').val()
-                }, (res) => {
+                console.log($("#inputUploadAvatar")[0].files[0])
+                let form = new FormData()
+                form.append('fullname', $('#inputFullname').val())
+                form.append('avatar', $("#inputUploadAvatar")[0].files[0])
+                callUploadAPI('user/profile', 'put', '', token, form, (res) => {
                     if(!res.success)
                         alert(res.error)
                     else

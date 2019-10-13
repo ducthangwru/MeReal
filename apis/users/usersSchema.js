@@ -11,8 +11,8 @@ const usersSchema = new Schema(
         avatar : {type: String, require : true, default : null},
         email : {type : String, require : true},
         reset_code : {type : String, default : null},
-        status : {type : Number, default : STATUS_USER.ACTIVED},
-        role : {type : Number, default : ROLE_USER.USER}
+        status : {type : Number, require : true, default : STATUS_USER.ACTIVE},
+        role : {type : Number, require : true, default : ROLE_USER.USER}
     }, {timestamps : {createAt : 'created_at', updateAt : 'updated_at'}}
 )
 

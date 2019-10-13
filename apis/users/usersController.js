@@ -17,7 +17,8 @@ const {
     md5,
     validateParameters,
     assignToken,
-    sendEmailForgotPW
+    sendEmailForgotPW,
+    upObject
 } = require('../../utils/utils')
 
 const {ROLE_USER, STATUS_USER} = require('../../utils/enum')
@@ -26,9 +27,11 @@ const {ROLE_USER, STATUS_USER} = require('../../utils/enum')
 router.put('/profile', verifyToken, async(req, res) => {
     try
     {
+        await upObject(req, res)
+
         let obj = {
             fullname : req.body.fullname,
-            avatar : req.body.avatar || null,
+            avatar : req.files['avatar'][0].filename || null,
             _id : req.user._id
         }
 
@@ -45,6 +48,7 @@ router.put('/profile', verifyToken, async(req, res) => {
         if(user)
         {
             let result = await usersModel.findByIdAndUpdate(obj._id, obj, {new: true}).exec()
+            result.avatar = result.avatar ? config.BASE_URL + '/uploads/' + result.avatar : config.NO_IMAGE
             return success(res, result)
         }
 
