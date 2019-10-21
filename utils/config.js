@@ -2,8 +2,8 @@ const SECRET_KEY = '@&Me^*@Real!~'
 
 const USER_EMAIL = 'thagnguyen111@gmail.com'
 const PASS_EMAIL = 'ducthang97'
-const BASE_URL = 'https://mereal.findme.vn'
-const NO_IMAGE = 'https://mereal.findme.vn/uploads/noimg.png'
+const BASE_URL = 'http://localhost:3000'
+const NO_IMAGE = 'http://localhost:3000/uploads/noimg.png'
 const form_email = (title_email, body_email, title_button, button, title_link, active_code, link_active) => {
     str = `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

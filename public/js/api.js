@@ -21,28 +21,6 @@ const callAPI = (path, method, query, token, data, callback) => {
     })
 }
 
-const callUploadAPI = (path, method, query, token, data, callback) => {
-  let settings = {
-      "async": true,
-      "url": `${base_url}/api/${path}?${query}`,
-      "method": method,
-      "headers": {
-        "Content-Type": "multipart/form-data",
-        "x-access-token" : token
-      },
-      "mimeType": "multipart/form-data",
-      "data": data
-    }
-    
-  $.ajax(settings)
-  .done(function (response) {
-      callback(response)
-  })
-  .fail((e) => {
-      callback({success : false, error: e.message })
-  })
-}
-
 const getProfile = (token, _id, callback) => {
   callAPI('user/profile', 'get', _id ? `_id=${_id}` : '', token, '', (res) => {
     if(res.success)

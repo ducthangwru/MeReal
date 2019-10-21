@@ -11,7 +11,8 @@ const {
     verifyTokenAgent,
     verifyTokenAgentOrAdmin,
     validateParameters,
-    assignToken
+    assignToken,
+    upObject
 } = require('../../utils/utils')
 
 const {STATUS_GIFT, TYPE_GIFT} = require('../../utils/enum')

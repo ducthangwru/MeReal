@@ -30,6 +30,7 @@ $(document).ready(function() {
             $('#inputUsername').val(u.username)
             $('#inputFullname').val(u.fullname)
             $('#inputEmail').val(u.email)
+            $('#imgAvatar').attr('src', u.avatar)
             
             $('#btnChangePwd1').click(() => {
                 $('#divChangeInfo').hide()
@@ -42,27 +43,30 @@ $(document).ready(function() {
             })
 
             $('#btnSave').click(() => {
-                console.log($("#inputUploadAvatar")[0].files[0])
                 let form = new FormData()
-                form.append('fullname', $('#inputFullname').val())
-                form.append('avatar', $("#inputUploadAvatar")[0].files[0])
-                callUploadAPI('user/profile', 'put', '', token, form, (res) => {
-                    if(!res.success)
-                        alert(res.error)
-                    else
+                form.append("avatar", document.getElementById('inputUploadAvatar').files[0]);
+                form.append("fullname", $('#inputFullname').val());
+
+                var settings = {
+                    "async": true,
+                    "crossDomain": true,
+                    "url": "/api/user/profile",
+                    "method": "PUT",
+                    "headers": {
+                        "x-access-token": token
+                    },
+                    "processData": false,
+                    "contentType": false,
+                    "mimeType": "multipart/form-data",
+                    "data": form
+                }
+
+                $.ajax(settings).done(function (response) {
+                    if(JSON.parse(response).success)
                     {
-                        getProfile(token, '', (data) => {
-                            if(data)
-                            {
-                                localStorage.setItem('user', JSON.stringify(data))
-                                u = JSON.parse(localStorage.getItem('user'))
-                            }
-                        })
-
-                        alert('Đổi thông tin thành công!')
+                        alert('Cập nhật thông tin thành công!')
                     }
-                })
-
+                  });
             })
 
             //Đổi mật khẩu

@@ -69,8 +69,11 @@ router.get('/profile', verifyToken, async(req, res) => {
         let result = await usersModel.findById(_id).exec()
 
         if(result)
+        {
+            result.avatar = result.avatar = result.avatar ? config.BASE_URL + '/uploads/' + result.avatar : config.NO_IMAGE
             return success(res, result)
-
+        }
+            
         return error(res, message.USER_NOT_EXISTS)
     }
     catch(e)
@@ -143,6 +146,9 @@ router.get('/', verifyTokenAdmin, async(req, res) => {
         }
 
         let result = await usersModel.paginate(query, options)
+        for (let i = 0; i < result.docs.length; i++) {
+            result.docs[i].avatar = result.docs[i].avatar = result.docs[i].avatar ? config.BASE_URL + '/uploads/' + result.docs[i].avatar : config.NO_IMAGE
+        }
 
         return success(res, result)
     }

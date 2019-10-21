@@ -547,6 +547,19 @@ $(document).ready(function() {
 		$('#divContent').html(data.content)
 	})
 
+	socket.on('winner', function (data) {
+		$('#divModalWinner').html('')
+		for (let i = 0; i < data.length; i++) {
+			$('#divModalWinner').append(`
+				<img src="${data[i].user.avatar}" height="50" width="50">
+				<label class="label label-success" style="margin-left : 5%">${i+1}. ${data[i].user.username}</label>
+				<br>
+			`)
+		}
+
+		$('#modalWinner').modal('show')
+	})
+
 	socket.on('contentAnswer', function (data) {
 		$('#divAnswer').append(data.content)
 		$(`input[name="${data.data.question._id}"]:radio`).change(function(){
@@ -623,10 +636,21 @@ $(document).ready(function() {
 		}
 		else if($('#btnStart').attr('data-name') == 'top_win')
 		{
-			callAPI('userHistory/winner', 'GET', `user_request=${request._id}`, token, null, (res) => {
+			callAPI('userRequest/winner', 'GET', `user_request=${request._id}`, token, null, (res) => {
 				if(res.success)
 				{
-					
+					$('#divModalWinner').html('')
+					for (let i = 0; i < res.data.length; i++) {
+						$('#divModalWinner').append(`
+							<img src="${res.data[i].user.avatar}" height="50" width="50">
+							<label class="label label-success" style="margin-left : 5%">${i+1}. ${res.data[i].user.username}</label>
+							<br>
+						`)
+					}
+
+					socket.emit('winner', res.data)
+
+					$('#modalWinner').modal('show')
 				}
 			})
 		}
@@ -704,6 +728,35 @@ $(document).ready(function() {
 	//Nếu nó là user
 	if(role == 1)
 	{
+		callAPI('userrequest/checkWhoLive', 'GET', '', token, null, (res) => {
+			if(res.success)
+			{
+				$('#divMenu').html(`
+					<div class="row">
+						<div class="col-sm-12" style="text-align:center; margin-top:1%">
+							<img src="${res.data.user.avatar ? res.data.user.avatar : '/noimg.png'}" alt="Smiley face" width="50px" height="50px">
+						</div>
+
+						<div class="col-sm-12" style="text-align:center; margin-top:1%">
+							<p style="color:white">${res.data.user.username}</p>
+						</div> <br>
+
+						<div class="col-sm-12" style="text-align:center; margin-top:1%">
+							<img src="${res.data.gift.image ? res.data.gift.image : '/noimg.png'}" alt="Smiley face" width="100px" height="100px">
+						</div>
+
+						<div class="col-sm-12" style="text-align:center; margin-top:1%;">
+							<p style="color:white">${res.data.gift.name}</p>
+							<p style="color:white">Trị giá: ${numeral(res.data.gift.price).format('0,0')} VNĐ</p>
+							<p style="color:white">Trao cho: ${numeral(res.data.top_win).format('0,0')} người điểm cao nhất</p>
+						</div> <br>
+					</div>
+				`)
+
+				console.log('a')
+			}
+		})
+
 		$('#btnStream').hide()
 		$('#ulMenu').append(`<li><a href="/history"><i class="fa fa-history"></i> <span>Lịch sử chơi<span></span></a></li>`)
 		$('#ulMenu').append(`<li><a href="/profile"><i class="fa fa-wrench"></i> <span>Tài khoản<span></span></a></li>`)

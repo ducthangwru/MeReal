@@ -14,6 +14,7 @@ const app = express()
 var server = require('http').createServer(app)
 var io = require('socket.io')(server)
 const socket = require('./apis/chat/socket')
+const fs = require('fs')
 socket.createSocket(io)
 
 const CONNECT_MONGO = 'mongodb://admin:admin123@ds243317.mlab.com:43317/mereal'
@@ -26,6 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.engine('handlebars', exphbs({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars');
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'uploads')))
 
 app.use(session({
     secret: '@MeReal&',
@@ -40,6 +42,7 @@ app.use(function (req, res, next) {
     req.headers['if-modified-since'] = '';
     if (!req.session.token && req.url !== '/'
         && !req.url.includes('/login') 
+        && req.url.includes('/uploads') 
         && !req.url.includes('/register') 
         && !req.url.includes('/forgot') 
         && !req.url.includes('/resetPassword') 
@@ -147,6 +150,15 @@ app.get('/time', function (req, res, next) {
 app.get('/privacy_policy_of_xeminh.html', function (req, res, next) {
     res.render('privacy', {layout : false})
 })
+
+app.get('/uploads/:file', function (req, res, next) {
+    let file = req.params.file
+    if(fs.existsSync(path.resolve(`uploads/${file}`)))
+        res.sendFile(path.resolve(`uploads/${file}`)) 
+    else
+        res.send({error : "no such file"})
+});
+
 
 app.get('/404', function (req, res, next) {
     res.render('404', {layout : false});

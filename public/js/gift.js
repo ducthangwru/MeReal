@@ -47,7 +47,7 @@ var tableGift = $('#tableGift').DataTable({
             "targets": 3,
             "data": "img",
             "render" : function ( url, type, row) {
-            return '<img height="75%" width="75%" src="'+row[3]+'"/>';
+            return '<img height="100px" width="100px" src="'+row[3]+'"/>';
             }
         },
         {
@@ -108,6 +108,23 @@ var tableGift = $('#tableGift').DataTable({
 $(document).ready(function() {
     loadDataGift()
 
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader()
+          
+          reader.onload = function(e) {
+            $('#imgImage').attr('src', e.target.result)
+          }
+          
+          reader.readAsDataURL(input.files[0])
+        }
+      }
+      
+      $("#inputUploadImage").change(function() {
+        readURL(this)
+    })
+
+
     $('#btnAddGift').click(() => {
         $('#h4AddEditGift').text('Thêm mới quà tặng')
         $('#btnAddEditGift').text('Thêm')
@@ -118,15 +135,31 @@ $(document).ready(function() {
     $('#btnAddEditGift').click(() => {
         if($('#btnAddEditGift').attr('data-name') == 'add')
         {
-            callAPI('gift', 'POST', '', token, {
-                name : $('#inputName').val(),
-                desc : $('#inputDesc').val(),
-                type : $('#selectType').val(),
-                price : $('#inputPrice').val(),
-                status : $('#selectStatus').val()
-            }, (res) => {
-                if(!res.success)
-                    alert(res.error)
+            let form = new FormData()
+            form.append("image", document.getElementById('inputUploadImage').files[0]);
+            form.append("name", $('#inputName').val());
+            form.append("desc", $('#inputDesc').val());
+            form.append("type", $('#selectType').val());
+            form.append("price", $('#inputPrice').val());
+            form.append("status", $('#selectStatus').val());
+
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "/api/gift",
+                "method": "POST",
+                "headers": {
+                    "x-access-token": token
+                },
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form
+            }
+
+            $.ajax(settings).done(function (res) {
+                if(!JSON.parse(res).success)
+                    alert(JSON.parse(res).error)
                 else
                 {
                     $('#inputName').val('')
@@ -137,20 +170,36 @@ $(document).ready(function() {
                     $('#modalAddEditGift').modal('hide')
                     loadDataGift()
                 }
-            })
+            });
         }
         else if($('#btnAddEditGift').attr('data-name') == 'edit')
         {
-            callAPI('gift', 'PUT', '', token, {
-                name : $('#inputName').val(),
-                desc : $('#inputDesc').val(),
-                type : $('#selectType').val(),
-                price : $('#inputPrice').val(),
-                status : $('#selectStatus').val(),
-                _id: $('#idGift').text() 
-            }, (res) => {
-                if(!res.success)
-                    alert(res.error)
+            let form = new FormData()
+            form.append("image", document.getElementById('inputUploadImage').files[0]);
+            form.append("name", $('#inputName').val());
+            form.append("desc", $('#inputDesc').val());
+            form.append("type", $('#selectType').val());
+            form.append("price", $('#inputPrice').val());
+            form.append("status", $('#selectStatus').val());
+            form.append("_id", $('#idGift').text());
+
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "/api/gift",
+                "method": "PUT",
+                "headers": {
+                    "x-access-token": token
+                },
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form
+            }
+
+            $.ajax(settings).done(function (res) {
+                if(!JSON.parse(res).success)
+                    alert(JSON.parse(res).error)
                 else
                 {
                     $('#inputName').val('')
@@ -161,7 +210,7 @@ $(document).ready(function() {
                     $('#modalAddEditGift').modal('hide')
                     loadDataGift()
                 }
-            })
+            });
         }
     })
 })
@@ -201,10 +250,11 @@ function editGift(data) {
     $('#btnAddEditGift').attr('data-name', 'edit')
     $('#idGift').text(data[0])
     $('#inputName').val(data[2])
-    $('#inputDesc').val(data[3])
-    $('#selectType').val(`${data[4]}`)
-    $('#inputPrice').val(data[5])
-    $('#selectStatus').val(`${data[6]}`)
+    $('#imgImage').attr('src', data[3])
+    $('#inputDesc').val(data[4])
+    $('#selectType').val(`${data[5]}`)
+    $('#inputPrice').val(data[6])
+    $('#selectStatus').val(`${data[7]}`)
     $('#modalAddEditGift').modal('show')
 }
 

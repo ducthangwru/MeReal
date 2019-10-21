@@ -4,6 +4,7 @@ const config = require('../../utils/config')
 const message = require('../../utils/message')
 const moment = require('moment')
 const userRequestsModel = require('./userRequestsModel')
+const userHistoryModel = require('../userHistories/userHistoriesModel')
 const {
     error,
     success,
@@ -203,11 +204,42 @@ router.get('/check', verifyTokenAgent, async(req, res) => {
     }
 })
 
+router.get('/checkWhoLive', verifyToken, async(req, res) => {
+    try
+    {
+        let dateNow = moment().format('YYYY-MM-DD')
+        let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
+        let timeNow = moment(moment(), 'HH:mm:ss')
+
+        let result = await userRequestsModel.findOne({date :  { $gte: dateNow, $lte: dateTomorrow}, $or : [{status : STATUS_USER_REQUEST.ACTIVED}, {status : STATUS_USER_REQUEST.PLAYED}]}).populate('gift').populate({ path: 'user', select: '-password' }).exec()
+        let check = false
+
+        if(result)
+        {
+            for (let i = 0; i < LIVESTREAM_TIME_ENUM.length; i++) {
+                if(result.time == LIVESTREAM_TIME_ENUM[i].id)
+                {
+                    let timeBefore30 = moment(LIVESTREAM_TIME_ENUM[i].from, 'HH:mm:ss').add(-30, 'minutes')
+                    let timeTo = moment(LIVESTREAM_TIME_ENUM[i].to, 'HH:mm:ss')
+                    if(timeNow.isAfter(timeBefore30) && timeNow.isBefore(timeTo))
+                        check = true
+                }
+            }
+        }
+
+        return check ? success(res, result) : error(res, message.NOT_EXIST_TIME)
+    }
+    catch(e)
+    {
+        console.log(e)
+        return error(res, e.message)
+    }
+})
+
 router.get('/winner', verifyTokenAgent, async(req, res) => {
     try
     {
         let user_request = req.query.user_request
-        let listWinner = []
  
         //check param
         if (validateParameters([user_request], res) == false) 
@@ -218,17 +250,23 @@ router.get('/winner', verifyTokenAgent, async(req, res) => {
         //Nếu chưa thì xử lý phát thưởng
         if(!userRequest.end)
         { 
-            //check xem nó là loại phần thưởng gì
-            //Nếu là tiền mặt
-            if(userRequest.gift.type == TYPE_GIFT.MONEY)
-            {
-                //Số tiền chia đều cho top_win
-                let money = userRequest.gift.price / userRequest.top_win
-                //
+            //Lấy ra top win cao điểm nhất mà lớn hơn 0 điểm
+            let listWin = await userHistoryModel.find({user_request : userRequest._id}).sort({score : 1}).limit(userRequest.top_win).exec()
+
+            for (let i = 0; i < listWin.length; i++) {
+                await userHistoryModel.findByIdAndUpdate(listWin[i]._id, {gift : userRequest.gift}).exec()
             }
+
+            await userRequestsModel.findByIdAndUpdate(user_request, {end : true}).exec()
+        }
+       
+        let listTopWin = await userHistoryModel.find({user_request : userRequest._id}).sort({score : 1}).limit(userRequest.top_win).populate({ path: 'user', select: '-password' }).exec()
+
+        for (let i = 0; i < listTopWin.length; i++) {
+            listTopWin[i].user.avatar = listTopWin[i].user.avatar ? config.BASE_URL + '/uploads/' + listTopWin[i].user.avatar : config.NO_IMAGE
         }
 
-        return success(res, {step : history ? history.step : 1, score : history ? history.score : 0, total_question : listQuestion.length})
+        return success(res, listTopWin)
     }
     catch(e)
     {

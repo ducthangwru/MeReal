@@ -73,6 +73,17 @@ const createSocket = (io) => {
                         log.error(e)
                     }
                 })
+
+                socket.on('winner', (data) => {
+                    try
+                    {
+                        socket.broadcast.to(config.SECRET_KEY).emit('winner', data)
+                    }
+                    catch(e)
+                    {
+                        log.error(e)
+                    }
+                })
             }
             catch(e)
             {
