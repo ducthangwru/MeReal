@@ -60,7 +60,7 @@ router.post('/', verifyTokenAgent, async(req, res) => {
 
         let obj = {
             name : req.body.name,
-            desc : req.body.desc,
+            desc : req.body.desc || '',
             type : req.body.type,
             price : req.body.price,
             status : req.body.status,
@@ -97,7 +97,7 @@ router.put('/', verifyTokenAgent, async(req, res) => {
         let obj = {
             _id : req.body._id,
             name : req.body.name,
-            desc : req.body.desc,
+            desc : req.body.desc || '',
             type : req.body.type,
             price : req.body.price,
             status : req.body.status,

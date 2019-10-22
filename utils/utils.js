@@ -168,7 +168,7 @@ const success = function (res, data, page) {
 
 
 const checkRegexUsername = function(username) {
-    let usernameRegex = /^[a-zA-Z\d.]{5,20}$/
+    let usernameRegex = /^[a-zA-Z\d.]{3,20}$/
     return username.match(usernameRegex)
 }
 

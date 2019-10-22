@@ -78,7 +78,7 @@ router.post('/login', async(req, res) => {
     {
         let username = req.body.username
         let password = req.body.password
-
+        
         //check param 
         if (validateParameters([username, password], res) == false) 
           return
