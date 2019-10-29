@@ -178,7 +178,8 @@ router.get('/check', verifyTokenAgent, async(req, res) => {
         let stream = req.query.stream
         let dateNow = moment().format('YYYY-MM-DD')
         let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
-        let timeNow = moment(moment(), 'HH:mm:ss')
+        let timeNow = moment(moment().add(11, 'h'), 'HH:mm:ss')
+        //let timeNow = moment(moment(), 'HH:mm:ss')
 
         let result = await userRequestsModel.findOne({user : user_id, date :  { $gte: dateNow, $lte: dateTomorrow}, $or : [{status : STATUS_USER_REQUEST.ACTIVED}, {status : STATUS_USER_REQUEST.PLAYED}]}).populate('gift').exec()
         let check = false
@@ -209,7 +210,8 @@ router.get('/checkWhoLive', verifyToken, async(req, res) => {
     {
         let dateNow = moment().format('YYYY-MM-DD')
         let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
-        let timeNow = moment(moment(), 'HH:mm:ss')
+        let timeNow = moment(moment().add(11, 'h'), 'HH:mm:ss')
+        //let timeNow = moment(moment(), 'HH:mm:ss')
 
         let result = await userRequestsModel.findOne({date :  { $gte: dateNow, $lte: dateTomorrow}, $or : [{status : STATUS_USER_REQUEST.ACTIVED}, {status : STATUS_USER_REQUEST.PLAYED}]}).populate('gift').populate({ path: 'user', select: '-password' }).exec()
         let check = false
