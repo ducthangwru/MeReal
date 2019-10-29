@@ -176,21 +176,35 @@ router.get('/check', verifyTokenAgent, async(req, res) => {
     {
         let user_id = req.user._id
         let stream = req.query.stream
-        let dateNow = moment().format('YYYY-MM-DD')
-        let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
-        let timeNow = moment(moment().add(11, 'h'), 'HH:mm:ss')
+        //let dateNow = moment().format('YYYY-MM-DD')
+        let dateNow = moment().add(11, 'h').format('YYYY-MM-DD')
+        //let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
+        let dateTomorrow = moment().add(11, 'h').add(1, 'd').format('YYYY-MM-DD')
+        let timeNow =  moment(moment().add(11, 'h'), 'HH:mm:ss')
         //let timeNow = moment(moment(), 'HH:mm:ss')
+
+        console.log(dateNow)
+        console.log(dateTomorrow)
+        console.log(timeNow)
 
         let result = await userRequestsModel.findOne({user : user_id, date :  { $gte: dateNow, $lte: dateTomorrow}, $or : [{status : STATUS_USER_REQUEST.ACTIVED}, {status : STATUS_USER_REQUEST.PLAYED}]}).populate('gift').exec()
         let check = false
+        if(result)
+        {
+            console.log(result)
+            for (let i = 0; i < LIVESTREAM_TIME_ENUM.length; i++) {
+                if(result.time == LIVESTREAM_TIME_ENUM[i].id)
+                {
+                    let timeBefore30 = moment(LIVESTREAM_TIME_ENUM[i].from, 'HH:mm:ss').add(-30, 'minutes')
+                    let timeTo = moment(LIVESTREAM_TIME_ENUM[i].to, 'HH:mm:ss')
 
-        for (let i = 0; i < LIVESTREAM_TIME_ENUM.length; i++) {
-            if(result.time == LIVESTREAM_TIME_ENUM[i].id)
-            {
-                let timeBefore30 = moment(LIVESTREAM_TIME_ENUM[i].from, 'HH:mm:ss').add(-30, 'minutes')
-                let timeTo = moment(LIVESTREAM_TIME_ENUM[i].to, 'HH:mm:ss')
-                if(timeNow.isAfter(timeBefore30) && timeNow.isBefore(timeTo))
-                    check = true
+                    console.log(timeNow.isAfter(timeBefore30))
+                    console.log(timeNow.isBefore(timeTo))
+                    console.log(timeTo)
+
+                    if(timeNow.isAfter(timeBefore30) && timeNow.isBefore(timeTo))
+                        check = true
+                }
             }
         }
 
@@ -208,8 +222,10 @@ router.get('/check', verifyTokenAgent, async(req, res) => {
 router.get('/checkWhoLive', verifyToken, async(req, res) => {
     try
     {
-        let dateNow = moment().format('YYYY-MM-DD')
-        let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
+        //let dateNow = moment().format('YYYY-MM-DD')
+        let dateNow = moment().add(11, 'h').format('YYYY-MM-DD')
+        //let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
+        let dateTomorrow = moment().add(11, 'h').add(1, 'd').format('YYYY-MM-DD')
         let timeNow = moment(moment().add(11, 'h'), 'HH:mm:ss')
         //let timeNow = moment(moment(), 'HH:mm:ss')
 
@@ -233,7 +249,6 @@ router.get('/checkWhoLive', verifyToken, async(req, res) => {
     }
     catch(e)
     {
-        console.log(e)
         return error(res, e.message)
     }
 })
