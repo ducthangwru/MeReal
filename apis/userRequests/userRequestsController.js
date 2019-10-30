@@ -107,12 +107,12 @@ router.put('/', verifyTokenAgent, async(req, res) => {
         if (validateParameters([obj._id, obj.gift, obj.user, obj.desc, obj.price, obj.time, obj.date, obj.status], res) == false) 
             return
 
-        let result = await userRequestsModel.findOneAndUpdate({_id : _id, user : user_id}, obj, {new : true}).exec()
+        let result = await userRequestsModel.findOneAndUpdate({_id : obj._id, user : obj.user}, obj, {new : true}).exec()
 
         if(result)
             return success(res, result)
         
-        return error(res, message.SET_QUESTION_NOT_EXISTS)
+        return error(res, message.REQUEST_NOT_EXISTS)
     }
     catch(e)
     {
