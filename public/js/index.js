@@ -296,7 +296,8 @@ var embed_demo = document.getElementById("embed-demo")
 var here_now   = document.getElementById('here-now') 
 var stream_info= document.getElementById('stream-info') 
 var end_stream = document.getElementById('end') 
-
+var pub_key = "pub-c-6265d3da-b817-441c-8722-d5aa3b0c94b2"
+var sub_key = "sub-c-99870162-9da7-11e9-9aea-96d77c97c6d4"
 var streamName 
 
 function stream() {
@@ -315,8 +316,8 @@ function stream() {
 			streamName = "a" //Tên phòng
 			var phone = window.phone = PHONE({
 				number        : streamName, // listen on username line else random
-				publish_key   : 'pub-c-561a7378-fa06-4c50-a331-5c0056d0163c', // Your Pub Key
-				subscribe_key : 'sub-c-17b7db8a-3915-11e4-9868-02ee2ddab7fe', // Your Sub Key
+				publish_key   : pub_key, // Your Pub Key
+				subscribe_key : sub_key, // Your Sub Key
 				oneway        : true,
 				broadcast     : true,
 			})
@@ -356,8 +357,8 @@ function watch(form){
 	var num = "a"
 	var phone = window.phone = PHONE({
 	    number        : "Viewer" + Math.floor(Math.random()*100), // listen on username line else random
-	    publish_key   : 'pub-c-6265d3da-b817-441c-8722-d5aa3b0c94b2', // Your Pub Key
-	    subscribe_key : 'sub-c-99870162-9da7-11e9-9aea-96d77c97c6d4', // Your Sub Key
+		publish_key   : pub_key, // Your Pub Key
+		subscribe_key : sub_key, // Your Sub Key
 	    oneway        : true
 	})
 	

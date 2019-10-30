@@ -176,12 +176,12 @@ router.get('/check', verifyTokenAgent, async(req, res) => {
     {
         let user_id = req.user._id
         let stream = req.query.stream
-        //let dateNow = moment().format('YYYY-MM-DD')
-        let dateNow = moment().add(11, 'h').format('YYYY-MM-DD')
-        //let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
-        let dateTomorrow = moment().add(11, 'h').add(1, 'd').format('YYYY-MM-DD')
-        let timeNow =  moment(moment().add(11, 'h'), 'HH:mm:ss')
-        //let timeNow = moment(moment(), 'HH:mm:ss')
+        let dateNow = moment().format('YYYY-MM-DD')
+        //let dateNow = moment().add(11, 'h').format('YYYY-MM-DD')
+        let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
+        //let dateTomorrow = moment().add(11, 'h').add(1, 'd').format('YYYY-MM-DD')
+        //let timeNow =  moment(moment().add(11, 'h'), 'HH:mm:ss')
+        let timeNow = moment(moment(), 'HH:mm:ss')
 
         console.log(dateNow)
         console.log(dateTomorrow)
@@ -222,12 +222,12 @@ router.get('/check', verifyTokenAgent, async(req, res) => {
 router.get('/checkWhoLive', verifyToken, async(req, res) => {
     try
     {
-        //let dateNow = moment().format('YYYY-MM-DD')
-        let dateNow = moment().add(11, 'h').format('YYYY-MM-DD')
-        //let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
-        let dateTomorrow = moment().add(11, 'h').add(1, 'd').format('YYYY-MM-DD')
-        let timeNow = moment(moment().add(11, 'h'), 'HH:mm:ss')
-        //let timeNow = moment(moment(), 'HH:mm:ss')
+        let dateNow = moment().format('YYYY-MM-DD')
+        //let dateNow = moment().add(11, 'h').format('YYYY-MM-DD')
+        let dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
+        //let dateTomorrow = moment().add(11, 'h').add(1, 'd').format('YYYY-MM-DD')
+        //let timeNow =  moment(moment().add(11, 'h'), 'HH:mm:ss')
+        let timeNow = moment(moment(), 'HH:mm:ss')
 
         let result = await userRequestsModel.findOne({date :  { $gte: dateNow, $lte: dateTomorrow}, $or : [{status : STATUS_USER_REQUEST.ACTIVED}, {status : STATUS_USER_REQUEST.PLAYED}]}).populate('gift').populate({ path: 'user', select: '-password' }).exec()
         let check = false
