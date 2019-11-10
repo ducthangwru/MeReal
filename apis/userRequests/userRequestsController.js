@@ -268,7 +268,7 @@ router.get('/winner', verifyTokenAgent, async(req, res) => {
         if(!userRequest.end)
         { 
             //Lấy ra top win cao điểm nhất mà lớn hơn 0 điểm
-            let listWin = await userHistoryModel.find({user_request : userRequest._id}).sort({score : 1}).limit(userRequest.top_win).exec()
+            let listWin = await userHistoryModel.find({user_request : userRequest._id}).sort({score : -1}).limit(userRequest.top_win).exec()
 
             for (let i = 0; i < listWin.length; i++) {
                 await userHistoryModel.findByIdAndUpdate(listWin[i]._id, {gift : userRequest.gift}).exec()
@@ -277,7 +277,7 @@ router.get('/winner', verifyTokenAgent, async(req, res) => {
             await userRequestsModel.findByIdAndUpdate(user_request, {end : true}).exec()
         }
        
-        let listTopWin = await userHistoryModel.find({user_request : userRequest._id}).sort({score : 1}).limit(userRequest.top_win).populate({ path: 'user', select: '-password' }).exec()
+        let listTopWin = await userHistoryModel.find({user_request : userRequest._id}).sort({score : -1}).limit(userRequest.top_win).populate({ path: 'user', select: '-password' }).exec()
 
         for (let i = 0; i < listTopWin.length; i++) {
             listTopWin[i].user.avatar = listTopWin[i].user.avatar ? config.BASE_URL + '/uploads/' + listTopWin[i].user.avatar : config.NO_IMAGE

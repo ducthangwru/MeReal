@@ -92,8 +92,8 @@ router.post('/', verifyTokenAgent, async(req, res) => {
         if (validateParameters([obj.question, obj.content, obj.is_true], res) == false) 
             return
 
-        if(obj.is_true == true)
-            await answerModel.updateMany({question}, {is_true : false}).exec()
+        if(obj.is_true == 'true')
+            await answerModel.updateMany({question : obj.question}, {is_true : false}).exec()
 
         let result = await answerModel.create(obj)
 
