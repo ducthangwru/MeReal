@@ -41,13 +41,13 @@ const STATUS_USER_REQUEST = {
 const LIVESTREAM_TIME_ENUM = [
     {
         id : 1,
-        from : "07:00",
-        to : "11:59",
+        from : "08:00",
+        to : "14:00",
         price : 10000000 //10.000.000 VNĐ 
     },
     {
         id : 2,
-        from : "12:00",
+        from : "14:30",
         to : "18:00",
         price : 20000000 //20.000.000 VNĐ
     },
